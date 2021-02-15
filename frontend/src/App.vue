@@ -1,60 +1,84 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+    <v-card
+     height="1000"
+     >
 
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
+    <v-app-bar app
+      color="blue darken-4"
+      height="100"
+     dark>
+
+      <v-img 
+      alt="logo"
+      src="./assets/logoriverside.png"
+      :aspect-ratio="10/2"
+      align
+
+      />
+
+
+      
+      <div class="d-flex align-center mr-2">
+        Church Membership Management System
       </div>
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+      <v-app-bar-nav-icon @click="drawer = true" right></v-app-bar-nav-icon>
+
     </v-app-bar>
 
+      <v-navigation-drawer
+        v-model="drawer"
+        absolute
+        temporary
+        right
+      >
+        <v-list dense>
+          <v-list-item
+            v-for="item in items"
+            :key="item.title"
+            :href="item.href"
+          >
+          
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+  
+            <v-list-item-content>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item-content>
+        
+          </v-list-item>
+          
+        </v-list>
+      
+      </v-navigation-drawer>
+
     <v-main>
-      <HelloWorld/>
+      <router-view />
     </v-main>
+    </v-card>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
-
 export default {
-  name: 'App',
-
-  components: {
-    HelloWorld,
-  },
-
-  data: () => ({
-    //
-  }),
-};
+  name: "app",
+  data() {
+   
+    return {
+      drawer: false,
+      items: [
+        { title: 'Home', icon: 'mdi-home', href:"/persons"},
+        { title: 'My Information', icon: 'mdi-account', href:"/persons"},
+        { title: 'My Groups', icon: 'mdi-account-group-outline', href:"/persons" },
+        { title: 'My Events', icon: 'mdi-account-group-outline', href:"/persons" },
+        
+      ],
+    }
+    
+    }
+  }
 </script>
