@@ -12,7 +12,7 @@
       <v-img 
       alt="logo"
       src="./assets/logoriverside.png"
-      :aspect-ratio="10/2"
+      :aspect-ratio="7/1"
       align
  
       />
