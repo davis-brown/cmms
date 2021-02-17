@@ -1,12 +1,6 @@
 <template>
   <div v-if="currentPerson" class="edit-form py-3">
       <v-form ref="form" lazy-validation>
-        <v-text-field
-        v-model="currentPerson.per_ID"
-        :rules="[(v) => !!v || 'Person ID is required']"
-        label="Person ID"
-        required
-      ></v-text-field>
        <v-text-field
         v-model="currentPerson.fam_ID"
         :rules="[(v) => !!v || 'Family ID is required']"
