@@ -23,4 +23,4 @@ update(per_ID, data) {
 
 
 
-export default new PersonDataService();
+export default new PersonDataService(); 
