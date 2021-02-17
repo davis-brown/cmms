@@ -71,10 +71,10 @@ export default {
     return {
       drawer: false,
       items: [
-        { title: 'Home', icon: 'mdi-home', href:"/persons"},
-        { title: 'My Information', icon: 'mdi-account', href:"/persons"},
-        { title: 'My Groups', icon: 'mdi-account-group-outline', href:"/persons" },
-        { title: 'My Events', icon: 'mdi-account-group-outline', href:"/persons" },
+        { title: 'Home', icon: 'mdi-home', href:"/person"},
+        { title: 'My Information', icon: 'mdi-account', href:"/person"},
+        { title: 'My Groups', icon: 'mdi-account-group-outline', href:"/person" },
+        { title: 'My Events', icon: 'mdi-account-group-outline', href:"/person" },
         
       ],
     }

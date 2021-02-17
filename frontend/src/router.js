@@ -6,7 +6,7 @@ export default new VueRouter({
   mode: "history",
   base: process.env.NODE_ENV === "development" ? "/" : "/congregation/",
 
-routes = [
+routes: [
   {
     path: "/person",
     name: "personlist",
