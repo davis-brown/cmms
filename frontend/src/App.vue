@@ -20,12 +20,14 @@
 
       
       <div class="d-flex align-center mr-2">
-        Church Membership Management System
+        <h2 class="font-weight-light">
+          Church Membership Management System
+        </h2>
       </div>
 
       <v-spacer></v-spacer>
 
-      <v-app-bar-nav-icon @click="drawer = true" right></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="drawer = true" right class="mr-4"></v-app-bar-nav-icon>
 
     </v-app-bar>
 
@@ -71,11 +73,14 @@ export default {
     return {
       drawer: false,
       items: [
-        { title: 'Home', icon: 'mdi-home', href:"/persons"},
-        { title: 'My Information', icon: 'mdi-account', href:"/persons"},
-        { title: 'My Groups', icon: 'mdi-account-group-outline', href:"/persons" },
-        { title: 'My Events', icon: 'mdi-account-group-outline', href:"/persons" },
-        
+        { title: 'Home', icon: 'mdi-home', href:"/home"},
+        { title: 'Church Information', icon: 'mdi-church', href:"/congregation"},
+        { title: 'Members', icon: 'mdi-account-box', href:"/members" },
+        { title: 'Families', icon: 'mdi-account-group', href:"/families" },
+        { title: 'Groups', icon: 'mdi-account-group-outline', href:"/groups" },
+        { title: 'LifeGroups', icon: 'mdi-home-group', href:"/lifegroups" },
+        { title: 'Events', icon: 'mdi-calendar', href:"/events" },
+       
       ],
     }
     
