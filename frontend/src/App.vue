@@ -72,6 +72,7 @@ export default {
       drawer: false,
       items: [
         { title: 'Home', icon: 'mdi-home', href:"/persons"},
+        { title: 'Families', icon: 'mdi-account-group-outline', href:"/families" },
         { title: 'My Information', icon: 'mdi-account', href:"/persons"},
         { title: 'My Groups', icon: 'mdi-account-group-outline', href:"/persons" },
         { title: 'My Events', icon: 'mdi-account-group-outline', href:"/persons" },
