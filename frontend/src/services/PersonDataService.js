@@ -3,7 +3,7 @@ import http from "../http-common";
 class PersonDataService {
 
 getAll() {
-    return http.get("/person")
+    return http.get("/person");
 }
 
 get(per_ID) {
@@ -15,12 +15,9 @@ create(data) {
 }
 
 update(per_ID, data) {
-    return http.put('person/${per_ID}');
+    return http.put(`person/${per_ID}`, data);
 }
 
 }
-
-
-
 
 export default new PersonDataService(); 

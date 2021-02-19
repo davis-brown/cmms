@@ -10,10 +10,10 @@ routes: [
   {
     path: "/person",
     name: "personlist",
-    component: () => import("./components/Person")
+    component: () => import("./components/PersonList")
   },
   {
-    path: "/personedit/:id",
+    path: "/personedit/:per_ID",
     name: "person-edit",
     component: () => import("./components/PersonEdit")
   },
