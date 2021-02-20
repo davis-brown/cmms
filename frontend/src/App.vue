@@ -74,7 +74,7 @@ export default {
       drawer: false,
       items: [
         { title: 'Home', icon: 'mdi-home', href:"/home"},
-        { title: 'Church Information', icon: 'mdi-church', href:"/congregation"},
+        { title: 'Congregation Information', icon: 'mdi-church', href:"/congregation"},
         { title: 'Members', icon: 'mdi-account-box', href:"/members" },
         { title: 'Families', icon: 'mdi-account-group', href:"/families" },
         { title: 'Groups', icon: 'mdi-account-group-outline', href:"/groups" },

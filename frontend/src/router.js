@@ -7,7 +7,7 @@ export default new Router({
   mode: "history",
   routes: [
     {
-      path: "/",
+      path: "/calendar",
       alias: "/calendar",
       name: "calendar",
       component: () => import("./components/Calendar")
