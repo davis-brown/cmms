@@ -4,7 +4,11 @@
   <v-row class="fill-height">
     
     <v-col>
-      <v-sheet height="64">
+      <v-sheet height="200">
+        <v-card :elevation="0" class=" d-flex justify-center mt-10 mb-10 loading tile">
+          <h1 class="font-weight-regular ">Events Calendar</h1>
+        </v-card>
+        
         <v-toolbar
           flat
           
