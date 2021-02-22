@@ -1,0 +1,64 @@
+<template>
+    <div>
+        <v-text-field
+        v-model="congregation.name"
+        :rules="[(v) => !! v || 'Name is required']"
+        label="Name"
+        required
+        ></v-text-field>
+
+        <v-text-field
+        v-model="congregation.address"
+        :rules="[(v) => !!v || 'Address is required']"
+        label="Address"
+        required
+        ></v-text-field>
+
+        <v-text-field
+        v-model="congregation.phone"
+        :rules="[(v) => !!v || 'Phone is required']"
+        label="Phone"
+        required
+        ></v-text-field>
+        <v-btn @click="updateCongregation">
+            Save
+        </v-btn>
+
+</template>
+
+<script>
+import CongregationService from "../serices/CongregationService";
+
+export default {
+    data(){
+        return{
+            currentCongregation: null,
+            message: 'Why null?'
+        };
+    },
+    methods: {
+        getCongregation(congregation_id){
+            CongregationService.get(congregation_id)
+            .then(response => {
+            this.currentCongregation=response.data;
+            console.log(response.data);
+
+        })
+        .catch(e=>{
+            console.log(e);
+        })
+    },
+    updateCongregation(){
+        CongregationService.update(this.currentCongregation.congregation_id, this.currentCongregation)
+        .then(response => {
+            console.log(response.data);
+            this.message='The congregation was updated successfully.';
+
+        })
+        .catch(e=>{
+            console.log(e);
+        });
+    }
+    }
+}
+</script>
