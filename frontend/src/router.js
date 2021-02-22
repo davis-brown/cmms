@@ -28,6 +28,7 @@ export default new Router({
       name: "familyedit",
       component: FamilyEdit
     },
+    {
       path: "/calendar",
       alias: "/calendar",
       name: "calendar",
