@@ -80,7 +80,7 @@ export default {
         { title: 'Groups', icon: 'mdi-account-group-outline', href:"/groups" },
         { title: 'LifeGroups', icon: 'mdi-home-group', href:"/lifegroups" },
         { title: 'Events Calendar', icon: 'mdi-calendar', href:"./Calendar" },
-       
+
       ],
     }
     
