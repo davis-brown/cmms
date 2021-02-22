@@ -3,6 +3,7 @@ import Router from "vue-router";
 import FamiliesList from "./views/FamiliesList"
 import FamilyAdd from "./views/FamilyAdd"
 import FamilyEdit from "./views/FamilyEdit"
+import Calendar from "./components/Calendar"
 
 Vue.use(Router);
 
@@ -26,7 +27,12 @@ export default new Router({
       path: "/familyedit",
       name: "familyedit",
       component: FamilyEdit
-    }
+    },
+      path: "/calendar",
+      alias: "/calendar",
+      name: "calendar",
+      component: Calendar
+    },
+  
   ]
 });
-    
