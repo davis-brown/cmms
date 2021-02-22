@@ -1,8 +1,9 @@
 module.exports = {
-  transpileDependencies: [
-    'vuetify'
-  ],
   devServer: {
-    port: 8081
-  }
+    host: 'localhost',
+  },
+  publicPath: process.env.NODE_ENV === 'development' ? '/' : '/congregation/',
+  "transpileDependencies": [
+    "vuetify"
+  ]
 }
