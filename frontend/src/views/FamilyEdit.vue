@@ -10,7 +10,7 @@
       ></v-text-field>
 
       <v-text-field
-        v-model="family.per_ID"
+        v-model="currentFamily.per_ID"
         label="Family Head ID"
         required
       ></v-text-field>
@@ -61,7 +61,7 @@ export default {
         .then(response => {
           console.log(response.data);
           this.message = 'The family was updated successfully!';
-          
+          this.$router.push({ name: 'familieslist' });
         })
         .catch(e => {
           console.log(e);
@@ -81,7 +81,7 @@ export default {
   },
   mounted() {
     this.message = '';
-    this.getFamily(this.$route.params.fam_ID);
+    this.getFamily(this.$route.params.id);
     
   }
 };

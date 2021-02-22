@@ -2,7 +2,7 @@
   <div class="submit-form mt-3 mx-auto">
     <H1>Add a family</H1>
 
-    <form @submit.prevent="saveStudent">
+    <form @submit.prevent="saveFamily">
 
       <v-text-field
         v-model="family.fam_name"

@@ -1,8 +1,19 @@
 <template>
 	<v-main>
       <v-container>
+		<v-btn
+			to="/familyadd"
+			class="mx-2"
+			fab
+			dark
+			color="blue darken-4"
+		>
+			<v-icon dark>
+				mdi-plus
+			</v-icon>
+		</v-btn>
         <v-row>
-          <v-col
+		<v-col
             v-for="family in families"
             :key="family.fam_ID"
             cols="4"
@@ -31,7 +42,7 @@
 				outlined
 				large
 				fab
-				color="indigo"
+				color="blue darken-4"
 				>
 				<v-icon>mdi-pencil</v-icon>
 				</v-btn>
