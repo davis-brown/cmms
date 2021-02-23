@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import CongregationServices from "../serices/CongregationServices.js";
+import CongregationServices from "../services/CongregationServices.js";
 
 export default {
     data(){
