@@ -2,20 +2,20 @@ import http from "../http-common";
 
 class PersonDataService {
 
-getAll() {
-    return http.get("/person");
+getAll(params) {
+    return http.get("/person", {params});
 }
 
-get(per_ID) {
-    return http.get(`person/${per_ID}`);
+get(id) {
+    return http.get(`person/${id}`);
 }
 
 create(data) {
     return http.post("person/", data);
 }
 
-update(per_ID, data) {
-    return http.put(`person/${per_ID}`, data);
+update(id, data) {
+    return http.put(`person/${id}`, data);
 }
 
 }

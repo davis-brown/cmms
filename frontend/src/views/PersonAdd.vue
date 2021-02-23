@@ -11,11 +11,6 @@
   <div class="submit-form mt-3 mx-auto">
     <H1>Add a member</H1>
     <form @submit.prevent="savePerson">
-      <v-text-field
-        v-model="person.per_ID"
-        label="Student ID"
-        required
-      ></v-text-field>
     
       <v-text-field
         v-model="person.fam_ID"

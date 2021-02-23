@@ -96,7 +96,7 @@
 
 
      </v-form>
-    <p>{{ message }}</p>
+<p>{{ message }}</p>
   </div>
 
   <div v-else>
@@ -113,7 +113,8 @@ export default {
   data() {
     return {
       currentPerson: null,
-      message: 'Why null?'
+       message: 'Why null?'
+     
     };
   },
   methods: {
@@ -132,23 +133,13 @@ export default {
         .then(response => {
           console.log(response.data);
           this.message = 'The Person was updated successfully!';
-          
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    },
-    deletePerson() {
-      PersonDataService.delete(this.currentPerson.per_ID)
-        .then(response => {
-          console.log(response.data);
-          this.$router.push({ name: "personlist" });
+          this.$router.push({ name: 'personlist' });
         })
         .catch(e => {
           console.log(e);
         });
     }
-  },
+    },
   mounted() {
     this.message = '';
     this.getPerson(this.$route.params.per_ID);
