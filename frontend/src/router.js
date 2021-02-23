@@ -13,7 +13,7 @@ routes: [
     component: () => import("./components/PersonList")
   },
   {
-    path: "/personedit/:per_ID",
+    path: "/personedit/:id",
     name: "person-edit",
     component: () => import("./components/PersonEdit")
   },
