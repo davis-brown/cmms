@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Router from "vue-router";
+import Router from "./router";
 import Congregation_Display from "./views/Congregation_Display"
 import CongregationEdit from "./views/CongregationEdit"
 

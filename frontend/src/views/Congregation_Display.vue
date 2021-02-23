@@ -26,7 +26,7 @@
     </div>
 </template>
 <script>
-import CongregationServices from "../services/CongregationServices";
+import CongregationServices from "../services/CongregationServices.js";
 export default{
     data(){
         return {

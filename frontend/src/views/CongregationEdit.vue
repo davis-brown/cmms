@@ -23,11 +23,11 @@
         <v-btn @click="updateCongregation">
             Save
         </v-btn>
-
+</div>
 </template>
 
 <script>
-import CongregationService from "../serices/CongregationService";
+import CongregationServices from "../serices/CongregationServices.js";
 
 export default {
     data(){
@@ -38,7 +38,7 @@ export default {
     },
     methods: {
         getCongregation(congregation_id){
-            CongregationService.get(congregation_id)
+            CongregationServices.get(congregation_id)
             .then(response => {
             this.currentCongregation=response.data;
             console.log(response.data);
@@ -49,7 +49,7 @@ export default {
         })
     },
     updateCongregation(){
-        CongregationService.update(this.currentCongregation.congregation_id, this.currentCongregation)
+        CongregationServices.update(this.currentCongregation.congregation_id, this.currentCongregation)
         .then(response => {
             console.log(response.data);
             this.message='The congregation was updated successfully.';

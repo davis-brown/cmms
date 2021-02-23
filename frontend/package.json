@@ -9,8 +9,11 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "common": "^0.2.5",
     "core-js": "^3.6.5",
+    "http": "0.0.1-security",
     "vue": "^2.6.11",
+    "vue-router": "^3.5.1",
     "vuetify": "^2.4.4"
   },
   "devDependencies": {
