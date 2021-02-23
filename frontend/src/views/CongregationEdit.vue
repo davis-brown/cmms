@@ -33,7 +33,7 @@ export default {
     data(){
         return{
             currentCongregation: null,
-            message: 'Why null?'
+            message: ''
         };
     },
     methods: {
