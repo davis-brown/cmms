@@ -1,4 +1,3 @@
-
 <template>
 <div id="app">
     <div id="nav">
@@ -9,7 +8,9 @@
     <router-view />
     </div>
 </template>
-<script></script>
+<script>
+
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
