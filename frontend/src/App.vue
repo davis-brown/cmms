@@ -79,7 +79,7 @@ export default {
         { title: 'Families', icon: 'mdi-account-group', href:"/families" },
         { title: 'Groups', icon: 'mdi-account-group-outline', href:"/groups" },
         { title: 'LifeGroups', icon: 'mdi-home-group', href:"/lifegroups" },
-        { title: 'Events Calendar', icon: 'mdi-calendar', href:"./Calendar" },
+        { title: 'Events Calendar', icon: 'mdi-calendar', href:"/calendar" },
 
       ],
     }
