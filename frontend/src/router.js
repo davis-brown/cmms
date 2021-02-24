@@ -29,10 +29,24 @@ export default new Router({
     },
     {
       path: "/calendar",
-      alias: "/calendar",
       name: "calendar",
       component: Calendar
     },
+    {
+      path: "/person",
+      name: "personlist",
+      component: () => import("./views/PersonList")
+    },
+    {
+      path: "/personedit",
+      name: "person-edit",
+      component: () => import("./views/PersonEdit")
+    },
+    {
+      path: "/personadd",
+      name: "personadd",
+      component: () => import("./views/PersonAdd")
+    }
   
   ]
 });
