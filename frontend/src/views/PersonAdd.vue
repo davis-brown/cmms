@@ -94,7 +94,8 @@ import PersonDataService from "../services/PersonDataService";
 export default {
   data() {
     return {
-      person: {}
+      person: {},
+      people: {}
   
     };
   },

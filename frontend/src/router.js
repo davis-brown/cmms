@@ -29,24 +29,23 @@ export default new Router({
     },
     {
       path: "/calendar",
-      alias: "/calendar",
       name: "calendar",
       component: Calendar
     },
     {
       path: "/person",
       name: "personlist",
-      component: () => import("./components/PersonList")
+      component: () => import("./views/PersonList")
     },
     {
-      path: "/personedit/:id",
+      path: "/personedit",
       name: "person-edit",
-      component: () => import("./components/PersonEdit")
+      component: () => import("./views/PersonEdit")
     },
     {
       path: "/personadd",
       name: "personadd",
-      component: () => import("./components/PersonAdd")
+      component: () => import("./views/PersonAdd")
     }
   
   ]

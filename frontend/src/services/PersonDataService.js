@@ -17,6 +17,9 @@ create(data) {
 update(id, data) {
     return http.put(`person/${id}`, data);
 }
+delete(id) {
+    return http.delete(`person/${id}`);
+  }
 
 }
 

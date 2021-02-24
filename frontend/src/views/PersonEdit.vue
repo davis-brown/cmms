@@ -113,7 +113,7 @@ export default {
   data() {
     return {
       currentPerson: null,
-       message: 'Why null?'
+  
      
     };
   },
@@ -138,11 +138,22 @@ export default {
         .catch(e => {
           console.log(e);
         });
+    },
+    deletePerson() {
+      PersonDataService.delete(this.currentPerson.per_ID)
+        .then(response => {
+          console.log(response.data);
+          this.$router.push({ name: "personlist" });
+        })
+        .catch(e => {
+          console.log(e);
+        });
     }
+
     },
   mounted() {
     this.message = '';
-    this.getPerson(this.$route.params.per_ID);
+    this.getPerson(this.$route.params.id);
     
   }
 };
