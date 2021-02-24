@@ -63,8 +63,6 @@ import FamilyService from "../services/FamilyService";
 
 export default {
 	name: 'Families-List',
-    
-    props :["id"],
     data() {
         return {
             families: {}
