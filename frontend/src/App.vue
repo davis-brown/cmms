@@ -1,8 +1,6 @@
 <template>
   <v-app>
-    <v-card
-     height="1000"
-     >
+    
 
     <v-app-bar app
       color="blue darken-4"
@@ -16,10 +14,7 @@
       align
 
       />
-
-
-      
-      <div class="d-flex align-center mr-2">
+     <div class="d-flex align-center mr-2">
         <h2 class="font-weight-light">
           Church Membership Management System
         </h2>
@@ -61,7 +56,7 @@
     <v-main>
       <router-view />
     </v-main>
-    </v-card>
+
   </v-app>
 </template>
 
