@@ -1,24 +1,20 @@
 <template>
 <div>
     <v-text-field
-    v-model="currentCongregation.congregation_id"
+    v-model="currentCongregation.con_ID"
     label="Congregation ID"
     ></v-text-field>
 
     <v-text-field
-    v-model="currentCongregation.name"
+    v-model="currentCongregation.con_name"
     label="Congregation Name"
     ></v-text-field>
 
     <v-text-field
-    v-model="currentCongregation.address"
+    v-model="currentCongregation.con_address"
     label="Congregation Address"
     ></v-text-field>
 
-    <v-text-field
-    v-model="currentCongregation.phone"
-    label="Congregation Phone"
-    ></v-text-field>
 
     <v-btn @click="editCongregation">
         Edit
@@ -35,8 +31,8 @@ export default{
         };
         },
         methods: {
-            getCongregation(congregation_id){
-                CongregationServices.get(congregation_id)
+            getCongregation(con_ID){
+                CongregationServices.get(con_ID)
                 .then(response => {
                     this.currentCongregation = response.data;
                     console.log(response.data);
@@ -47,7 +43,7 @@ export default{
             }
         },
         mounted(){
-            this.getCongregation(this.$route.params.congregation_id);
+            this.getCongregation(this.$route.params.con_ID);
         }
 
     };

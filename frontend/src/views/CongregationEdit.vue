@@ -1,25 +1,19 @@
 <template>
     <div>
         <v-text-field
-        v-model="congregation.name"
+        v-model="congregation.con_name"
         :rules="[(v) => !! v || 'Name is required']"
         label="Name"
         required
         ></v-text-field>
 
         <v-text-field
-        v-model="congregation.address"
+        v-model="congregation.con_address"
         :rules="[(v) => !!v || 'Address is required']"
         label="Address"
         required
         ></v-text-field>
 
-        <v-text-field
-        v-model="congregation.phone"
-        :rules="[(v) => !!v || 'Phone is required']"
-        label="Phone"
-        required
-        ></v-text-field>
         <v-btn @click="updateCongregation">
             Save
         </v-btn>
@@ -37,8 +31,8 @@ export default {
         };
     },
     methods: {
-        getCongregation(congregation_id){
-            CongregationServices.get(congregation_id)
+        getCongregation(con_ID){
+            CongregationServices.get(con_ID)
             .then(response => {
             this.currentCongregation=response.data;
             console.log(response.data);
@@ -49,7 +43,7 @@ export default {
         })
     },
     updateCongregation(){
-        CongregationServices.update(this.currentCongregation.congregation_id, this.currentCongregation)
+        CongregationServices.update(this.currentCongregation.con_ID, this.currentCongregation)
         .then(response => {
             console.log(response.data);
             this.message='The congregation was updated successfully.';
