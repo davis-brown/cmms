@@ -11,7 +11,7 @@
     ></v-text-field>
 
     <v-text-field
-    v-model="currentCongregation.con_address"
+    v-model="currentCongregation.con_addrs"
     label="Congregation Address"
     ></v-text-field>
 

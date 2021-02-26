@@ -8,7 +8,7 @@
         ></v-text-field>
 
         <v-text-field
-        v-model="congregation.con_address"
+        v-model="congregation.con_addrs"
         :rules="[(v) => !!v || 'Address is required']"
         label="Address"
         required
