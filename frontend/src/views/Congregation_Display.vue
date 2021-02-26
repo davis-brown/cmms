@@ -3,7 +3,7 @@
     <v-text-field
     v-model="currentCongregation.con_ID"
     label="Congregation ID"
-    ></v-text-field>
+    ></v-text-field> 
 
     <v-text-field
     v-model="currentCongregation.con_name"
@@ -23,10 +23,11 @@
 </template>
 <script>
 import CongregationServices from "../services/CongregationServices.js";
+
 export default{
     data(){
         return {
-            currentCongregation: null,
+            currentCongregation: {},
             message: ''
         };
         },
@@ -35,15 +36,19 @@ export default{
                 CongregationServices.get(con_ID)
                 .then(response => {
                     this.currentCongregation = response.data;
-                    console.log(response.data);
+                    console.log("congregation"+this.currentCongregation.con_ID+this.currentCongregation.con_name);
                 })
                 .catch(e => {
                     console.log(e);
                 });
+            },
+            editCongregation(){
+
             }
         },
+
         mounted(){
-            this.getCongregation(this.$route.params.con_ID);
+            this.getCongregation(1);
         }
 
     };
