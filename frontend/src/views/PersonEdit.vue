@@ -87,11 +87,9 @@
 
       <v-divider class="my-5"></v-divider>
 
-      <v-btn color="error" small class="mr-2" @click="deletePerson">
-        Delete
-      </v-btn>
+    
     <v-btn color="success" small @click="updatePerson">
-        Update
+        Submit
       </v-btn>
 
 
