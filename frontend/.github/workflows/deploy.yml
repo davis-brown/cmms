@@ -14,7 +14,6 @@ jobs:
               with:
                   ref: dev-branch
             - uses: actions/setup-node@v1
-            - run: npm run bundle
             - run: npm install
             - run: npm run build
             - name: Deploy to Server
@@ -26,3 +25,13 @@ jobs:
                     REMOTE_HOST: 'example.com'
                     REMOTE_USER: ubuntu
                     TARGET: '/var/www/html'
+            - name: Execute SSH commmands on remote server
+              uses: JimCronqvist/action-ssh@master
+              env:
+                  NAME: 'Root'
+              with:
+                  hosts: 'ubuntu@example.com'
+                  privateKey: ${{ secrets.SERVER_SSH_KEY }}
+                  debug: false
+                  command: |
+                      sudo cp /var/www/.htaccess /var/www/html/.htaccess
