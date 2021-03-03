@@ -15,6 +15,36 @@
         required
       ></v-text-field>
 
+      <v-data-table
+        :headers="headers"
+        :items="familyPersons"
+        hide-default-footer
+        class="elevation - 1">
+        <template v-slot:item.actions="{ item }">
+            <v-icon
+              small
+              class="mr-2"
+              @click="deleteMajorForCourse(item)"
+            >
+              Delete
+            </v-icon>
+        </template>
+      </v-data-table>
+      <v-row justify="center">
+        <v-col col="2">  
+              <v-btn color="success" @click="addMajorForCourse()"
+                  >Add</v-btn
+              >
+        </v-col>
+        <v-col justify="left" col="2"> 
+            <v-select :items="majors"
+              label="Major"
+              item-text ="major_name"
+              item-value= "major_id" 
+              v-model="major.major_id" />
+        </v-col>
+      </v-row>
+
       <v-divider class="my-5"></v-divider>
 
       <v-btn color="error" small class="mr-2" @click="deleteFamily">
@@ -37,11 +67,14 @@
 
 <script>
 import FamilyService from "../services/FamilyService";
+import PersonDataService from "../services/PersonDataService";
+import FamilypersonService from "../services/FamilypersonService";
 
 export default {
   data() {
     return {
-      currentFamily: null
+      currentFamily: null,
+      headers
     };
   },
   methods: {
