@@ -1,6 +1,7 @@
 const db = require("../models");
 const Family = db.family;
 
+
 // Create and Save a new Major
 exports.create = (req, res) => {
     if (!req.body) {
