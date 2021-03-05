@@ -89,7 +89,7 @@
 <script>
 import FamilyService from "../services/FamilyService";
 import PersonDataService from "../services/PersonDataService";
-import FamilyPersonService from "@/services/FamilyPersonService";
+import FamilyPersonService from "../services/FamilyPersonService";
 
 export default {
   data() {
