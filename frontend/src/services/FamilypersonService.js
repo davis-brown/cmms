@@ -1,8 +1,8 @@
 import http from "../http-common";
 
-class FamilypersonService {
-  getFamilies(params) {
-    return http.get("/familyperson", {params});
+class FamilyPersonService {
+  getFamilyPersons(id) {
+    return http.get("/familyperson?family=" + id);
   }
 
   get(id) {
@@ -26,4 +26,4 @@ class FamilypersonService {
   }
 }
 
-export default new FamilypersonService();
+export default new FamilyPersonService();
