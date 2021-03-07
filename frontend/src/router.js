@@ -4,7 +4,8 @@ import FamiliesList from "./views/FamiliesList"
 import FamilyAdd from "./views/FamilyAdd"
 import FamilyEdit from "./views/FamilyEdit"
 import Calendar from "./components/Calendar"
-
+import Congregation_Display from "./views/Congregation_Display"
+import CongregationEdit from "./views/CongregationEdit"
 Vue.use(Router);
 
 export default new Router({
@@ -46,7 +47,17 @@ export default new Router({
       path: "/personadd",
       name: "personadd",
       component: () => import("./views/PersonAdd")
-    }
+    },
+    {
+      path: "/congregation",
+      name: "congregationdisplay",
+      component: Congregation_Display
+  },
+  {
+      path: "/congregationedit",
+      name: "congregationedit",
+      component: CongregationEdit
+  },
   
   ]
 });
