@@ -24,4 +24,14 @@ jobs:
                     SOURCE: 'dist/'
                     REMOTE_HOST: 'example.com'
                     REMOTE_USER: ubuntu
-                    TARGET: '/var/www/html/congregation'
+                    TARGET: '/var/www/html'
+            - name: Execute SSH commmands on remote server
+              uses: JimCronqvist/action-ssh@master
+              env:
+                  NAME: 'Root'
+              with:
+                  hosts: 'ubuntu@example.com'
+                  privateKey: ${{ secrets.SERVER_SSH_KEY }}
+                  debug: false
+                  command: |
+                      sudo cp /var/www/.htaccess /var/www/html/.htaccess
