@@ -7,75 +7,58 @@
     <v-btn to="/personadd" class="add-button" text-lg-right>
          <v-icon dark> mdi-plus </v-icon>
      </v-btn>
-
-     <v-row>
-         <v-col
-         v-for="person in people"
-         :key="person.per_ID"
-         cols="10"
-
-         >
                 
   <v-card
     class="mx-auto"
-    max-width="600"
-    elevation="5"
-    height="200"
+    max-width="1000"
+    elevation="3"
+    height="600"
     outlined
-    shaped
     >
-           
     <v-card-title>
-      {{person.per_ID}}
-      <br>
-      <h3> <br> Name:</h3> 
-      <br>{{person.frst_name}} {{person.last_name}}
-      
-      </v-card-title>
-      <v-card-subtitle>
-      <h3> Baptised: {{person.bapt_date}}</h3>
-        {{person.employer}}
-  <!--v-data-table
-      :headers="headers"
-      :items="person"
-      :search="search"
-      @click:row="editPerson(person)"
-    ></v-data-table-->
-       <v-card-actions>
-				<v-btn
-				@click="editPerson(person)"
-				class="ma"
-				outlined
-        top
-				medium
-				fab
-				color="blue darken"
-				>
-				<v-icon>mdi-pencil</v-icon>
-				</v-btn>
-       </v-card-actions>
-        </v-card-subtitle>
-         </v-card> 
-         </v-col>
-          </v-row>
-      <!--v-text-field
+      <v-text-field
         v-model="search"
         append-icon="mdi-magnify"
         label="Search"
         single-line
         hide-details
       ></v-text-field>
+    </v-card-title>
+   
   <v-data-table
       :headers="headers"
-      :items="people"
-      hide-default-footer
+      :items="person"
+      :single-expand="singleExpand"
+      :expanded.sync="expanded"
+      item-key="per_ID"
+      show-expand
       :items-per-page="30"
-      mobile-breakpoint="0"
-      @click:row="editPerson(person)"
-  >
- 
-  </v-data-table-->
+      class="elevation-1"
+      :search="search"
+     
+    >
 
+<template v-slot:expanded-item="{ headers, item }">
+      <td :colspan="headers.length">
+        {{ item.per_ID }}
+        <v-card-actions>
+				<v-btn
+				@click="editPerson(item)"
+				class="ma"
+				outlined
+        top
+				small
+				fab
+				color="blue darken"
+				>
+				<v-icon>mdi-pencil</v-icon>
+				</v-btn>
+       </v-card-actions>
+      </td>
+
+    </template>
+    </v-data-table>
+    </v-card> 
     </v-container>
 </v-main>
 </template>
@@ -83,48 +66,92 @@
 <script>
 import PersonDataService from "../services/PersonDataService";
   export default {
-    name: 'personlist',
-    props: ["id"],
-  
-   
 
   data() {
         return { 
-         people: {},
-         /**search: '',
+        search: '',
+         person: [],
+         singleExpand: false,
+         expanded: [],
             headers: [
               {
                     text: 'ID',
-                    value: 'person.per_ID',
-                    align: 'left',
-                    sortable: true,
-                    width: "1%"
-
+                    value: 'per_ID',
+                    align: 'start',
+                    width: "2%"
               },
                 {
-                    text: 'First Name',
-                    value: 'persons.frst_name' + 'person.last_name',
+                    text: 'Member',
+                    value: 'frst_name',
+                    align: 'left',
+                    sortable: true,
+                    width: "3%"
+                },
+                  {
+                    value: 'last_name',
+                    align: 'left',
+                    sortable: true,
+                    width: "3%"
+                },
+                  {
+                    text: 'Birthday',
+                    value: 'bday',
+                    align: 'left',
+                    sortable: true,
+                    width: "7%"
+                },
+                  {
+                    text: 'Baptism ',
+                    value: 'baptised',
+                    align: 'left',
+                    sortable: true,
+                    width: "1%"
+                },
+                  {
+                    
+                    value: 'bapt_date',
+                    align: 'left',
+                    sortable: true,
+                    width: "7%"
+                },
+                {
+                    text: 'Employer',
+                    value: 'employer',
+                    align: 'left',
+                    sortable: true,
+                    width: "4%"
+                },
+                 {
+                    text: 'Publish Permission',
+                    value: 'pub_permission',
                     align: 'left',
                     sortable: true,
                     width: "1%"
                 },
                 {
-                    text: 'Family',
-                    value: 'person.fam_ID',
+                    text: 'Church Position',
+                    value: 'church_pos',
                     align: 'left',
-                    sortable: false,
+                    sortable: true,
                     width: "1%"
                 },
+                 {
+                    text: 'Edit',
+                    value: 'data-table-expand',
+                    align: 'right',
+                    width: "1%"
+                },
+              
             ],
-            message: 'Enter click on course to edit'
-            */
+            message: 'Enter click on Member to edit'
+           
         };
     },
     created() {
         PersonDataService.getAll()
             .then(response => {
-                this.people = response.data;
-                console.log(this.people);
+                this.person = response.data;
+                console.log(this.person);
             })
             .catch(error => {
                 this.message = error.response.data.message;

@@ -23,6 +23,7 @@ firebase.initializeApp({
 
 export const db = firebase.firestore();
 
+Vue.config.productionTip = false;
 new Vue({
   router,
   vuetify,
