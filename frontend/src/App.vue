@@ -16,7 +16,7 @@
       />
      <div class="d-flex align-center mr-2">
         <h2 class="font-weight-light">
-          Church Membership Management System
+          Church Membership System
         </h2>
       </div>
 
@@ -28,7 +28,7 @@
 
       <v-navigation-drawer
         v-model="drawer"
-        fixed
+        absolute
         temporary
         right
       >

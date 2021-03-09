@@ -174,7 +174,7 @@ h4 {
   text-align: center;
 }
 .edit-form {
-  max-width: 600px;
+  max-width: 400px;
   margin: auto;
 }
 </style>
