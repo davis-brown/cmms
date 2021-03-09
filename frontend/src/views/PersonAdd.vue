@@ -32,7 +32,7 @@
         label="Last Name"
         required
       ></v-text-field>
-      <v-text-field
+      <!--<v-text-field
         v-model="person.user_name"
         label="User Name"
         required
@@ -46,7 +46,7 @@
         v-model="person.password"
         label="Password"
         required
-      ></v-text-field>
+      ></v-text-field> -->
       <v-text-field
         v-model="person.bday"
         label="Birthday YYYY-MM-DD"
@@ -76,11 +76,11 @@
         label="Position in Church"
         required
       ></v-text-field>
-       <v-text-field
+       <!--<v-text-field
         v-model="person.fam_pos"
         label="Position in Family"
         required
-      ></v-text-field>
+      ></v-text-field> -->
        </form>
       <v-btn color="primary" class="offset-sm4 mt-3" @click="savePerson">Submit</v-btn>
       <v-btn color="primary" class="mt-3" @click="cancel">Cancel</v-btn>

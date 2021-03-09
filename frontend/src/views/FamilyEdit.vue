@@ -24,7 +24,7 @@
         :items="familyPersons"
         hide-default-footer
         class="elevation - 1">
-        <template v-slot:item.actions="{ item }">
+        <template v-slot:item="{ item }">
             <v-icon
               small
               class="mr-2"
@@ -233,7 +233,7 @@ h4 {
   text-align: center;
 }
 .edit-form {
-  max-width: 300px;
+  max-width: 600px;
   margin: auto;
 }
 </style>

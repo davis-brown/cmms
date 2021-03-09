@@ -3,16 +3,22 @@
 <v-container>
 
      <h1>Members of the Congregation </h1>
-
-    <v-btn to="/personadd" class="add-button" text-lg-right>
-         <v-icon dark> mdi-plus </v-icon>
-     </v-btn>
-                
+	<v-btn
+			to="/personadd"
+			class="mr-4"
+			dark
+			color="primary"
+		>
+    New Member
+		</v-btn>
+      <v-spacer>  </v-spacer> 
+  
+      <v-spacer>  </v-spacer> 
   <v-card
     class="mx-auto"
     max-width="1000"
     elevation="3"
-    height="600"
+    height="1000"
     outlined
     >
     <v-card-title>
@@ -24,7 +30,7 @@
         hide-details
       ></v-text-field>
     </v-card-title>
-   
+  
   <v-data-table
       :headers="headers"
       :items="person"
@@ -32,15 +38,12 @@
       :expanded.sync="expanded"
       item-key="per_ID"
       show-expand
-      :items-per-page="30"
       class="elevation-1"
       :search="search"
-     
+    
     >
-
-<template v-slot:expanded-item="{ headers, item }">
+<template v-slot:expanded-item="{ item }">
       <td :colspan="headers.length">
-        {{ item.per_ID }}
         <v-card-actions>
 				<v-btn
 				@click="editPerson(item)"
@@ -55,7 +58,6 @@
 				</v-btn>
        </v-card-actions>
       </td>
-
     </template>
     </v-data-table>
     </v-card> 

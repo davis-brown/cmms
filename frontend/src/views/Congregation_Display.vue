@@ -1,5 +1,9 @@
 <template>
-<div>
+    <v-main>
+<v-container>
+
+     <h1>Congregation Information</h1>
+
     <v-text-field
     v-model="currentCongregation.con_ID"
     label="Congregation ID"
@@ -19,8 +23,11 @@
     <v-btn @click="editCongregation">
         Edit
     </v-btn>
-    </div>
+
+</v-container>
+</v-main>
 </template>
+
 <script>
 import CongregationServices from "../services/CongregationServices.js";
 
