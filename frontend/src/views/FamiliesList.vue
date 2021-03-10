@@ -1,17 +1,15 @@
 <template>
 	<v-main>
       <v-container>
+		<h1>Families of the Congregation </h1>
 		<v-btn
-			to="/familyadd"
-			class="mx-2"
-			fab
-			dark
-			color="blue darken-4"
-		>
-			<v-icon dark>
-				mdi-plus
-			</v-icon>
-		</v-btn>
+            class="mr-4"
+            color="primary"
+            to="/familyadd"
+            dark
+          >
+            New Family
+          </v-btn>
         <v-row>
 		<v-col
             v-for="family in families"
@@ -20,10 +18,9 @@
           >
             <v-card
 				class="mx-auto"
-				max-width="344"
 			>
 				<v-img
-				src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
+				src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fc1.staticflickr.com%2F1%2F40%2F82164251_077fa70150_z.jpg%3Fzz%3D1&f=1&nofb=1xx`"
 				height="200px"
 				></v-img>
 
@@ -40,7 +37,6 @@
 				@click="editFamily(family)"
 				class="ma-2"
 				outlined
-				large
 				fab
 				color="blue darken-4"
 				>
