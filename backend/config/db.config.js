@@ -1,7 +1,7 @@
 module.exports = {
   HOST: 'localhost',
   USER: 'root',
-  PASSWORD: 'REMOVED',
+  PASSWORD: '',
   DB: 'congregations',
   dialect: 'mysql',
   pool: {
