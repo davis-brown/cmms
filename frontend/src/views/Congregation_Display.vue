@@ -1,31 +1,63 @@
 <template>
-    <v-main>
+<v-main>
 <v-container>
+    <h1>Congregation Information</h1>
+     <v-btn
+			to="/congregationadd"
+			class="mr-4"
+			dark
+			color="primary"
+		>
+    Add Congregation
+		</v-btn>
+        <v-row
+        align="center">
+		<v-col
+            v-for="congregation in congregations"
+            :key="congregation.con_ID"
+            cols="12"
+            align="center"
+          >
 
-     <h1>Congregation Information</h1>
+  <v-card
+  class="mx-auto"
+  max-width="544"
+    
+  >
+  <v-spacer></v-spacer>
+  <v-card-title primary-title class="justify-center">
 
-    <v-text-field
-    v-model="currentCongregation.con_ID"
-    label="Congregation ID"
-    ></v-text-field> 
+    <h2>{{congregation.con_name}}</h2>
+    </v-card-title>
+<v-spacer></v-spacer>
+  <v-card-subtitle>
+    <h3>
+    Congregation Address
+       <v-divider></v-divider>
+   {{congregation.con_addrs}} 
+   </h3>
+</v-card-subtitle>
+    
+      <v-card-actions>
+      <v-btn
+				@click="editCongregation(congregation)"
+				class="ma-2"
+				outlined
+				large
+				fab
+				color="blue darken-4"
+				>
+				<v-icon>mdi-pencil</v-icon>
+				</v-btn>
+        <v-spacer></v-spacer>
+        </v-card-actions>
+   
+      </v-card>
 
-    <v-text-field
-    v-model="currentCongregation.con_name"
-    label="Congregation Name"
-    ></v-text-field>
-
-    <v-text-field
-    v-model="currentCongregation.con_addrs"
-    label="Congregation Address"
-    ></v-text-field>
-
-
-    <v-btn @click="editCongregation">
-        Edit
-    </v-btn>
-
-</v-container>
-</v-main>
+       </v-col>
+       </v-row>
+ </v-container>
+    </v-main>
 </template>
 
 <script>
@@ -34,29 +66,42 @@ import CongregationServices from "../services/CongregationServices.js";
 export default{
     data(){
         return {
-            currentCongregation: {},
-            message: ''
+          
+            congregations: {}
         };
-        },
-        methods: {
-            getCongregation(con_ID){
-                CongregationServices.get(con_ID)
-                .then(response => {
-                    this.currentCongregation = response.data;
-                    console.log("congregation"+this.currentCongregation.con_ID+this.currentCongregation.con_name);
+      },
+        created() {
+            CongregationServices.getAll()
+               .then(response => {
+                    this.congregations = response.data;
+                    console.log(this.congregations);
                 })
-                .catch(e => {
-                    console.log(e);
+                .catch(error => {
+                    this.message = error.response.data.message;
                 });
             },
-            editCongregation(){
+       methods: {
+         editCongregation(congregation){
+            this.$router.push({ name: 'congregationedit', params: { id: congregation.con_ID } });
+
 
             }
-        },
-
-        mounted(){
-            this.getCongregation(1);
         }
 
-    };
+       };
+       
+
     </script>
+
+<style>
+.list {
+	text-align: left;
+	max-width: 1400px;
+	margin: fixed;
+}
+
+.add-button {
+	margin-left:71%; 
+	margin-right:0;
+}
+</style>
