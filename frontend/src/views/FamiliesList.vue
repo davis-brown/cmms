@@ -41,11 +41,7 @@
 				color="blue darken-4"
 				>
 				<v-icon>mdi-pencil</v-icon>
-				</v-btn>
-
-				<v-spacer></v-spacer>
-
-				
+				</v-btn>				
 				</v-card-actions>
 			</v-card>
           </v-col>

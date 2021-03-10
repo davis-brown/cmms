@@ -1,7 +1,5 @@
 <template>
   <v-app>
-    
-
     <v-app-bar app
       color="blue darken-4"
       height="100"
@@ -16,7 +14,7 @@
       />
      <div class="d-flex align-center mr-2">
         <h2 class="font-weight-light">
-          Church Membership Management System
+          Church Membership System
         </h2>
       </div>
 

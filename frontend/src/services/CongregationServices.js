@@ -1,20 +1,23 @@
 import http from "../http-common";
 
 class CongregationServices {
-  getAll() {
-    return http.get("/congregation");
+  getAll(params) {
+    return http.get("/congregation", {params});
   }
 
-  get(congregation_id) {
-    return http.get(`congregation/${congregation_id}`);
+  get(id) {
+    return http.get(`congregation/${id}`);
   }
 
   create(data) {
     return http.post("congregation/", data);
   }
 
-  update(congregation_id, data) {
-    return http.put(`congregation/${congregation_id}`, data);
+  update(id, data) {
+    return http.put(`congregation/${id}`, data);
+  }
+  delete(id) {
+    return http.delete(`congregation/${id}`);
   }
 
  

@@ -58,6 +58,12 @@ export default new Router({
       name: "congregationedit",
       component: CongregationEdit
   },
+  {
+    path: "/congregationadd",
+    name: "congregationadd",
+    component: () => import("./views/CongregationAdd")
+
+  }
   
   ]
 });

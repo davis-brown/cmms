@@ -26,7 +26,7 @@
         label="Last Name"
         required
       ></v-text-field>
-      <v-text-field
+      <!--<v-text-field
         v-model="currentPerson.user_name"
         :rules="[(v) => !!v || 'User Name is required']"
         label="User Name"
@@ -44,6 +44,7 @@
         label="Password"
         required
       ></v-text-field>
+      -->
       <v-text-field
         v-model="currentPerson.bday"
         :rules="[(v) => !!v || 'Birthday is required']"
@@ -72,25 +73,32 @@
         label="Publishing Permission "
         required
       ></v-text-field>
+      <!--
       <v-text-field
         v-model="currentPerson.church_pos"
         :rules="[(v) => !!v || 'Church Position is required']"
         label="Position in the Church "
         required
       ></v-text-field>
-      <v-text-field
+        -->
+      <!--<v-text-field
         v-model="currentPerson.fam_pos"
         :rules="[(v) => !!v || 'Family Position is required']"
         label="Position in the Family "
         required
-      ></v-text-field>
+      ></v-text-field>-->
 
-      <v-divider class="my-5"></v-divider>
+
 
     
     <v-btn color="success" small @click="updatePerson">
         Submit
       </v-btn>
+
+    <v-btn color="primary" small @click="cancel">
+        Cancel
+      </v-btn>
+        
 
 
      </v-form>
@@ -125,6 +133,9 @@ export default {
         .catch(e => {
           console.log(e);
         });
+    },
+     cancel() {
+      this.$router.push({ name: "personlist" });
     },
     updatePerson() {
       PersonDataService.update(this.currentPerson.per_ID, this.currentPerson)
@@ -163,7 +174,7 @@ h4 {
   text-align: center;
 }
 .edit-form {
-  max-width: 300px;
+  max-width: 400px;
   margin: auto;
 }
 </style>
