@@ -60,9 +60,9 @@
             ></v-text-field>
         </v-col>
         <v-col col="3">  
-              <v-btn color="success" @click="addPersonForFamily()"
-                  >Add</v-btn
-              >
+              <v-btn color="success" @click="addPersonForFamily()" center>
+                Add
+              </v-btn>
         </v-col>
       </v-row>
 
@@ -233,7 +233,7 @@ h4 {
   text-align: center;
 }
 .edit-form {
-  max-width: 300px;
+  max-width: 400px;
   margin: auto;
 }
 </style>
