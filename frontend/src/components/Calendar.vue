@@ -226,9 +226,25 @@ export default {
             snapshot.forEach(doc => {
                 let appData = doc.data();
                 appData.id = doc.id;
+                //start
+                let datelength = appData.start.length;
+                var changemonth = appData.start.substr(datelength-5);
+                var changeyear = appData.start.substr(0,4);
+                var newdate = changeyear + "-" + changemonth;
+                //end
+                let datelengthE = appData.start.length;
+                var changemonthE = appData.start.substr(datelengthE-5);
+                var changeyearE = appData.start.substr(0,4);
+                var newdateE = changeyearE + "-" + changemonthE;
+                appData.start = newdate;
+                appData.end = newdateE;
                 events.push(appData);
+
             });
             this.events =events;
+
+
+            console.log(events);
         },
 
         async addEvent() {
