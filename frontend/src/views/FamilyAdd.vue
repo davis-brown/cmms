@@ -36,7 +36,7 @@
         </template>
       </v-data-table>
 
-      <v-row justify="center">
+      <v-row justify="center" align="center">
         <v-col justify="left" col="1"> 
             <v-autocomplete
                 v-model="familyPerson.per_ID"
@@ -60,7 +60,7 @@
               required
             ></v-text-field>
         </v-col>
-        <v-col col="3">  
+        <v-col align="center" col="3">  
               <v-btn color="success" @click="addPersonForTable()"
                   >Add</v-btn
               >
@@ -71,10 +71,18 @@
 
     </form>
   <v-divider class="my-5"></v-divider>
-      <v-btn color="primary" class="mt-3" @click="saveFamily">Submit</v-btn>
-
-      <v-btn color="primary" class="mt-3" @click="cancel">Cancel</v-btn>
-
+    <v-row justify="center">
+      <v-col justify="left" col="1"> 
+        <v-btn color="error" @click="cancel">
+          Cancel
+        </v-btn>
+      </v-col>
+      <v-col justify="right" col="2"> 
+        <v-btn class= "float-right" color="success" @click="saveFamily">
+          Save
+        </v-btn>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
