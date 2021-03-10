@@ -34,8 +34,8 @@ import CongregationServices from "../services/CongregationServices.js";
 
 export default {
     data(){
-        return{
-            currentCongregation: null
+        return {
+            currentCongregation: null,
         };
     },
     methods: {
@@ -46,7 +46,7 @@ export default {
             console.log(response.data);
 
         })
-        .catch(e=>{
+        .catch(e => {
             console.log(e);
         })
     },
@@ -55,9 +55,9 @@ export default {
         .then(response => {
             console.log(response.data);
             this.message='The congregation was updated successfully.';
-
+              this.$router.push({ name: 'congregationdisplay' });
         })
-        .catch(e=>{
+        .catch(e => {
             console.log(e);
         });
         },

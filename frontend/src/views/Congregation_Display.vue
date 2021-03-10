@@ -63,10 +63,9 @@
 <script>
 import CongregationServices from "../services/CongregationServices.js";
 
-export default{
+export default {
     data(){
         return {
-          
             congregations: {}
         };
       },
