@@ -44,6 +44,7 @@
       ></v-text-field>
       <v-text-field
         v-model="person.password"
+        type="password"
         label="Password"
         required
       ></v-text-field> -->
