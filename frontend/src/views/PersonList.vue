@@ -130,13 +130,7 @@ import PersonDataService from "../services/PersonDataService";
                     sortable: true,
                     width: "1%"
                 },
-                {
-                    text: 'Church Position',
-                    value: 'church_pos',
-                    align: 'left',
-                    sortable: true,
-                    width: "1%"
-                },
+               
                  {
                     text: 'Edit',
                     value: 'data-table-expand',

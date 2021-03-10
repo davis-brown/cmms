@@ -71,11 +71,11 @@
         label="Publish Permission"
         required
       ></v-text-field>
-      <v-text-field
+      <!-- v-text-field
         v-model="person.church_pos"
         label="Position in Church"
         required
-      ></v-text-field>
+      ></v-text-field-->
        <!--<v-text-field
         v-model="person.fam_pos"
         label="Position in Family"
