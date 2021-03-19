@@ -69,7 +69,7 @@ export default {
         { title: 'Congregation Information', icon: 'mdi-church', href:"/congregation"},
         { title: 'Members', icon: 'mdi-account-box', href:"/person" },
         { title: 'Families', icon: 'mdi-account-group', href:"/families" },
-        { title: 'Groups', icon: 'mdi-account-group-outline', href:"/groups" },
+        { title: 'Groups', icon: 'mdi-account-group-outline', href:"/group" },
         { title: 'LifeGroups', icon: 'mdi-home-group', href:"/lifegroups" },
         { title: 'Events Calendar', icon: 'mdi-calendar', href:"/calendar" },
 

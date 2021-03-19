@@ -63,7 +63,26 @@ export default new Router({
     name: "congregationadd",
     component: () => import("./views/CongregationAdd")
 
+  },
+  {
+    path: "/group",
+    name: "groupdisplay",
+    component: () => import("./views/Group")
+
+  },
+  {
+    path: "/groupadd",
+    name: "groupadd",
+    component: () => import("./views/GroupAdd")
+
+  },
+  {
+    path: "/groupedit",
+    name: "groupedit",
+    component: () => import("./views/GroupEdit")
+
   }
+
   
   ]
 });
