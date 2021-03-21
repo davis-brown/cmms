@@ -15,6 +15,9 @@ module.exports = (sequelize, Sequelize) => {
       },
       grp_name: {
         type: Sequelize.STRING
+      },
+      per_ID: {
+        type: Sequelize.INTEGER
       }
     }, {
       tableName: 'group'
