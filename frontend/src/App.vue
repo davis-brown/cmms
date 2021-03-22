@@ -209,6 +209,7 @@ export default {
         to="/home"
         text-lg-right
         elevation="6"
+        color="blue darken-4"
       >
       <span class="mr-2">
       <v-icon>Home</v-icon>
@@ -219,6 +220,7 @@ export default {
         to="/congregation"
         text-lg-right
         elevation="6"
+        color="blue darken-4"
       >
         <span class="mr-2">
         <v-icon>Congregation</v-icon>
@@ -226,7 +228,11 @@ export default {
       </v-btn>
 
       <v-btn
-        to="/person">
+        to="/person"
+        text-lg-right
+        elevation="6"
+        color="blue darken-4"
+        >
             <span class="mr-2">
         <v-icon>Members</v-icon>
         </span>
@@ -237,6 +243,7 @@ export default {
         to="/families"
         text-lg-right
         elevation="6"
+        color="blue darken-4"
       >
         <span class="mr-2">
         <v-icon>Family</v-icon>
@@ -247,6 +254,7 @@ export default {
         to="/group"
         text-lg-right
         elevation="6"
+        color="blue darken-4"
       >
       <span class="mr-2">
       <v-icon>Groups</v-icon>
