@@ -1,7 +1,7 @@
 <template>
 	<v-card class="mx-auto">
         <v-img
-        :src="'http://localhost:8080/images' + family.fam_pic"
+        :src="this.path + family.fam_pic"
         height = "300px"
         width = "400px"
         ></v-img>
@@ -42,7 +42,8 @@ export default {
     data() {
         return {
             familyPersons: [],
-			familyNames: ""
+			familyNames: "",
+            path: ""
             
         };
     },
@@ -69,6 +70,11 @@ export default {
     },
     mounted() {
         this.getPeopleForFamily(this.family.fam_ID)
+        if (process.env.NODE_ENV === "development") {
+            this.path = "http://localhost:8080/images";
+        } else {
+            this.path = "http://example.com/images";
+        }
     }
 };
 </script>
