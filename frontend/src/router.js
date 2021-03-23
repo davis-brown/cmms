@@ -11,16 +11,15 @@ import Login from './views/Login.vue';
 import Register from './views/Register.vue';
 Vue.use(Router);
 
-export default new Router({
+export const router = new Router({
   mode: "history",
-
-
   routes: [
     {
       path: '/',
       name: 'home',
       component: Home
     },
+    
     {
       path: '/home',
       component: Home
@@ -96,19 +95,18 @@ export default new Router({
       path: "/congregation",
       name: "congregationdisplay",
       component: Congregation_Display
-  },
-  {
-      path: "/congregationedit",
-      name: "congregationedit",
-      component: CongregationEdit
-  },
-  {
-    path: "/congregationadd",
-    name: "congregationadd",
-    component: () => import("./views/CongregationAdd")
+    },
+    {
+        path: "/congregationedit",
+        name: "congregationedit",
+        component: CongregationEdit
+    },
+    {
+      path: "/congregationadd",
+      name: "congregationadd",
+      component: () => import("./views/CongregationAdd")
 
-  }
-  
+    }
   ]
 });
 
