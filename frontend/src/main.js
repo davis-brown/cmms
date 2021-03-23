@@ -2,31 +2,35 @@
 import Vue from 'vue'
 import App from './App.vue'
 import vuetify from './plugins/vuetify';
-import router from './router.js';
+import { router } from './router';
 import VueTextAreaAutosize from 'vue-textarea-autosize';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
+import store from './store';
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import VeeValidate from 'vee-validate';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import {
+  faHome,
+  faUser,
+  faUserPlus,
+  faSignInAlt,
+  faSignOutAlt
+} from '@fortawesome/free-solid-svg-icons';
+
+library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt);
 
 Vue.use(VueTextAreaAutosize);
+Vue.use(VeeValidate);
+Vue.component('font-awesome-icon', FontAwesomeIcon);
 
-Vue.config.productionTip = false;
 
-firebase.initializeApp({
-  apiKey: "REMOVED",
-    authDomain: "vue-calendar-11.firebaseapp.com",
-    databaseURL: "https://vue-calendar-11-default-rtdb.firebaseio.com",
-    projectId: "vue-calendar-11",
-    storageBucket: "vue-calendar-11.appspot.com",
-    messagingSenderId: "1085269062531",
-    appId: "1:1085269062531:web:014ade62953e6b10e5bcb6"
-});
-
-export const db = firebase.firestore();
 
 Vue.config.productionTip = false;
 new Vue({
   router,
   vuetify,
+  store,
   render: h => h(App),
 }).$mount('#app')
 
