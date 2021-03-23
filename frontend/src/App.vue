@@ -89,26 +89,20 @@
       color="blue darken-4"
       height="100"
      dark>
-
       <v-img 
       alt="logo"
       src="./assets/logoriverside.png"
       :aspect-ratio="10/2"
       align
-
       />
      <div class="d-flex align-center mr-2">
         <h2 class="font-weight-light">
           Church Membership System
         </h2>
       </div>
-
       <v-spacer></v-spacer>
-
       <v-app-bar-nav-icon @click="drawer = true" right class="mr-4"></v-app-bar-nav-icon>
-
     </v-app-bar>
-
       <v-navigation-drawer
         v-model="drawer"
         fixed
@@ -135,32 +129,13 @@
         </v-list>
       
       </v-navigation-drawer>
-
-
     <v-main>
       <router-view />
     </v-main>
-
   </v-app> -->
 </template>
 <script>
 export default {
-  name: "app",
-  data() {
-   
-    return {
-      drawer: false,
-      items: [
-        { title: 'Home', icon: 'mdi-home', href:"/home"},
-        { title: 'Congregation Information', icon: 'mdi-church', href:"/congregation"},
-        { title: 'Members', icon: 'mdi-account-box', href:"/person" },
-        { title: 'Families', icon: 'mdi-account-group', href:"/families" },
-        { title: 'Groups', icon: 'mdi-account-group-outline', href:"/group" },
-        { title: 'LifeGroups', icon: 'mdi-home-group', href:"/lifegroups" },
-        { title: 'Events Calendar', icon: 'mdi-calendar', href:"/calendar" },
-
-      ],
-
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
@@ -169,14 +144,12 @@ export default {
       if (this.currentUser && this.currentUser.roles) {
         return this.currentUser.roles.includes('ROLE_ADMIN');
       }
-
       return false;
     },
     showModeratorBoard() {
       if (this.currentUser && this.currentUser.roles) {
         return this.currentUser.roles.includes('ROLE_MODERATOR');
       }
-
       return false;
     }
   },
@@ -186,7 +159,22 @@ export default {
       this.$router.push('/login');
     }
   }
-  
+  // name: "app",
+  // data() {
+   
+  //   return {
+  //     drawer: false,
+  //     items: [
+  //       { title: 'Home', icon: 'mdi-home', href:"/home"},
+  //       { title: 'Congregation Information', icon: 'mdi-church', href:"/congregation"},
+  //       { title: 'Members', icon: 'mdi-account-box', href:"/person" },
+  //       { title: 'Families', icon: 'mdi-account-group', href:"/families" },
+  //       { title: 'Groups', icon: 'mdi-account-group-outline', href:"/groups" },
+  //       { title: 'LifeGroups', icon: 'mdi-home-group', href:"/lifegroups" },
+  //       { title: 'Events Calendar', icon: 'mdi-calendar', href:"/calendar" },
+  //     ],
+  //   }
+    
+  //   }
   }
-
 </script>
