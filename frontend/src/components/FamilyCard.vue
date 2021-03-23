@@ -70,11 +70,7 @@ export default {
     },
     mounted() {
         this.getPeopleForFamily(this.family.fam_ID)
-        if (process.env.NODE_ENV === "development") {
-            this.path = "http://localhost:8080/images";
-        } else {
-            this.path = "/images";
-        }
+        this.path = "http://localhost:8080/images";
     }
 };
 </script>
