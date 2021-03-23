@@ -1,7 +1,14 @@
 <template>
   <div v-if="currentFamily" class="edit-form">
       <v-form ref="form" lazy-validation>
-        
+
+      <v-file-input
+        v-model="selectedFile"
+        accept="image/png, image/jpeg, image/bmp"
+        prepend-icon="mdi-camera"
+        label="Family Photo"
+      ></v-file-input>
+
       <v-text-field
         v-model="currentFamily.fam_name"
         :rules="[(v) => !!v || 'First name is required']"
@@ -146,6 +153,7 @@ import FamilyPersonService from "../services/FamilyPersonService";
 export default {
   data() {
     return {
+      selectedFile: "",
       dialog: false,
       currentFamily: null,
       familyPersons: [],
@@ -157,30 +165,34 @@ export default {
                     text: 'Name',
                     align: 'left',
                     value: 'person.frst_name',
+                    sortable: false,
                 },
                 {
                     text: '',
                     align: 'left',
                     value: 'person.last_name',
+                    sortable: false,
                 },
                 {
                     text: 'Role',
                     align: 'left',
                     value: 'fam_role',
+                    sortable: false,
                 },
                 {
                     text: 'Family Head',
-                    align: 'left',
+                    align: 'center',
                     value: 'head',
+                    sortable: false,
                 },
                 {
                     text: 'Action',
+                    align: 'center',
                     value: 'actions',
-                    align: 'left',
                     sortable: false,
                 }
             ],
-    };
+    }
   },
   
   methods: {
@@ -196,19 +208,37 @@ export default {
     },
 
     updateFamily() {
-      FamilyService.update(this.currentFamily.fam_ID, this.currentFamily)
+      const formData = new FormData();
+      formData.append("file", this.selectedFile);
+      formData.append("existingPic", this.currentFamily.fam_pic);
+      FamilyService.upload(formData)
+      .then(res => {
+        this.currentFamily.fam_pic = res.data.path;
+        FamilyService.update(this.currentFamily.fam_ID, this.currentFamily)
+          .then(response => {
+            console.log(response.data);
+            this.message = 'The family was updated successfully!';
+            this.$router.push({ name: 'familieslist' });
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    },
+
+    deleteFamily() {
+      console.log(this.currentFamily.fam_pic);
+      FamilyService.delete(this.currentFamily.fam_ID, this.currentFamily.fam_pic)
         .then(response => {
           console.log(response.data);
-          this.message = 'The family was updated successfully!';
-          this.$router.push({ name: 'familieslist' });
         })
         .catch(e => {
           console.log(e);
         });
-    },
-
-    deleteFamily() {
-      FamilyService.delete(this.currentFamily.fam_ID)
+      FamilyPersonService.deleteAll(this.currentFamily.fam_ID)
         .then(response => {
           console.log(response.data);
           this.$router.push({ name: "familieslist" });
@@ -295,7 +325,7 @@ h4 {
   text-align: center;
 }
 .edit-form {
-  max-width: 600;
+  max-width: 600px;
   margin: auto;
 }
 </style>

@@ -21,8 +21,8 @@ class FamilyPersonService {
     return http.delete(`familyperson/${id}`);
   }
 
-  deleteAll() {
-    return http.delete(`familyperson`);
+  deleteAll(id) {
+    return http.delete(`/familyperson?family=` + id);
   }
 }
 
