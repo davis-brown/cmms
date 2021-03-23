@@ -1,6 +1,7 @@
 import http from "../http-common";
 
 class GroupDataService {
+    
 
 getAll(params) {
     return http.get("/group", {params});

@@ -97,14 +97,14 @@
               </v-dialog>
             </v-toolbar>
           </template>
-          <template v-slot:item.head="{ item }">
+          <template v-slot: item.head="{ item }">
             <v-radio-group
               v-model="currentFamily.per_ID"
               name="rowSelector">
               <v-radio :value="item.person.per_ID"/>
             </v-radio-group>
           </template>
-          <template v-slot:item.actions="{ item }">
+          <template v-slot: item.actions="{ item }">
               <v-icon
                 @click="deletePersonForFamily(item)"
               >
