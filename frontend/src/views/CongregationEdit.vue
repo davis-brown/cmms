@@ -17,11 +17,11 @@
         ></v-text-field>
 
 
-    <v-btn color="success" small @click="updateCongregation">
+    <v-btn color="dark" small @click="updateCongregation">
         Submit
       </v-btn>
 
-    <v-btn color="primary" small @click="cancel">
+    <v-btn color="dark" small @click="cancel">
         Cancel
       </v-btn>
     
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import CongregationServices from "../services/CongregationServices.js";
+import CongregationServices from "../services/CongregationServices";
 
 export default {
     data(){
@@ -48,7 +48,10 @@ export default {
         })
         .catch(e => {
             console.log(e);
-        })
+        });
+    },
+    cancel() {
+      this.$router.push({ name: "congregaationdisplay" });
     },
     updateCongregation(){
         CongregationServices.update(this.currentCongregation.con_ID, this.currentCongregation)
@@ -61,16 +64,14 @@ export default {
             console.log(e);
         });
         },
-     cancel() {
-      this.$router.push({ name: "congregationdisplay" });
-        },
+    },
 
     mounted() {
     this.message = '';
     this.getCongregation(this.$route.params.id);
     
   }
-    }
+    
 };
 </script>
 <style>
