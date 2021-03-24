@@ -1,8 +1,15 @@
 <template>
-  <div class="submit-form mt-3 mx-auto">
+  <div class="submit-form mt-3 mx-auto" data-app=“true>
     <h1>Add a family</h1>
 
     <form @submit.prevent="saveFamily">
+      
+      <v-file-input
+      v-model="selectedFile"
+      accept="image/png, image/jpeg, image/bmp"
+      prepend-icon="mdi-camera"
+      label="Family Photo"
+    ></v-file-input>
 
       <v-text-field
         v-model="family.fam_name"
@@ -140,6 +147,7 @@ import FamilyPersonService from "../services/FamilyPersonService";
 export default {
   data() {
     return {
+      selectedFile: [],
       dialog: false,
       family: {},
       familyPersons: [],
@@ -148,24 +156,33 @@ export default {
       message: '',
       headers: [
                 {
-                    text: 'First Name',
+                    text: 'Name',
                     align: 'left',
                     value: 'person.frst_name',
+                    sortable: false,
                 },
                 {
-                    text: 'Last Name',
+                    text: '',
                     align: 'left',
                     value: 'person.last_name',
+                    sortable: false,
                 },
                 {
-                    text: 'Family Role',
+                    text: 'Role',
                     align: 'left',
                     value: 'fam_role',
+                    sortable: false,
+                },
+                {
+                    text: 'Family Head',
+                    align: 'center',
+                    value: 'head',
+                    sortable: false,
                 },
                 {
                     text: 'Action',
                     value: 'actions',
-                    align: 'left',
+                    align: 'center',
                     sortable: false,
                 }
             ],
@@ -173,20 +190,29 @@ export default {
   },
   methods: {
     saveFamily() {
-      console.log(this.family)
-      FamilyService.create(this.family)
-        .then(response => {
-          console.log(response.data.fam_ID)
-          this.familyPersons.forEach(familyPerson => {
-            familyPerson.fam_ID = response.data.fam_ID;
-            this.addPersonForFamily(familyPerson)
+      const formData = new FormData();
+      formData.append("file", this.selectedFile);
+      FamilyService.upload(formData)
+      .then(res => {
+        this.family.fam_pic = res.data.path;
+        FamilyService.create(this.family)
+          .then(response => {
+            console.log(response.data.fam_ID)
+            this.familyPersons.forEach(familyPerson => {
+              familyPerson.fam_ID = response.data.fam_ID;
+              this.addPersonForFamily(familyPerson)
+            })
+            this.$router.push({ name: "familieslist" });
           })
-          this.$router.push({ name: "familieslist" });
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+          .catch((e) => {
+            console.log(e);
+          });
+      })
+      .catch(err => {
+        console.log(err);
+      });
     },
+
 
     cancel() {
       this.$router.push({ name: "familieslist" });
@@ -243,7 +269,8 @@ export default {
 
       return textOne.indexOf(searchText) > -1 ||
         textTwo.indexOf(searchText) > -1
-    }
+    },
+
   },
   mounted() {
     this.message = '';
@@ -254,7 +281,7 @@ export default {
 
 <style>
 .submit-form {
-  max-width: 400px;
+  max-width: 500px;
   margin: auto;
   font-size: 20px;
 }
