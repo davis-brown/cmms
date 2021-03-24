@@ -9,42 +9,18 @@
             dark
           >
             New Family
-          </v-btn>
+        </v-btn>
         <v-row>
-		<v-col
-            v-for="family in families"
-            :key="family.fam_ID"
-            cols="4"
-          >
-            <v-card
-				class="mx-auto"
+			<v-col
+				v-for="family in families"
+				:key="family.fam_ID"
+				cols="4"
 			>
-				<v-img
-				src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fc1.staticflickr.com%2F1%2F40%2F82164251_077fa70150_z.jpg%3Fzz%3D1&f=1&nofb=1xx`"
-				height="200px"
-				></v-img>
-
-				<v-card-title>
-				{{ family.fam_name}}
-				</v-card-title>
-
-				<v-card-subtitle>
-				Contact Information
-				</v-card-subtitle>
-
-				<v-card-actions>
-				<v-btn
-				@click="editFamily(family)"
-				class="ma-2"
-				outlined
-				fab
-				color="blue darken-4"
-				>
-				<v-icon>mdi-pencil</v-icon>
-				</v-btn>				
-				</v-card-actions>
-			</v-card>
-          </v-col>
+				<FamilyCard 
+					v-bind:key="family.fam_ID"
+					v-bind:family="family"
+				></FamilyCard>
+			</v-col>
         </v-row>
       </v-container>
     </v-main>
@@ -52,30 +28,32 @@
 
 <script>
 import FamilyService from "../services/FamilyService";
+import FamilyCard from "../components/FamilyCard";
 
 export default {
 	name: 'Families-List',
+	components: {
+		FamilyCard
+	},
     data() {
         return {
-            families: {}
+            families: []
             
         };
     },
-	created() {
-		FamilyService.getFamilies()
+	methods: {
+		getFamilies()  {
+			FamilyService.getFamilies()
             .then(response => {
                 this.families = response.data;
-                console.log(this.families);
             })
             .catch(error => {
                 this.message = error.response.data.message;
             });
-	},
-	methods: {
-		editFamily(family) {
-            this.$router.push({ name: 'familyedit', params: { id: family.fam_ID } });
-        }
-		
+		},
+    },
+	mounted() {
+		this.getFamilies();
 	}
 };
 </script>
