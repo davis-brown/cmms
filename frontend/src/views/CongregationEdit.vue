@@ -51,7 +51,7 @@ export default {
         });
     },
     cancel() {
-      this.$router.push({ name: "congregaationdisplay" });
+      this.$router.push({ name: "congregationdisplay" });
     },
     updateCongregation(){
         CongregationServices.update(this.currentCongregation.con_ID, this.currentCongregation)
