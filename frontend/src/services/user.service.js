@@ -8,6 +8,7 @@ if (process.env.NODE_ENV === "development") {
   API_URL = "/api/test/";
 }
 
+
 class UserService {
   getPublicContent() {
     return axios.get(API_URL + 'all');
