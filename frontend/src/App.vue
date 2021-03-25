@@ -36,6 +36,11 @@
             Families
             </router-link>
           </li>
+          <li v-if="currentUser" class="nav-item">
+            <router-link to="/group" class="nav-link">
+            Groups
+            </router-link>
+          </li>
         </div>
 
         <div v-if="!currentUser" class="navbar-nav ml-auto">
