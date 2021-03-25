@@ -124,12 +124,12 @@
 
       <v-row justify="center">
         <v-col justify="left" col="1"> 
-          <v-btn color="error" @click="deleteFamily">
+          <v-btn color="dark" @click="deleteFamily">
             Delete
           </v-btn>
         </v-col>
         <v-col justify="right" col="2"> 
-          <v-btn class= "float-right" color="success" @click="updateFamily">
+          <v-btn class= "float-right" color="dark" @click="updateFamily">
             Update
           </v-btn>
         </v-col>
