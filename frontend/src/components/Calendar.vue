@@ -205,8 +205,8 @@ export default {
             loc_id: null
           },
         
-        today: new Date().toISOString().substr(0, 10),
-        focus: new Date().toISOString().substr(0, 10),
+        today: new Date().toISOString(),
+        focus: new Date().toISOString(),
       
         
         type: "month",
@@ -228,22 +228,30 @@ export default {
     }),
 
     created() { 
-      console.log(this.today);
+      
       EventService.getEvents()
 
             .then(response => {
                 this.events = response.data;
+                const events = []
                 for ( var i=0; i<this.events.length; i++) {
                   this.events[i].event_date = this.events[i].event_date.substr(0,10);
                   this.events[i].event_start = this.events[i].event_date + ' '+ this.events[i].event_start;
                   this.events[i].event_end = this.events[i].event_date + ' '+ this.events[i].event_end;
-                  var tempyear = this.events[i].event_date.substr(0,4);
-                  var tempmd = this.events[i].event_date.substr(5,5);
-                  // this.events[i].event_date = tempmd + '-'+tempyear;
+                 events.push({
+                   name: this.events[i].event_name,
+                   start: this.events[i].event_start,
+                   end: this.events[i].event_end,
+                   color: this.events[i].event_color,
+                   
+                 })
+                 
+                 console.log('names: '+ this.name);
                 }
+                this.events = events
                 console.log(this.events);
-                console.log(tempmd);
-                console.log(tempyear);
+                console.log('names: '+name);
+                
             })
             .catch(error => {
                 this.message = error.response.data.message;
