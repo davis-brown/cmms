@@ -1,6 +1,11 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/api/auth/';
+var API_URL;
+if (process.env.NODE_ENV === "development") {
+  API_URL = "http://localhost:8080/api/auth/";
+} else {
+  API_URL = "/api/auth/";
+}
 
 class AuthService {
   login(user) {

@@ -38,35 +38,44 @@ export default {
             currentCongregation: null,
         };
     },
-    methods: {
-        getCongregation(con_ID){
-            CongregationServices.get(con_ID)
-            .then(response => {
-            this.currentCongregation = response.data;
-            console.log(response.data);
-
+     methods: {
+    getCongregation(con_ID) {
+      CongregationServices.get(con_ID)
+        .then(response => {
+          this.currentCongregation = response.data;
+          console.log(response.data);
         })
         .catch(e => {
-            console.log(e);
+          console.log(e);
         });
     },
-    cancel() {
+     cancel() {
       this.$router.push({ name: "congregationdisplay" });
     },
-    updateCongregation(){
-        CongregationServices.update(this.currentCongregation.con_ID, this.currentCongregation)
+    updateCongregation() {
+      CongregationServices.update(this.currentCongregation.con_ID, this.currentCongregation)
         .then(response => {
-            console.log(response.data);
-            this.message='The congregation was updated successfully.';
-              this.$router.push({ name: 'congregationdisplay' });
+          console.log(response.data);
+          this.message = 'The Congregation was updated successfully!';
+          this.$router.push({ name: 'congregationdisplay' });
         })
         .catch(e => {
-            console.log(e);
+          console.log(e);
         });
-        },
     },
+    deleteCongregation() {
+      CongregationServices.delete(this.currentCongregation.con_ID)
+        .then(response => {
+          console.log(response.data);
+          this.$router.push({ name: "congregationlist" });
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    }
 
-    mounted() {
+    },
+  mounted() {
     this.message = '';
     this.getCongregation(this.$route.params.id);
     

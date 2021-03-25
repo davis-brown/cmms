@@ -1,5 +1,5 @@
 <template>
-  <div class="submit-form mt-3 mx-auto">
+  <div class="submit-form mt-3 mx-auto" data-app=“true>
     <h1>Add a family</h1>
 
     <form @submit.prevent="saveFamily">
@@ -148,7 +148,7 @@ import FamilyPersonService from "../services/FamilyPersonService";
 export default {
   data() {
     return {
-      selectedFile: "",
+      selectedFile: [],
       dialog: false,
       family: {},
       familyPersons: [],

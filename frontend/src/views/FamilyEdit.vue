@@ -1,5 +1,5 @@
 <template>
-  <div v-if="currentFamily" class="edit-form">
+  <div v-if="currentFamily" class="submit-form mt-3 mx-auto" data-app=“true”>
       <v-form ref="form" lazy-validation>
 
       <v-file-input
@@ -153,7 +153,7 @@ import FamilyPersonService from "../services/FamilyPersonService";
 export default {
   data() {
     return {
-      selectedFile: "",
+      selectedFile: [],
       dialog: false,
       currentFamily: null,
       familyPersons: [],
@@ -324,8 +324,8 @@ h4 {
   font-size: 25px;
   text-align: center;
 }
-.edit-form {
-  max-width: 600px;
+.submit-form {
+  max-width: 800;
   margin: auto;
 }
 </style>
