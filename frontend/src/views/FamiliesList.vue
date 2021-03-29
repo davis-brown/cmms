@@ -1,6 +1,6 @@
 <template>
 	<v-main>
-      <v-container>
+      <v-container fluid>
 		<h1>Families of the Congregation </h1>
 		<v-btn
             class="mr-4"

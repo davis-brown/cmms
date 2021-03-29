@@ -34,6 +34,15 @@
                 vertical
               ></v-divider>
               <v-spacer></v-spacer>
+              <v-btn
+                    color="primary"
+                    dark
+                    class="mb-2"
+                    @click="addNewMember"
+                  >
+                    New Member
+              </v-btn>
+              <v-spacer></v-spacer>
               <v-dialog
                 v-model="dialog"
                 max-width="500px"
@@ -231,6 +240,10 @@ export default {
 
     deletePersonForFamily(familyperson) {
       this.familyPersons = this.familyPersons.filter(familyPerson => familyPerson.fp_ID!=familyperson.fp_ID);
+    },
+
+    addNewMember() {
+        this.$router.push({ name: 'personadd' });
     },
 
     addPersonForFamily(familyPerson) {
