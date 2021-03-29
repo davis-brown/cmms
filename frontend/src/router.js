@@ -6,6 +6,7 @@ import FamilyEdit from "./views/FamilyEdit"
 import Calendar from "./components/Calendar"
 import Congregation_Display from "./views/Congregation_Display"
 import CongregationEdit from "./views/CongregationEdit"
+import HomePage from "./views/HomePage"
 Vue.use(Router);
 
 export default new Router({
@@ -63,6 +64,11 @@ export default new Router({
     name: "congregationadd",
     component: () => import("./views/CongregationAdd")
 
+  },
+  {
+    path: "/home",
+    name: "homepage",
+    component: HomePage
   }
   
   ]
