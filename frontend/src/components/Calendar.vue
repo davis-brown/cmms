@@ -246,9 +246,9 @@ export default {
                    
                  })
                  
-                 console.log('names: '+ this.name);
+                 console.log('names: '+ this.events.name);
                 }
-                this.events = events
+                this.events = events;
                 console.log(this.events);
                 console.log('names: '+name);
                 
