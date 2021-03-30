@@ -21,8 +21,8 @@ class GroupMemberService {
     return http.delete(`groupmember/${id}`);
   }
 
-  deleteAll() {
-    return http.delete(`groupmember`);
+  deleteAll(id) {
+    return http.delete("/groupmember?group=" + id);
   }
 }
 

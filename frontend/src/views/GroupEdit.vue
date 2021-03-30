@@ -1,5 +1,5 @@
 <template>
-  <div v-if="currentGroup" class="edit-form">
+  <div v-if="currentGroup" class="submit-form" data-app="true">
       <v-form ref="form" lazy-validation>
         
       <v-text-field
@@ -28,7 +28,7 @@
               <v-spacer></v-spacer>
               <v-dialog
                 v-model="dialog"
-                max-width="500px"
+                max-width="700px"
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
@@ -38,7 +38,7 @@
                     v-bind="attrs"
                     v-on="on"
                   >
-                    Edit Members
+                    Edit/Add Members
                   </v-btn>
                 </template>
                 <v-card>
@@ -55,7 +55,7 @@
                                 :items="people"
                                 label="Group Member"
                                 item-value="per_ID"
-                                :filter="customFilter"
+                            
                               >
                                 <template slot="selection" slot-scope="data" >
                                   {{data.item.frst_name}} {{data.item.last_name}}
@@ -97,14 +97,7 @@
               </v-dialog>
             </v-toolbar>
           </template>
-          <template v-slot: item.head="{ item }">
-            <v-radio-group
-              v-model="currentGroup.per_ID"
-              name="rowSelector">
-              <v-radio :value="item.person.per_ID"/>
-            </v-radio-group>
-          </template>
-          <template v-slot: item.actions="{ item }">
+          <template v-slot:item.actions="{ item }">
               <v-icon
                 @click="deletePersonForGroup(item)"
               >
@@ -117,12 +110,12 @@
 
       <v-row justify="center">
         <v-col justify="left" col="1"> 
-          <v-btn color="error" @click="deleteGroup">
+          <v-btn color="dark" @click="deleteGroup">
             Delete
           </v-btn>
         </v-col>
         <v-col justify="right" col="2"> 
-          <v-btn class= "float-right" color="success" @click="updateGroup">
+          <v-btn class= "float-right" color="dark" @click="updateGroup">
             Update
           </v-btn>
         </v-col>
@@ -135,11 +128,10 @@
     <p>Please click on a Group...</p>
     
   </div>
-
 </template>
 
 <script>
-import GroupDataServices from "../services/GroupDataService.js";
+import GroupDataServices from "../services/GroupDataService";
 import PersonDataService from "../services/PersonDataService";
 import GroupMemberService from "../services/GroupMemberService";
 
@@ -167,15 +159,15 @@ export default {
                     text: 'Role',
                     align: 'left',
                     value: 'grp_role',
-                },
+                }, 
                 {
-                    text: 'Action',
+                    text: 'Delete',
                     value: 'actions',
-                    align: 'left',
+                    align: 'center',
                     sortable: false,
                 }
             ],
-    };
+    }
   },
   
   methods: {
@@ -200,7 +192,7 @@ export default {
         .catch(e => {
           console.log(e);
         });
-    },
+   },
 
     deleteGroup() {
       GroupDataServices.delete(this.currentGroup.grp_ID)
@@ -290,7 +282,8 @@ h4 {
   text-align: center;
 }
 .edit-form {
-  max-width: 600;
+  max-width: 600px;
+  max-height: 900px;
   margin: auto;
 }
 </style>
