@@ -1,15 +1,31 @@
 <template>
 <v-app>
   <div id="app">
-    <header class="header header-absolute bg-dark" style="height: 150px">
-      <div class="container-fluid">
-          <img style="padding-top:20px; display:block; margin-left:auto; margin-right:auto;" src="./assets/logoriverside.png">
-          
+    <nav v-if="currentUser" class="navbar navbar-expand navbar-dark" style="background-color:#31609d; height: 40px;">
+
+        <div v-if="currentUser" class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <router-link to="/profile" class="nav-link">
+              <font-awesome-icon icon="user" />
+              {{ currentUser.username }}
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href @click.prevent="logOut">
+              <font-awesome-icon icon="sign-out-alt" />LogOut
+            </a>
+          </li>
         </div>
+    </nav>
+    <header class="header header-absolute bg-gradient" style="height: 200px; background-color: #31609d;">
+      <div class="container-fluid">
+          <img style="display:block; height:140px; margin:auto" src="./assets/logoriverside.png">
+          
+      </div>
+      <h4 class="nav-title font-weight-light text-center" style="color:#f1f1f1">Riverside Church Membership System</h4>
     </header>
-      <nav class="navbar navbar-expand  navbar-dark bg-dark">
-        <a href class="navbar-brand" @click.prevent>Riverside Church Membership System</a>
-        <div class="navbar-nav mr-auto ml-auto">
+      <nav class="navbar navbar-expand navbar-dark" style="background-color:#31609d;">
+        <div class="navbar-nav mx-auto font-weight-normal" style="font-size:17px">
           <li class="nav-item">
             <router-link to="/home" class="nav-link">
               Home
@@ -50,9 +66,9 @@
             </router-link>
           </li>
         </div>
-
-        <div v-if="currentUser" class="navbar-nav ml-auto">
-          <li v-if="showAdminBoard" class="nav-item">
+      <div v-if="currentUser" class="navbar-nav">
+        
+        <li v-if="showAdminBoard" class="nav-item">
             <router-link to="/admin" class="nav-link">Admin Board</router-link>
           </li>
           <li v-if="showModeratorBoard" class="nav-item">
@@ -61,19 +77,9 @@
           <li class="nav-item">
             <router-link v-if="currentUser" to="/user" class="nav-link">User</router-link>
           </li>
+      </div>
 
-          <li class="nav-item">
-            <router-link to="/profile" class="nav-link">
-              <font-awesome-icon icon="user" />
-              {{ currentUser.username }}
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href @click.prevent="logOut">
-              <font-awesome-icon icon="sign-out-alt" />LogOut
-            </a>
-          </li>
-        </div>
+
       </nav>
   
 
