@@ -25,23 +25,25 @@
         class="mx-auto"
         max-width="544"
       >
-        <v-card-title>
-            {{ group.grp_name }}
+         <v-card-title class="justify-center">
+          <h2>
+        {{ group.grp_name }}
+        </h2>
         </v-card-title>
-
-
 				<v-card-subtitle>
 				Members of the group: 
+        <v-divider> </v-divider>
 				</v-card-subtitle>
 
-        <!-- INSERT MEMBERS HERE -->
-        <v-fade-transition>
+        <v-expand-transition>
           <v-overlay
             v-if="hover"
+            class="d-flex transition-fast-in-fast-out grey darken-1 v-card--reveal display-3 white--text"
             absolute
-            color="#036358"
+            style="height: 90%;"
+        
           >
-           <v-card-actions>
+          <v-card-actions>
       <v-btn
 				@click="editGroup(group)"
 				class="ma-2"
@@ -55,7 +57,7 @@
           <v-spacer></v-spacer>
           </v-card-actions>
           </v-overlay>
-        </v-fade-transition>
+        </v-expand-transition>
 
  </v-card>
  </template>
