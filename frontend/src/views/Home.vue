@@ -12,7 +12,7 @@
   
   <v-main>
 <v-container>
-    <h1>Congregation Information</h1>
+    <h1> Congregation Information</h1>
      <v-btn
 			to="/congregationadd"
 			class="mr-4"
