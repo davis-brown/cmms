@@ -4,7 +4,6 @@ import FamiliesList from "./views/FamiliesList"
 import FamilyAdd from "./views/FamilyAdd"
 import FamilyEdit from "./views/FamilyEdit"
 import Calendar from "./components/Calendar"
-import Congregation_Display from "./views/Congregation_Display"
 import CongregationEdit from "./views/CongregationEdit"
 import Home from './views/Home.vue';
 import Login from './views/Login.vue';
@@ -90,11 +89,6 @@ export const router = new Router({
       path: "/personadd",
       name: "personadd",
       component: () => import("./views/PersonAdd")
-    },
-    {
-      path: "/congregation",
-      name: "congregationdisplay",
-      component: Congregation_Display
     },
     {
         path: "/congregationedit",

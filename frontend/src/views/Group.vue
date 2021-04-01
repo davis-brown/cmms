@@ -10,6 +10,7 @@
 		>
     Add Group
 		</v-btn>
+        <v-divider> </v-divider>
     <v-row>
     <v-col
       v-for="group in groups"
@@ -93,12 +94,9 @@ export default {
 
             }
         }
-
        };
        
-
     </script>
-
 <style>
 .list {
 	text-align: left;

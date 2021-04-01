@@ -7,7 +7,9 @@
           <li class="nav-item">
             <router-link to="/profile" class="nav-link">
               <font-awesome-icon icon="user" />
+       
               {{ currentUser.username }}
+ 
             </router-link>
           </li>
           <li class="nav-item">
@@ -19,24 +21,20 @@
     </nav>
     <header class="header header-absolute bg-gradient" style="height: 200px; background-color: #31609d;">
       <div class="container-fluid">
-          <img style="display:block; height:140px; margin:auto" src="./assets/logoriverside.png">
+          <img style="display:block; height:150px; margin:auto" src="./assets/logoriverside.png">
           
       </div>
-      <h4 class="nav-title font-weight-light text-center" style="color:#f1f1f1">Riverside Church Membership System</h4>
+      <h3 class="nav-title font-weight-light text-center" style="color:#f1f1f1">Riverside Church Membership System</h3>
     </header>
       <nav class="navbar navbar-expand navbar-dark" style="background-color:#31609d;">
-        <div class="navbar-nav mx-auto font-weight-normal" style="font-size:17px">
+        <div class="navbar-nav mx-auto font-weight-normal" style="font-size:25px">
           <li class="nav-item">
             <router-link to="/home" class="nav-link">
               Home
             </router-link>
           </li>
           
-          <li v-if="currentUser" class="nav-item">
-            <router-link to="/congregation" class="nav-link">
-            Congregation
-            </router-link>
-          </li>
+    
           <li v-if="currentUser" class="nav-item">
             <router-link to="/calendar" class="nav-link">
             Events Calendar
