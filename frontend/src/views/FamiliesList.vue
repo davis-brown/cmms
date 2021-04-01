@@ -10,6 +10,7 @@
           >
             New Family
         </v-btn>
+	<v-divider> </v-divider>
         <v-row>
 			<v-col
 				v-for="family in families"
