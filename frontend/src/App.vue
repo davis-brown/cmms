@@ -79,17 +79,19 @@
           <li v-if="showModeratorBoard" class="nav-item">
             <router-link to="/mod" class="nav-link">Moderator Board</router-link>
           </li>
-
+ </div>
       </nav>
+      </div>
   
 
       <v-main>
         <router-view />
+       
       </v-main>
-    </div>
+
 </v-app>
 
-
+</template>
 
   <!-- <v-app>
     <v-app-bar app
@@ -140,7 +142,7 @@
       <router-view />
     </v-main>
   </v-app> -->
-</template>
+
 <script>
 export default {
   computed: {
