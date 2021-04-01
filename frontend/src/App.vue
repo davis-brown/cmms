@@ -1,7 +1,7 @@
 <template>
 <v-app>
   <div id="app">
-    <nav v-if="currentUser" class="navbar navbar-expand navbar-dark" style="background-color:#31609d; height: 40px;">
+    <nav v-if="currentUser" class="navbar navbar-expand navbar-dark" style="background-color:#1b53c4; height: 40px;">
 
         <div v-if="currentUser" class="navbar-nav ml-auto">
           <li class="nav-item">
