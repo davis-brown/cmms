@@ -6,7 +6,8 @@
         <div v-if="currentUser" class="navbar-nav ml-auto">
           <li class="nav-item">
             <router-link to="/profile" class="nav-link">
-              <font-awesome-icon icon="user" />
+              <font-awesome-icon icon="user-plus" />
+              
        
               {{ currentUser.username }}
  
