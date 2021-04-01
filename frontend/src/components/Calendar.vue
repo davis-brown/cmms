@@ -102,7 +102,7 @@
                     <v-text-field v-model="event.event_date" type="date" label="start (required)"></v-text-field>
                     <v-text-field v-model="event.event_start" type="time" label="start time (required)"></v-text-field>
                     <v-text-field v-model="event.event_end" type="time" label="end time (required)"></v-text-field>
-                    <v-text-field v-model="event.event_color" type="color" label="color (click to open color menu)"></v-text-field>
+                    <v-text-field v-model="event.color" type="color" label="color (click to open color menu)"></v-text-field>
                     <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialog=false">Create Event</v-btn>
                 </v-form>
               </v-container>
@@ -201,7 +201,7 @@ export default {
             event_date: null,
             event_end: null,
             event_start: null,
-            event_color: "#1976D2",
+            color: "#1976D2",
             loc_id: null
           },
         
@@ -229,31 +229,33 @@ export default {
 
     created() { 
       
-      EventService.getEvents()
+     EventService.getEvents()
 
             .then(response => {
-                this.events = response.data;
-                const events = []
-                for ( var i=0; i<this.events.length; i++) {
-                  this.events[i].event_date = this.events[i].event_date.substr(0,10);
-                  this.events[i].event_start = this.events[i].event_date + ' '+ this.events[i].event_start;
-                  this.events[i].event_end = this.events[i].event_date + ' '+ this.events[i].event_end;
-                 events.push({
-                   name: this.events[i].event_name,
-                   start: this.events[i].event_start,
-                   end: this.events[i].event_end,
-                   color: this.events[i].event_color,
-                   
-                 })
+                //console.log(response.data[0]);
+                var events = new Array();
+                
+
+                for ( var i=0; i< response.data.length; i++) {
+                  var event ={};
+                  event.start = response.data[i].event_date.substr(0,10) + ' '+ response.data[i].event_start;
+                  event.end = response.data[i].event_date.substr(0,10) + ' '+ response.data[i].event_end;
                  
-                 console.log('names: '+ this.events.name);
+                   event.name = response.data[i].event_name;
+                   
+                   event.color = response.data[i].color;
+
+                   events.push(event);  
+                
                 }
                 this.events = events;
-                console.log(this.events);
-                console.log('names: '+name);
+  
+                console.log(events);
+              
                 
             })
             .catch(error => {
+              console.log(error);
                 this.message = error.response.data.message;
             });
     },
