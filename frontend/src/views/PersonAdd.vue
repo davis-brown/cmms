@@ -83,8 +83,8 @@
         required
       ></v-text-field> -->
        </form>
-      <v-btn color="primary" class="offset-sm4 mt-3" @click="savePerson">Submit</v-btn>
-      <v-btn color="primary" class="mt-3" @click="cancel">Cancel</v-btn>
+      <v-btn color="dark" class="offset-sm4 mt-3" @click="savePerson">Submit</v-btn>
+      <v-btn color="dark" class="mt-3" @click="cancel">Cancel</v-btn>
      </div>
   
 </template>
@@ -96,16 +96,17 @@ export default {
   data() {
     return {
       person: {},
-      people: {}
-  
+      people: {},
+      prevRoute: ""
     };
   },
   methods: {
     savePerson() {
-      console.log(this.person)
+      console.log(this.$route.params)
       PersonDataService.create(this.person)
         .then(() => {
-          this.$router.push({ name: "personlist" });
+          console.log(this.prevRoute)
+          this.$router.push({ name: this.prevRoute.name, params: { per_ID: this.person.per_ID, id: this.$route.params.fam_ID } });
           console.log(this.data)
         })
         .catch((e) => {
@@ -113,9 +114,15 @@ export default {
         });
     },
     cancel() {
-      this.$router.push({ name: "personlist" });
+      this.$router.go(-1);
     },
   },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.prevRoute = from
+    })
+  },
+
 };
 </script>
 

@@ -33,6 +33,15 @@
                 vertical
               ></v-divider>
               <v-spacer></v-spacer>
+              <v-btn
+                    color="primary"
+                    dark
+                    class="mb-2"
+                    @click="addNewMember"
+                  >
+                    New Member
+              </v-btn>
+              <v-spacer></v-spacer>
               <v-dialog
                 v-model="dialog"
                 max-width="500px"
@@ -124,12 +133,12 @@
 
       <v-row justify="center">
         <v-col justify="left" col="1"> 
-          <v-btn color="error" @click="deleteFamily">
+          <v-btn color="dark" @click="deleteFamily">
             Delete
           </v-btn>
         </v-col>
         <v-col justify="right" col="2"> 
-          <v-btn class= "float-right" color="success" @click="updateFamily">
+          <v-btn class= "float-right" color="dark" @click="updateFamily">
             Update
           </v-btn>
         </v-col>
@@ -241,11 +250,11 @@ export default {
       FamilyPersonService.deleteAll(this.currentFamily.fam_ID)
         .then(response => {
           console.log(response.data);
-          this.$router.push({ name: "familieslist" });
         })
         .catch(e => {
           console.log(e);
         });
+      this.$router.push({ name: "familieslist" });
     },
     
     getPeopleForFamily(fam_ID)  {
@@ -278,6 +287,10 @@ export default {
         .catch(error => {
             this.message = error.response.data.message;
         });
+    },
+
+    addNewMember() {
+        this.$router.push({ name: 'personadd', params: { fam_ID: this.currentFamily.fam_ID } });
     },
 
     addPersonForFamily() {
@@ -315,6 +328,10 @@ export default {
     this.getFamily(this.$route.params.id);
     this.getPeopleForFamily(this.$route.params.id);
     this.getPeople();
+    if(this.$route.params.per_ID)  {
+      this.dialog = true;
+      this.familyPerson.per_ID = this.$route.params.per_ID;
+    }
   }
 };
 </script>
@@ -325,7 +342,7 @@ h4 {
   text-align: center;
 }
 .submit-form {
-  max-width: 800;
+  max-width: 500px;
   margin: auto;
 }
 </style>

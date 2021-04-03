@@ -91,11 +91,11 @@
 
 
     
-    <v-btn color="success" small @click="updatePerson">
+    <v-btn color="dark" small @click="updatePerson">
         Submit
       </v-btn>
 
-    <v-btn color="primary" small @click="cancel">
+    <v-btn color="dark" small @click="cancel">
         Cancel
       </v-btn>
         

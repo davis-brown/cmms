@@ -6,8 +6,11 @@
         <div v-if="currentUser" class="navbar-nav ml-auto">
           <li class="nav-item">
             <router-link to="/profile" class="nav-link">
-              <font-awesome-icon icon="user" />
+              <font-awesome-icon icon="user-plus" />
+              
+       
               {{ currentUser.username }}
+ 
             </router-link>
           </li>
           <li class="nav-item">
@@ -19,24 +22,20 @@
     </nav>
     <header class="header header-absolute bg-gradient" style="height: 200px; background-color: #31609d;">
       <div class="container-fluid">
-          <img style="display:block; height:140px; margin:auto" src="./assets/logoriverside.png">
+          <img style="display:block; height:150px; margin:auto" src="./assets/logoriverside.png">
           
       </div>
-      <h4 class="nav-title font-weight-light text-center" style="color:#f1f1f1">Riverside Church Membership System</h4>
+      <h3 class="nav-title font-weight-light text-center" style="color:#f1f1f1">Riverside Church Membership System</h3>
     </header>
       <nav class="navbar navbar-expand navbar-dark" style="background-color:#31609d;">
-        <div class="navbar-nav mx-auto font-weight-normal" style="font-size:17px">
+        <div class="navbar-nav mx-auto font-weight-normal" style="font-size:25px">
           <li class="nav-item">
             <router-link to="/home" class="nav-link">
               Home
             </router-link>
           </li>
           
-          <li v-if="currentUser" class="nav-item">
-            <router-link to="/congregation" class="nav-link">
-            Congregation
-            </router-link>
-          </li>
+    
           <li v-if="currentUser" class="nav-item">
             <router-link to="/calendar" class="nav-link">
             Events Calendar
@@ -50,6 +49,11 @@
           <li v-if="currentUser" class="nav-item">
             <router-link to="/families" class="nav-link">
             Families
+            </router-link>
+          </li>
+          <li v-if="currentUser" class="nav-item">
+            <router-link to="/group" class="nav-link">
+            Groups
             </router-link>
           </li>
         </div>
@@ -74,25 +78,23 @@
           <li v-if="showModeratorBoard" class="nav-item">
             <router-link to="/mod" class="nav-link">Moderator Board</router-link>
           </li>
-          <li class="nav-item">
-            <router-link v-if="currentUser" to="/user" class="nav-link">User</router-link>
-          </li>
-      </div>
-
-
+ </div>
       </nav>
+      </div>
   
 
       <v-main>
         <router-view />
+       
       </v-main>
-    </div>
+
+
 </v-app>
 
 </template>
+
 <script>
 export default {
-
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
@@ -101,14 +103,12 @@ export default {
       if (this.currentUser && this.currentUser.roles) {
         return this.currentUser.roles.includes('ROLE_ADMIN');
       }
-
       return false;
     },
     showModeratorBoard() {
       if (this.currentUser && this.currentUser.roles) {
         return this.currentUser.roles.includes('ROLE_MODERATOR');
       }
-
       return false;
     }
   },
@@ -118,6 +118,6 @@ export default {
       this.$router.push('/login');
     }
   }
-  }
 
+  }
 </script>

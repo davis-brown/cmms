@@ -59,9 +59,7 @@ export default {
 			.then(response => {
 				this.familyPersons = response.data;
                 this.familyPersons.forEach( familyPerson => {this.familyNames += familyPerson.person.frst_name + ", "});
-                console.log(this.familyNames);
                 this.familyNames = this.familyNames.slice(0, -2);
-                console.log(this.familyNames);
 			})
 			.catch(error => {
 				this.message = error.response.data.message;
@@ -70,7 +68,11 @@ export default {
     },
     mounted() {
         this.getPeopleForFamily(this.family.fam_ID)
-        this.path = "http://localhost:8080/images";
+        if (process.env.NODE_ENV === "development") {
+            this.path = "http://localhost:8080/api/images";
+        } else {
+            this.path = "/api/images";
+        }
     }
 };
 </script>
