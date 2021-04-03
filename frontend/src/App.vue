@@ -28,7 +28,7 @@
       <h3 class="nav-title font-weight-light text-center" style="color:#f1f1f1">Riverside Church Membership System</h3>
     </header>
       <nav class="navbar navbar-expand navbar-dark" style="background-color:#31609d;">
-        <div class="navbar-nav mx-auto font-weight-normal" style="font-size:25px">
+        <div class="navbar-nav mx-auto font-weight-normal" style="font-size:20px">
           <li class="nav-item">
             <router-link to="/home" class="nav-link">
               Home

@@ -1,6 +1,7 @@
 <template>
-  <v-app id="inspire">
-    <v-carousel height="350px">
+  
+<v-main>
+ <v-carousel cycle hide-delimiter-background height="500px">
       <v-carousel-item
         v-for="(item,i) in items"
         :key="i"
@@ -8,9 +9,8 @@
         reverse-transition="fade"
         transition="fade"
       ></v-carousel-item>
-    </v-carousel>
+  </v-carousel>
   
-  <v-main>
 <v-container>
     <h1> Congregation Information</h1>
      <v-btn
@@ -69,8 +69,7 @@
        </v-col>
        </v-row>
  </v-container>
-    </v-main>
-</v-app>
+</v-main>
 </template>
 
 <script>
@@ -83,6 +82,9 @@ export default {
     return {
       congregations: {},
       items: [
+        {
+          src: require("../assets/riversidewindow.jpg")
+        },
         {
            src: 'https://christianchronicle.org/wp-content/uploads/2017/09/mrcc_01.jpg'
         },
