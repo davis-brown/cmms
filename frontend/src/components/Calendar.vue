@@ -97,11 +97,12 @@
           <v-card>
               <v-container>
                 <v-form @submit.prevent="addEvent">
-                    <v-text-field v-model="event.event_name" type="text" label="event name (required)"></v-text-field>
-                    <v-text-field v-model="event.event_desc" type="text" label="detail"></v-text-field>
-                    <v-text-field v-model="event.event_date" type="date" label="start (required)"></v-text-field>
-                    <v-text-field v-model="event.event_start" type="time" label="start time (required)"></v-text-field>
-                    <v-text-field v-model="event.event_end" type="time" label="end time (required)"></v-text-field>
+                    <v-text-field v-model="event.event_name" type="text" label="event name (required)" required></v-text-field>
+                    <v-text-field v-model="event.event_desc" type="text" label="detail" required></v-text-field>
+                    <v-text-field v-model="event.loc_ID" type="text" label="event location" required></v-text-field>
+                    <v-text-field v-model="event.event_date" type="date" label="start (required)" required></v-text-field>
+                    <v-text-field v-model="event.event_start" type="time" label="start time (required)" required></v-text-field>
+                    <v-text-field v-model="event.event_end" type="time" label="end time (required)" required></v-text-field>
                     <v-label><p style="font-size: 14px">Color (pick a color)</p></v-label>
                     <div class="container v-row" style="margin-top:-20px; margin-bottom: 15px">
                       <v-btn fab x-small color="blue" @click="event.color='#1e90ff'" style=" margin-left: -15px; margin-right:4px"></v-btn>
@@ -188,6 +189,12 @@
               >
                 Save
               </v-btn>
+              <v-btn
+              text
+               @click.prevent="moreEvent(selectedEvent)"
+              >
+                View More...
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-menu>
@@ -211,7 +218,7 @@ export default {
             event_end: null,
             event_start: null,
             color: "#1976D2",
-            loc_id: null
+            loc_id: null,
           },
         
         today: new Date().toISOString(),
@@ -236,7 +243,7 @@ export default {
 
     }),
 
-    mounted() { 
+    created() { 
       this.getEvents();
      
     },
@@ -262,17 +269,13 @@ export default {
                    event.color = response.data[i].color;
                    event.id = response.data[i].evt_ID;
                    event.details = response.data[i].event_desc;
+                   event.location = response.data[i].loc_ID;
 
                    events.push(event);  
                 
                 }
                 this.events = events;
-
-
-  
                 console.log(events);
-              
-                
             })
             .catch(error => {
               console.log(error);
@@ -291,6 +294,7 @@ export default {
           });
         this.selectedOpen = false;
         this.getEvents();
+        console.log("done");
       },
 
         // async updateEvent(ev) {
@@ -311,6 +315,7 @@ export default {
         event.event_date = calendarevent.start.substr(0,10);
         event.event_start = calendarevent.start.substr(10,14);
         event.event_end = calendarevent.end.substr(10,14);
+        event.loc_ID = calendarevent.location;
 
         console.log(event.event_start);
 
@@ -340,6 +345,13 @@ export default {
         this.selectedOpen = false;
         this.getEvents();
       },
+
+      moreEvent(currentevent) {
+        this.event = {};
+        event.evt_ID = currentevent.id;
+        this.$router.push({ name: 'eventdetails', params: { id: event.evt_ID } });
+      
+        },
        
       viewDay ({ date }) {
         this.focus = date
