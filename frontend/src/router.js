@@ -4,7 +4,6 @@ import FamiliesList from "./views/FamiliesList"
 import FamilyAdd from "./views/FamilyAdd"
 import FamilyEdit from "./views/FamilyEdit"
 import Calendar from "./components/Calendar"
-import Congregation_Display from "./views/Congregation_Display"
 import CongregationEdit from "./views/CongregationEdit"
 import Home from './views/Home.vue';
 import Login from './views/Login.vue';
@@ -15,13 +14,8 @@ export const router = new Router({
   mode: "history",
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: Home
-    },
-    
-    {
       path: '/home',
+      name: 'home',
       component: Home
     },
     {
@@ -92,11 +86,6 @@ export const router = new Router({
       component: () => import("./views/PersonAdd")
     },
     {
-      path: "/congregation",
-      name: "congregationdisplay",
-      component: Congregation_Display
-    },
-    {
         path: "/congregationedit",
         name: "congregationedit",
         component: CongregationEdit
@@ -106,7 +95,27 @@ export const router = new Router({
       name: "congregationadd",
       component: () => import("./views/CongregationAdd")
 
-    }
+  },
+  {
+    path: "/group",
+    name: "groupdisplay",
+    component: () => import("./views/Group")
+
+  },
+  {
+    path: "/groupadd",
+    name: "groupadd",
+    component: () => import("./views/GroupAdd")
+
+  },
+  {
+    path: "/groupedit",
+    name: "groupedit",
+    component: () => import("./views/GroupEdit")
+
+  }
+
+  
   ]
 });
 

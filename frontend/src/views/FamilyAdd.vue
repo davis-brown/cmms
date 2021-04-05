@@ -114,16 +114,17 @@
               </v-dialog>
             </v-toolbar>
           </template>
-          <template v-slot:item.head="{ item }">
+          <template v-slot: item.head="{ item }">
             <v-radio-group
               v-model="family.per_ID"
               name="rowSelector">
               <v-radio :value="item.person.per_ID"/>
             </v-radio-group>
           </template>
-          <template v-slot:item.actions="{ item }">
+          <template v-slot: item.actions="{ item }">
               <v-icon
                 @click="deletePersonForFamily(item)"
+              
               >
                 mdi-delete
               </v-icon>
@@ -135,12 +136,12 @@
   <v-divider class="my-5"></v-divider>
     <v-row justify="center">
       <v-col justify="left" col="1"> 
-        <v-btn color="error" @click="cancel">
+        <v-btn color="dark" @click="cancel">
           Cancel
         </v-btn>
       </v-col>
       <v-col justify="right" col="2"> 
-        <v-btn class= "float-right" color="success" @click="saveFamily">
+        <v-btn class= "float-right" color="dark" @click="saveFamily">
           Save
         </v-btn>
       </v-col>
