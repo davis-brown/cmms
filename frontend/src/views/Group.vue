@@ -3,6 +3,7 @@
     <v-container fluid>
      <h1>Groups</h1>
      <v-btn
+      v-if="showAdminBoard"
 			to="/groupadd"
 			class="mr-4"
 			dark
@@ -32,14 +33,21 @@
 <script>
 import GroupDataServices from "../services/GroupDataService";
 import GroupCard from "../components/GroupCard";
+
 export default {
   name: 'Group-List',
   components: {
-    GroupCard
+    GroupCard,
   },
     data() {
         return {
-            groups: []
+            groups: [],
+        showAdminBoard() {
+      if (this.currentUser && this.currentUser.roles) {
+        return this.currentUser.roles.includes('ROLE_ADMIN');
+      }
+      return false;
+    },
         };
       },
       methods: {
