@@ -261,6 +261,17 @@ export default {
       </span>
       </v-btn>
 
+      <v-btn
+        to="/lifeevent"
+        text-lg-right
+        elevation="6"
+        color="blue darken-4"
+        >
+        <span class="mr-2">
+        <v-icon> Life Events</v-icon>
+        </span>
+      </v-btn>
+
     </v-app-bar>
 
     <v-main>

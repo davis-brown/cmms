@@ -7,6 +7,8 @@ import Calendar from "./components/Calendar"
 import Congregation_Display from "./views/Congregation_Display"
 import CongregationEdit from "./views/CongregationEdit"
 import HomePage from "./views/HomePage"
+import LifeEventList from "./views/LifeEventList"
+import LifeEventAdd from "./views/LifeEventAdd"
 Vue.use(Router);
 
 export default new Router({
@@ -14,6 +16,17 @@ export default new Router({
 
 
   routes: [
+    {
+      path: "/lifeevent",
+      name: "lifeevent",
+      component: LifeEventList
+    },
+    {
+      path: "/lifeeventadd",
+      name: "lifeeventadd",
+      component: LifeEventAdd
+
+    },
     {
       path: "/families",
       name: "familieslist",
