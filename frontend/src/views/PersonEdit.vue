@@ -1,6 +1,11 @@
 <template>
   <div v-if="currentPerson" class="edit-form py-3">
       <v-form ref="form" lazy-validation>
+      <v-checkbox
+      v-model="currentPerson.pub_permission"
+      label="Publish Permission"
+
+    ></v-checkbox>
        <v-text-field
         v-model="currentPerson.fam_ID"
         :rules="[(v) => !!v || 'Family ID is required']"
@@ -26,37 +31,18 @@
         label="Last Name"
         required
       ></v-text-field>
-      <!--<v-text-field
-        v-model="currentPerson.user_name"
-        :rules="[(v) => !!v || 'User Name is required']"
-        label="User Name"
-        required
-      ></v-text-field>
-      <v-text-field
-        v-model="currentPerson.role_value"
-        :rules="[(v) => !!v || 'Role Value is required']"
-        label="Role Value"
-        required
-      ></v-text-field>
-        <v-text-field
-        v-model="currentPerson.password"
-        :rules="[(v) => !!v || 'Password is required']"
-        label="Password"
-        required
-      ></v-text-field>
-      -->
+    
       <v-text-field
         v-model="currentPerson.bday"
         :rules="[(v) => !!v || 'Birthday is required']"
         label="Birthday (YYYY-MM-DD)"
         required
       ></v-text-field>
-       <v-text-field
-        v-model="currentPerson.baptised"
-        :rules="[(v) => !!v || 'Baptism is required']"
-        label="Baptised "
-        required
-      ></v-text-field>
+        <v-checkbox
+      v-model="currentPerson.baptised"
+      label="Baptised"
+ 
+    ></v-checkbox>
         <v-text-field
         v-model="currentPerson.bapt_date"
         label="Baptism Date"
@@ -73,23 +59,12 @@
         label="Publishing Permission "
         required
       ></v-text-field>
-      <!--
-      <v-text-field
-        v-model="currentPerson.church_pos"
-        :rules="[(v) => !!v || 'Church Position is required']"
-        label="Position in the Church "
-        required
-      ></v-text-field>
-        -->
-      <!--<v-text-field
-        v-model="currentPerson.fam_pos"
-        :rules="[(v) => !!v || 'Family Position is required']"
-        label="Position in the Family "
-        required
-      ></v-text-field>-->
-
-
-
+      <v-textarea
+          v-model="currentPerson.notes"
+          solo
+          label="Notes"
+        ></v-textarea>
+     
     
     <v-btn color="dark" small @click="updatePerson">
         Submit
@@ -99,8 +74,6 @@
         Cancel
       </v-btn>
         
-
-
      </v-form>
 <p>{{ message }}</p>
   </div>
