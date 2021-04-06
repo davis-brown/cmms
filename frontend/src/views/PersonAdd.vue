@@ -85,6 +85,70 @@
        </form>
       <v-btn color="primary" class="offset-sm4 mt-3" @click="savePerson">Submit</v-btn>
       <v-btn color="primary" class="mt-3" @click="cancel">Cancel</v-btn>
+
+
+      <v-container>
+
+     <h1>List of Life Events </h1>
+	<v-btn
+			to="/lifeeventadd"
+			class="mr-4"
+			dark
+			color="primary"
+		>
+    New Life Event
+		</v-btn>
+      <v-spacer>  </v-spacer> 
+  
+      <v-spacer>  </v-spacer> 
+  <v-card
+    class="mx-auto"
+    max-width="1000"
+    elevation="3"
+    height="1000"
+    outlined
+    >
+    <v-card-title>
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Search"
+        single-line
+        hide-details
+      ></v-text-field>
+    </v-card-title>
+  
+  <v-data-table
+      :headers="headers"
+      :items="person"
+      :single-expand="singleExpand"
+      :expanded.sync="expanded"
+      item-key="event_ID"
+      show-expand
+      class="elevation-1"
+      :search="search"
+    
+    >
+<template v-slot:expanded-item="{ item }">
+      <td :colspan="headers.length">
+        <v-card-actions>
+				<v-btn
+				@click="editEvent(item)"
+				class="ma"
+				outlined
+        top
+				small
+				fab
+				color="blue darken"
+				>
+				<v-icon>mdi-pencil</v-icon>
+				</v-btn>
+       </v-card-actions>
+      </td>
+    </template>
+    </v-data-table>
+    </v-card> 
+    </v-container>
      </div>
   
 </template>
@@ -96,16 +160,17 @@ export default {
   data() {
     return {
       person: {},
-      people: {}
-  
+      people: {},
+      prevRoute: ""
     };
   },
   methods: {
     savePerson() {
-      console.log(this.person)
+      console.log(this.$route.params)
       PersonDataService.create(this.person)
         .then(() => {
-          this.$router.push({ name: "personlist" });
+          console.log(this.prevRoute)
+          this.$router.push({ name: this.prevRoute.name, params: { per_ID: this.person.per_ID, id: this.$route.params.fam_ID } });
           console.log(this.data)
         })
         .catch((e) => {
@@ -113,9 +178,15 @@ export default {
         });
     },
     cancel() {
-      this.$router.push({ name: "personlist" });
+      this.$router.go(-1);
     },
   },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.prevRoute = from
+    })
+  },
+
 };
 </script>
 
