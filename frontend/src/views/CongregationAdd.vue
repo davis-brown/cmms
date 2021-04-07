@@ -37,7 +37,7 @@ export default {
       console.log(this.congregation)
       CongregationServices.create(this.congregation)
         .then(() => {
-          this.$router.push({ name: "congregationdisplay" });
+          this.$router.push({ name: 'home' });
           console.log(this.data)
         })
         .catch((e) => {
@@ -45,7 +45,7 @@ export default {
         });
     },
     cancel() {
-      this.$router.push({ name: "congregationdisplay" });
+      this.$router.push({ name: 'home' });
     },
   },
 };
