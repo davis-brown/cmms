@@ -114,7 +114,7 @@
               </v-dialog>
             </v-toolbar>
           </template>
-          <template v-slot: item.head="{ item }">
+          <template v-slot:item.head="{ item }">
             <v-radio-group
               v-model="family.per_ID"
               name="rowSelector">
