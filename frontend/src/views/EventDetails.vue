@@ -44,7 +44,7 @@ export default {
   },
 
   methods: {
-      getEvent(evt_ID) {
+    getEvent(evt_ID) {
       EventService.get(evt_ID)
         .then(response => {
           this.currentEvent = response.data;
@@ -54,6 +54,8 @@ export default {
           console.log(e);
         });
     },
+
+    
    
   }
 }

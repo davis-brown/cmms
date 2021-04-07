@@ -30,7 +30,7 @@
       <nav class="navbar navbar-expand navbar-dark" style="background-color:#31609d;">
         <div class="navbar-nav mx-auto font-weight-normal" style="font-size:20px">
           <li class="nav-item">
-            <router-link to="/home" class="nav-link">
+            <router-link to="/homepage" class="nav-link">
               Home
             </router-link>
           </li>
