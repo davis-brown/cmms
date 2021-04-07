@@ -118,7 +118,7 @@
             <v-radio-group
               v-model="family.per_ID"
               name="rowSelector">
-              <v-radio :value="item.person.per_ID"/>
+              <div class="d-flex justify-center"><v-radio :value="item.person.per_ID"/></div>
             </v-radio-group>
           </template>
           <template v-slot: item.actions="{ item }">
