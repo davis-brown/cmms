@@ -121,7 +121,7 @@
               <div class="d-flex justify-center"><v-radio :value="item.person.per_ID"/></div>
             </v-radio-group>
           </template>
-          <template v-slot: item.actions="{ item }">
+          <template v-slot:item.actions="{ item }">
               <v-icon
                 @click="deletePersonForFamily(item)"
               
