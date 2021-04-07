@@ -13,8 +13,8 @@ exports.create = (req, res) => {
 
     // Create a Familyperson
     const familyperson = {
+        fp_ID: req.body.fp_ID,
         fam_ID: req.body.fam_ID,
-        fam_name: req.body.fam_name,
         per_ID: req.body.per_ID,
         fam_role: req.body.fam_role
     };
