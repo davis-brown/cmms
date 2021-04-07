@@ -29,7 +29,7 @@
     </header>
       <nav class="navbar navbar-expand navbar-dark" style="background-color:#31609d;">
         <div class="navbar-nav mx-auto font-weight-normal" style="font-size:20px">
-          <li class="nav-item">
+          <li v-if="currentUser" class="nav-item">
             <router-link to="/homepage" class="nav-link">
               Home
             </router-link>
