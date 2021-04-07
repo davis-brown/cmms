@@ -23,7 +23,7 @@
         </v-carousel-item>
     </v-carousel>
 
-    <div class="member row" style="background-color: orange; height: 400px; width:100%; margin:0; overflow: hidden;">
+    <div class="member row" style="background-color: orange; height: 400px; width:100%; margin:0;">
         <div class="textcontainer">
              <h2 style="font-weight: 900">Members</h2>
             <p>Find out more about the members of the riverside church</p>
@@ -48,7 +48,7 @@
         </div>
     </div>
 
-    <div class="families row" style="background-color:#F4A460; height: 400px; width:100%; margin:0; overflow: hidden;">
+    <div class="families row" style="background-color:#F4A460; height: 400px; width:100%; margin:0;">
         <div class="textcontainer">
              <h2 style="font-weight: 900">Families</h2>
             <p>View and edit your family information and view the families in Riverside Community Church</p>
@@ -60,7 +60,7 @@
         
     </div>
        
-     <div class="event row" style="background-color:#87CEFA; height: 400px; width:100%; margin:0; overflow: hidden;">
+     <div class="event row" style="background-color:#87CEFA; height: 400px; width:100%; margin:0;">
         <div class="imagecontainer">
             <img src="../assets/calendarpicture.jpg">
         </div>
@@ -126,6 +126,7 @@ export default {
 * {
     margin: 0;
     padding: 0;
+    overflow: hidden;
 }
 
 

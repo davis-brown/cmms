@@ -115,7 +115,7 @@ export default {
   methods: {
     logOut() {
       this.$store.dispatch('auth/logout');
-      this.$router.push('/login');
+      this.$router.push('/homepage');
     }
   }
 

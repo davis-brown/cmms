@@ -14,18 +14,19 @@ export const router = new Router({
   mode: "history",
   routes: [
     {
+      path: '/',
+      name: 'HomePage',
+      // lazy-loaded
+      component: () => import('./views/HomePage.vue')
+    },
+    {
       path: '/homepage',
       name: 'HomePage',
       // lazy-loaded
       component: () => import('./views/HomePage.vue')
     },
     {
-      path: '/',
-      name: 'home',
-      component: Home
-    },
-    {
-      path: '/home',
+      path: '/congregation',
       name: 'home',
       component: Home
     },
@@ -137,7 +138,7 @@ export const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/login', '/register', '/homepage'];
+  const publicPages = ['/login', '/register', '/homepage','/'];
   const authRequired = !publicPages.includes(to.path);
   const loggedIn = localStorage.getItem('user');
 
@@ -147,5 +148,25 @@ router.beforeEach((to, from, next) => {
     next('/login');
   } else {
     next();
+  }
+
+  if ((from.path=='/' || from.path=='/homepage')&& !loggedIn) {
+    next('/login');
+    if (loggedIn) {
+      if (to.path=='/person'){
+        router.push('/person');
+      }
+      if (to.path=='/group'){
+        router.push('/group');
+      }
+      if (to.path=='/families'){
+        router.push('/families');
+      }
+      if (to.path=='/calendar'){
+        router.push('/calendar');
+      }
+    }
+    
+
   }
 });
