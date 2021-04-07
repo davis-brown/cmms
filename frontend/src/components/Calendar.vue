@@ -19,6 +19,7 @@
             color="primary"
             @click="dialog = true"
             dark
+            v-if="showModeratorBoard || showAdminBoard"
           >
             New Event
           </v-btn> 
@@ -175,16 +176,18 @@
               >
                 Close
               </v-btn>
+
               <v-btn
                 text
-                v-if="currentlyEditing != selectedEvent.id"
+                v-if="(currentlyEditing != selectedEvent.id) && showAdminBoard"
                 @click.prevent="editEvent(selectedEvent)"
               >
                 Edit 
               </v-btn>
               <v-btn
                 text
-                v-else
+                
+                v-else-if="showAdminBoard"
                 @click.prevent="updateEvent(selectedEvent)"
               >
                 Save
@@ -206,6 +209,24 @@
 <script>
 import EventService from "../services/EventService";
 export default {
+
+  computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
+    showAdminBoard() {
+      if (this.currentUser && this.currentUser.roles) {
+        return this.currentUser.roles.includes('ROLE_ADMIN');
+      }
+      return false;
+    },
+    showModeratorBoard() {
+      if (this.currentUser && this.currentUser.roles) {
+        return this.currentUser.roles.includes('ROLE_MODERATOR');
+      }
+      return false;
+    }
+  },
     
     data: () => ({
 

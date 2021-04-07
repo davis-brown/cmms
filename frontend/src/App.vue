@@ -72,7 +72,7 @@
         </div>
       <div v-if="currentUser" class="navbar-nav">
         
-        <li v-if="showAdminBoard" class="nav-item">
+        <li v-if="showModeratorBoard" class="nav-item">
             <router-link to="/admin" class="nav-link">Admin Board</router-link>
           </li>
           <li v-if="showModeratorBoard" class="nav-item">
