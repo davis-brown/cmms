@@ -267,6 +267,7 @@ export default {
           familyPerson.person = response.data;
           console.log(familyPerson)
           this.familyPersons.push(familyPerson)
+          this.familyPerson = {};
         })
         .catch(e => {
           console.log(e);
@@ -304,6 +305,4 @@ export default {
 h1 {
   text-align: center;
 }
-
-
 </style>

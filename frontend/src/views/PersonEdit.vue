@@ -59,12 +59,17 @@
         label="Publishing Permission "
         required
       ></v-text-field>
-      <v-textarea
+     
+          <v-textarea
           v-model="currentPerson.notes"
           solo
           label="Notes"
         ></v-textarea>
-     
+
+    <PersonContact
+      v-bind:key="currentPerson.per_ID"
+      v-bind:person="currentPerson"
+		></PersonContact>
     
     <v-btn color="dark" small @click="updatePerson">
         Submit
@@ -75,7 +80,7 @@
       </v-btn>
         
      </v-form>
-<p>{{ message }}</p>
+    <p>{{ message }}</p>
   </div>
 
   <div v-else>
@@ -88,11 +93,15 @@
 
 <script>
 import PersonDataService from "../services/PersonDataService";
+import PersonContact from "../components/ContactInfo";
+
 export default {
+  components: {
+		PersonContact
+	},
   data() {
     return {
       currentPerson: null,
-  
      
     };
   },
@@ -107,7 +116,7 @@ export default {
           console.log(e);
         });
     },
-     cancel() {
+    cancel() {
       this.$router.push({ name: "personlist" });
     },
     updatePerson() {
@@ -130,9 +139,10 @@ export default {
         .catch(e => {
           console.log(e);
         });
-    }
-
     },
+    
+
+  },
   mounted() {
     this.message = '';
     this.getPerson(this.$route.params.id);

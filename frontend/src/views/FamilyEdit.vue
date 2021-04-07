@@ -304,10 +304,12 @@ export default {
           .then(() => {
                 this.getPeopleForFamily(this.$route.params.id);
                 console.log(this.familyPersons);
+                this.familyPerson = {};
           })
           .catch(error => {
               this.message = error.response.data.message;
           });
+        
            
     },
     close () {

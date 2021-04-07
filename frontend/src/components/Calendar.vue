@@ -97,12 +97,22 @@
           <v-card>
               <v-container>
                 <v-form @submit.prevent="addEvent">
-                    <v-text-field v-model="event.event_name" type="text" label="event name (required)"></v-text-field>
-                    <v-text-field v-model="event.event_desc" type="text" label="detail"></v-text-field>
-                    <v-text-field v-model="event.event_date" type="date" label="start (required)"></v-text-field>
-                    <v-text-field v-model="event.event_start" type="time" label="start time (required)"></v-text-field>
-                    <v-text-field v-model="event.event_end" type="time" label="end time (required)"></v-text-field>
-                    <v-text-field v-model="event.color" type="color" label="color (click to open color menu)"></v-text-field>
+                    <v-text-field v-model="event.event_name" type="text" label="event name (required)" required></v-text-field>
+                    <v-text-field v-model="event.event_desc" type="text" label="detail" required></v-text-field>
+                    <v-text-field v-model="event.loc_ID" type="text" label="event location" required></v-text-field>
+                    <v-text-field v-model="event.event_date" type="date" label="start (required)" required></v-text-field>
+                    <v-text-field v-model="event.event_start" type="time" label="start time (required)" required></v-text-field>
+                    <v-text-field v-model="event.event_end" type="time" label="end time (required)" required></v-text-field>
+                    <v-label><p style="font-size: 14px">Color (pick a color)</p></v-label>
+                    <div class="container v-row" style="margin-top:-20px; margin-bottom: 15px">
+                      <v-btn fab x-small color="blue" @click="event.color='#1e90ff'" style=" margin-left: -15px; margin-right:4px"></v-btn>
+                      <v-btn fab x-small color="red" @click="event.color='#ff0000'" style="margin-right:4px"></v-btn>
+                      <v-btn fab x-small color="green" @click="event.color='#008000'" style="margin-right:4px"></v-btn>
+                      <v-btn fab x-small color="pink" @click="event.color='#ff69b4'" style="margin-right:4px"></v-btn>
+                      <v-btn fab x-small color="purple" @click="event.color='#800080'" style="margin-right:4px"></v-btn>
+                      <v-btn fab x-small color="orange" @click="event.color='#ffa500'"></v-btn>
+                    </div>
+                    <hr>
                     <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialog=false">Create Event</v-btn>
                 </v-form>
               </v-container>
@@ -133,23 +143,23 @@
             flat
           >
             <v-toolbar
-              :color="selectedEvent.event_color"
+              :color="selectedEvent.color"
               dark
             >
-              <v-btn @click="deleteEvent(selectedEvent.evt_id)" icon>
+              <v-btn @click="deleteEvent(selectedEvent.id)" icon>
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
-              <v-toolbar-title v-html="selectedEvent.event_name"></v-toolbar-title>
+              <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
               <v-spacer></v-spacer>
               
             </v-toolbar>
             <v-card-text>
-              <form v-if="currentlyEditing != selectedEvent.evt_id">
-                  {{selectedEvent.event_desc}}
+              <form v-if="currentlyEditing !== selectedEvent.id">
+                  {{selectedEvent.details}}
               </form>
               <form v-else>
                   <textarea-autosize
-                      v-model="selectedEvent.event_desc"
+                      v-model="selectedEvent.details"
                       type="text"
                       style="width: 100%"
                       :min-height="100"
@@ -167,7 +177,7 @@
               </v-btn>
               <v-btn
                 text
-                v-if="currentlyEditing != selectedEvent.evt_id"
+                v-if="currentlyEditing != selectedEvent.id"
                 @click.prevent="editEvent(selectedEvent)"
               >
                 Edit 
@@ -178,6 +188,12 @@
                 @click.prevent="updateEvent(selectedEvent)"
               >
                 Save
+              </v-btn>
+              <v-btn
+              text
+               @click.prevent="moreEvent(selectedEvent)"
+              >
+                View More...
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -202,7 +218,7 @@ export default {
             event_end: null,
             event_start: null,
             color: "#1976D2",
-            loc_id: null
+            loc_id: null,
           },
         
         today: new Date().toISOString(),
@@ -228,8 +244,15 @@ export default {
     }),
 
     created() { 
-      
-     EventService.getEvents()
+      this.getEvents();
+     
+    },
+
+    
+    methods: {
+
+      getEvents() {
+        EventService.getEvents()
 
             .then(response => {
                 //console.log(response.data[0]);
@@ -244,80 +267,21 @@ export default {
                    event.name = response.data[i].event_name;
                    
                    event.color = response.data[i].color;
+                   event.id = response.data[i].evt_ID;
+                   event.details = response.data[i].event_desc;
+                   event.location = response.data[i].loc_ID;
 
                    events.push(event);  
                 
                 }
                 this.events = events;
-  
                 console.log(events);
-              
-                
             })
             .catch(error => {
               console.log(error);
                 this.message = error.response.data.message;
             });
-    },
-
-    
-    methods: {
-
-
-      /*
-        async getEvents () {
-            let snapshot = await db.collection('calEvent').get();
-            let events = [];
-            snapshot.forEach(doc => {
-                let appData = doc.data();
-                appData.id = doc.id;
-                //start
-                let datelength = appData.start.length;
-                var changemonth = appData.start.substr(datelength-5);
-                var changeyear = appData.start.substr(0,4);
-                var newdate = changeyear + "-" + changemonth;
-                //end
-                let datelengthE = appData.start.length;
-                var changemonthE = appData.start.substr(datelengthE-5);
-                var changeyearE = appData.start.substr(0,4);
-                var newdateE = changeyearE + "-" + changemonthE;
-                appData.start = newdate;
-                appData.end = newdateE;
-                events.push(appData);
-
-            });
-            this.events =events;
-
-
-            console.log(events);
-        },
-
-        */
-
-        // async addEvent() {
-        //     if(this.name && this.start && this.end) {
-        //         await db.collection('calEvent').add({
-        //             name: this.name,
-        //             details: this.details,
-        //             start: this.start,
-        //             end: this.end,
-        //             starttime: this.starttime,
-        //             endtime: this.endttime,
-        //             color: this.color
-        //         });
-        //         this.getEvents();
-        //         this.name = "";
-        //         this.details = "";
-        //         this.start = "";
-        //         this.end = "";
-        //         this.color = "";
-        //         this.starttime = "",
-        //         this.endtime = ""
-        //     }
-        //     else {
-        //         alert('Name, start and end date are required')
-        //     }
-        // },
+      },
 
       addEvent() {
         console.log(this.event)
@@ -328,6 +292,9 @@ export default {
           .catch((e) => {
             console.log(e);
           });
+        this.selectedOpen = false;
+        this.getEvents();
+        console.log("done");
       },
 
         // async updateEvent(ev) {
@@ -341,44 +308,52 @@ export default {
         //     this.currentlyEditing = null;
         // },
 
-      updateEvent() {
-      EventService.update(this.selectedEvent.evt_ID, this.selectedEvent)
+      updateEvent(calendarevent) {
+        this.event = {};
+        event.event_name = calendarevent.name;
+        event.event_desc = calendarevent.details;
+        event.event_date = calendarevent.start.substr(0,10);
+        event.event_start = calendarevent.start.substr(10,14);
+        event.event_end = calendarevent.end.substr(10,14);
+        event.loc_ID = calendarevent.location;
+
+        console.log(event.event_start);
+
+      EventService.update(this.currentlyEditing, event)
         .then(response => {
           console.log(response.data);
         })
         .catch(e => {
           console.log(e);
         });
+        this.selectedOpen = false;
+        this.currentlyEditing = null;
+        
       },
 
       //MySQL 
       deleteEvent() {
-        EventService.delete(this.currentEvent.event_ID)
+        EventService.delete(this.selectedEvent.id)
+        
         .then(response => {
           console.log(response.data);
         })
         .catch(e => {
           console.log(e);
         });
+
+        this.selectedOpen = false;
+        this.getEvents();
       },
-    
-        
-/*
-        async deleteEvent(ev) {
-            await db
-            .collection('calEvent')
-            .doc(ev)
-            .delete();
 
-            this.selectedOpen = false;
-            this.getEvents();
-        },
+      moreEvent(currentevent) {
+        this.event = {};
+        event.evt_ID = currentevent.id;
+        this.$router.push({ name: 'eventdetails', params: { id: event.evt_ID } });
       
-
-      */
-
+        },
        
-        viewDay ({ date }) {
+      viewDay ({ date }) {
         this.focus = date
         this.type = 'day'
       },
@@ -386,18 +361,21 @@ export default {
       getEventColor (event) {
         return event.color
       },
+
       setToday () {
         this.focus = ''
       },
+
       prev () {
         this.$refs.calendar.prev()
       },
+
       next () {
         this.$refs.calendar.next()
       },
 
       editEvent(event) {
-          this.currentlyEditing = event.evt_ID;
+          this.currentlyEditing = event.id;
       },
 
       showEvent ({ nativeEvent, event }) {
@@ -418,6 +396,7 @@ export default {
 
         nativeEvent.stopPropagation()
       },
+
       updateRange ({ event_start, event_end }) {
         this.event_start = event_start
         this.event_end = event_end
@@ -427,6 +406,10 @@ export default {
           return d > 3 && d < 21
           ? 'th'
           : ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th','th', 'th'][d % 10]
+      }, 
+
+      reloadPage() {
+        window.location.reload()
       }
 
     }
