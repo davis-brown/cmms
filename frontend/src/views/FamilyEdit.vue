@@ -117,7 +117,7 @@
             <v-radio-group
               v-model="currentFamily.per_ID"
               name="rowSelector">
-              <v-radio :value="item.person.per_ID"/>
+              <div class="d-flex justify-center"><v-radio :value="item.person.per_ID"/></div>
             </v-radio-group>
           </template>
           <template v-slot:item.actions="{ item }">
@@ -209,7 +209,6 @@ export default {
       FamilyService.get(fam_ID)
         .then(response => {
           this.currentFamily = response.data;
-          console.log(response.data);
         })
         .catch(e => {
           console.log(e);
@@ -217,12 +216,27 @@ export default {
     },
 
     updateFamily() {
-      const formData = new FormData();
-      formData.append("file", this.selectedFile);
-      formData.append("existingPic", this.currentFamily.fam_pic);
-      FamilyService.upload(formData)
-      .then(res => {
-        this.currentFamily.fam_pic = res.data.path;
+      if(this.selectedFile.length == 0)  {
+        const formData = new FormData();
+        formData.append("file", this.selectedFile);
+        formData.append("existingPic", this.currentFamily.fam_pic);
+        FamilyService.upload(formData)
+        .then(res => {
+          this.currentFamily.fam_pic = res.data.path;
+          FamilyService.update(this.currentFamily.fam_ID, this.currentFamily)
+            .then(response => {
+              console.log(response.data);
+              this.message = 'The family was updated successfully!';
+              this.$router.push({ name: 'familieslist' });
+            })
+            .catch(e => {
+              console.log(e);
+            });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      } else {
         FamilyService.update(this.currentFamily.fam_ID, this.currentFamily)
           .then(response => {
             console.log(response.data);
@@ -232,10 +246,7 @@ export default {
           .catch(e => {
             console.log(e);
           });
-      })
-      .catch(err => {
-        console.log(err);
-      });
+      }
     },
 
     deleteFamily() {
