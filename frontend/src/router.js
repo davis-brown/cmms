@@ -14,6 +14,12 @@ export const router = new Router({
   mode: "history",
   routes: [
     {
+      path: '/homepage',
+      name: 'HomePage',
+      // lazy-loaded
+      component: () => import('./views/HomePage.vue')
+    },
+    {
       path: '/',
       name: 'home',
       component: Home
@@ -131,7 +137,7 @@ export const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/login', '/register', '/home'];
+  const publicPages = ['/login', '/register', '/homepage'];
   const authRequired = !publicPages.includes(to.path);
   const loggedIn = localStorage.getItem('user');
 
