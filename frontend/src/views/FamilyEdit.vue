@@ -216,7 +216,7 @@ export default {
     },
 
     updateFamily() {
-      if(this.selectedFile.length == 0)  {
+      if(this.selectedFile.length != 0)  {
         const formData = new FormData();
         formData.append("file", this.selectedFile);
         formData.append("existingPic", this.currentFamily.fam_pic);
