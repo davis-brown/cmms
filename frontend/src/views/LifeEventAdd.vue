@@ -5,12 +5,12 @@
     <form @submit.prevent="saveLifeEvent">
 
     <v-text-field
-    v-model="event.event_ID"
+    v-model="lifeevent.event_ID"
     label="Life Event Date"
     ></v-text-field>
 
     <v-text-field
-    v-model="event.event_notes"
+    v-model="lifeevent.event_notes"
     label="Life Event Notes"
     ></v-text-field>
       
@@ -27,15 +27,15 @@ import LifeEventService from "../services/LifeEventService";
 export default {
   data() {
     return {
-      event: {},
-      events: []
+      lifeevent: {},
+      lifeevents: []
   
     };
   },
   methods: {
     saveLifeEvent() {
-      console.log(this.event)
-      LifeEventService.create(this.event)
+      console.log(this.lifeevent)
+      LifeEventService.create(this.lifeevent)
         .then(() => {
           this.$router.push({ name: "lifeevent" });
           console.log(this.data)
