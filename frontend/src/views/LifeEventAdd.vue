@@ -10,7 +10,7 @@
     ></v-text-field>
 
     <v-text-field
-    v-model="lifeevent.event_notes"
+    v-model="lifeevent.event_note"
     label="Life Event Notes"
     ></v-text-field>
       

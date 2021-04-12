@@ -90,7 +90,7 @@ import LifeEventService from "../services/LifeEventService";
                 },
                   {
                     text: 'Details',
-                    value: 'notes',
+                    value: 'note',
                     align: 'left',
                     sortable: true,
                     width: "5%"
