@@ -83,14 +83,14 @@ import LifeEventService from "../services/LifeEventService";
               },
                 {
                     text: 'Date',
-                    value: 'date',
+                    value: 'event_date',
                     align: 'left',
                     sortable: true,
-                    width: "5%"
+                    width: "7%"
                 },
                   {
                     text: 'Details',
-                    value: 'note',
+                    value: 'event_note',
                     align: 'left',
                     sortable: true,
                     width: "5%"

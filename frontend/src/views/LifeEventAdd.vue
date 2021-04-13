@@ -5,9 +5,10 @@
     <form @submit.prevent="saveLifeEvent">
 
     <v-text-field
-    v-model="lifeevent.event_ID"
+    v-model="lifeevent.event_date"
     label="Life Event Date"
     ></v-text-field>
+
 
     <v-text-field
     v-model="lifeevent.event_note"
