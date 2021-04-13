@@ -7,12 +7,16 @@
     <v-text-field
     v-model="lifeevent.event_date"
     label="Life Event Date"
+    required
+    clearable
     ></v-text-field>
 
 
     <v-text-field
     v-model="lifeevent.event_note"
     label="Life Event Notes"
+    required
+    clearable
     ></v-text-field>
       
        </form>

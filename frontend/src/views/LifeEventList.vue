@@ -46,7 +46,7 @@
       <td :colspan="headers.length">
         <v-card-actions>
 				<v-btn
-				@click="editEvent(item)"
+				@click="editLifeEvent(item)"
 				class="ma"
 				outlined
         top

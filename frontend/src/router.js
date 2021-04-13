@@ -9,6 +9,7 @@ import CongregationEdit from "./views/CongregationEdit"
 import HomePage from "./views/HomePage"
 import LifeEventList from "./views/LifeEventList"
 import LifeEventAdd from "./views/LifeEventAdd"
+import LifeEventEdit from "./views/LifeEventEdit"
 Vue.use(Router);
 
 export default new Router({
@@ -26,6 +27,11 @@ export default new Router({
       name: "lifeeventadd",
       component: LifeEventAdd
 
+    },
+    {
+      path: "/lifeeventedit",
+      name: "lifeeventedit",
+      component: LifeEventEdit
     },
     {
       path: "/families",
