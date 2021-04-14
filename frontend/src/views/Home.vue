@@ -1,7 +1,18 @@
 <template>
+  
 <v-main>
+ <v-carousel cycle hide-delimiter-background height="500px">
+      <v-carousel-item
+        v-for="(item,i) in items"
+        :key="i"
+        :src="item.src"
+        reverse-transition="fade"
+        transition="fade"
+      ></v-carousel-item>
+  </v-carousel>
+  
 <v-container>
-    <h1>Congregation Information</h1>
+    <h1> Congregation Information</h1>
      <v-btn
 			to="/congregationadd"
 			class="mr-4"
@@ -10,6 +21,7 @@
 		>
     Add Congregation
 		</v-btn>
+        <v-divider> </v-divider>
         <v-row
         align="center">
 		<v-col
@@ -57,19 +69,36 @@
        </v-col>
        </v-row>
  </v-container>
-    </v-main>
+</v-main>
 </template>
 
 <script>
-import CongregationServices from "../services/CongregationServices.js";
+import UserService from '../services/user.service';
+import CongregationServices from "../services/CongregationServices";
 
 export default {
-    data(){
-        return {
-            congregations: {}
-        };
-      },
-        created() {
+  name: 'Home',
+  data() {
+    return {
+      congregations: {},
+      items: [
+        {
+          src: require("../assets/riversidewindow.jpg")
+        },
+        {
+           src: 'https://christianchronicle.org/wp-content/uploads/2017/09/mrcc_01.jpg'
+        },
+        {
+          src: 'https://c4s6k6b6.rocketcdn.me/wp-content/uploads/2020/06/cross-at-sunset-50x30-1-667x400.jpg.webp'
+        },
+        {
+           src: 'https://christianchronicle.org/wp-content/uploads/2019/03/p21_ATFbeller_0419-1024x768.jpg'
+        }
+      ],
+      content: ''
+    };
+  },
+  created() {
             CongregationServices.getAll()
                .then(response => {
                     this.congregations = response.data;
@@ -85,22 +114,24 @@ export default {
 
 
             }
-        }
+        },
 
-       };
-       
+  mounted() {
+    UserService.getPublicContent().then(
+      response => {
+        this.content = response.data;
+      },
+      error => {
+        this.content =
+          (error.response && error.response.data) ||
+          error.message ||
+          error.toString();
+      }
+    );
+  }
+};
+</script>
 
-    </script>
+<style scoped>
 
-<style>
-.list {
-	text-align: left;
-	max-width: 1400px;
-	margin: fixed;
-}
-
-.add-button {
-	margin-left:71%; 
-	margin-right:0;
-}
 </style>

@@ -6,7 +6,7 @@
     <v-col>
       <v-sheet height="200">
         <v-card :elevation="0" class=" d-flex justify-center mt-10 mb-10 loading tile">
-          <h1 class="font-weight-regular ">Events Calendar</h1>
+          <h1 class="font-weight-regular" style="font-weight:400;">Events Calendar</h1>
         </v-card>
         
         <v-toolbar
@@ -19,6 +19,7 @@
             color="primary"
             @click="dialog = true"
             dark
+            v-if="showModeratorBoard || showAdminBoard"
           >
             New Event
           </v-btn> 
@@ -97,15 +98,24 @@
           <v-card>
               <v-container>
                 <v-form @submit.prevent="addEvent">
-                    <v-text-field v-model="name" type="text" label="event name (required)"></v-text-field>
-                    <v-text-field v-model="details" type="text" label="detail"></v-text-field>
-                    <v-text-field v-model="start" type="date" label="start (required)"></v-text-field>
-                    <v-text-field v-model="end" type="date" label="end (required)"></v-text-field>
-                    <v-text-field v-model="color" type="color" label="color (click to open color menu)"></v-text-field>
+                    <v-text-field v-model="event.event_name" type="text" label="event name (required)" required></v-text-field>
+                    <v-text-field v-model="event.event_desc" type="text" label="detail" required></v-text-field>
+                    <v-text-field v-model="event.loc_ID" type="text" label="event location" required></v-text-field>
+                    <v-text-field v-model="event.event_date" type="date" label="start (required)" required></v-text-field>
+                    <v-text-field v-model="event.event_start" type="time" label="start time (required)" required></v-text-field>
+                    <v-text-field v-model="event.event_end" type="time" label="end time (required)" required></v-text-field>
+                    <v-label><p style="font-size: 14px">Color (pick a color)</p></v-label>
+                    <div class="container v-row" style="margin-top:-20px; margin-bottom: 15px">
+                      <v-btn fab x-small color="blue" @click="event.color='#1e90ff'" style=" margin-left: -15px; margin-right:4px"></v-btn>
+                      <v-btn fab x-small color="red" @click="event.color='#ff0000'" style="margin-right:4px"></v-btn>
+                      <v-btn fab x-small color="green" @click="event.color='#008000'" style="margin-right:4px"></v-btn>
+                      <v-btn fab x-small color="pink" @click="event.color='#ff69b4'" style="margin-right:4px"></v-btn>
+                      <v-btn fab x-small color="purple" @click="event.color='#800080'" style="margin-right:4px"></v-btn>
+                      <v-btn fab x-small color="orange" @click="event.color='#ffa500'"></v-btn>
+                    </div>
+                    <hr>
                     <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialog=false">Create Event</v-btn>
-                </v-form> 
-                
-
+                </v-form>
               </v-container>
           </v-card>
       </v-dialog>
@@ -145,7 +155,7 @@
               
             </v-toolbar>
             <v-card-text>
-              <form v-if="currentlyEditing != selectedEvent.id">
+              <form v-if="currentlyEditing !== selectedEvent.id">
                   {{selectedEvent.details}}
               </form>
               <form v-else>
@@ -166,19 +176,27 @@
               >
                 Close
               </v-btn>
+
               <v-btn
                 text
-                v-if="currentlyEditing != selectedEvent.id"
+                v-if="(currentlyEditing != selectedEvent.id) && showAdminBoard"
                 @click.prevent="editEvent(selectedEvent)"
               >
                 Edit 
               </v-btn>
               <v-btn
                 text
-                v-else
+                
+                v-else-if="showAdminBoard"
                 @click.prevent="updateEvent(selectedEvent)"
               >
                 Save
+              </v-btn>
+              <v-btn
+              text
+               @click.prevent="moreEvent(selectedEvent)"
+              >
+                View More...
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -189,12 +207,45 @@
 </template>
 
 <script>
-import { db } from '@/main';
+import EventService from "../services/EventService";
 export default {
+
+  computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
+    showAdminBoard() {
+      if (this.currentUser && this.currentUser.roles) {
+        return this.currentUser.roles.includes('ROLE_ADMIN');
+      }
+      return false;
+    },
+    showModeratorBoard() {
+      if (this.currentUser && this.currentUser.roles) {
+        return this.currentUser.roles.includes('ROLE_MODERATOR');
+      }
+      return false;
+    }
+  },
     
     data: () => ({
-        today: new Date().toISOString().substr(0, 10),
-        focus: new Date().toISOString().substr(0, 10),
+
+       
+          event: {
+            evt_ID: null,
+            event_name: null,
+            event_desc: null,
+            event_date: null,
+            event_end: null,
+            event_start: null,
+            color: "#1976D2",
+            loc_id: null,
+          },
+        
+        today: new Date().toISOString(),
+        focus: new Date().toISOString(),
+      
+        
         type: "month",
         typeToLabel: {
             month: "Month",
@@ -202,11 +253,8 @@ export default {
             day: "Day",
             "4day": "4 Days"
         },
-        name: null,
-        details: null,
-        start: null,
-        end: null,
-        color: "#1976D2",
+        
+    
         currentlyEditing: null,
         selectedEvent: {},
         selectedElement: null,
@@ -216,80 +264,117 @@ export default {
 
     }),
 
-    mounted() {
-        this.getEvents()
+    created() { 
+      this.getEvents();
+     
     },
+
+    
     methods: {
-        async getEvents () {
-            let snapshot = await db.collection('calEvent').get();
-            let events = [];
-            snapshot.forEach(doc => {
-                let appData = doc.data();
-                appData.id = doc.id;
-                //start
-                let datelength = appData.start.length;
-                var changemonth = appData.start.substr(datelength-5);
-                var changeyear = appData.start.substr(0,4);
-                var newdate = changeyear + "-" + changemonth;
-                //end
-                let datelengthE = appData.start.length;
-                var changemonthE = appData.start.substr(datelengthE-5);
-                var changeyearE = appData.start.substr(0,4);
-                var newdateE = changeyearE + "-" + changemonthE;
-                appData.start = newdate;
-                appData.end = newdateE;
-                events.push(appData);
 
-            });
-            this.events =events;
+      getEvents() {
+        EventService.getEvents()
 
+            .then(response => {
+                //console.log(response.data[0]);
+                var events = new Array();
+                
 
-            console.log(events);
-        },
+                for ( var i=0; i< response.data.length; i++) {
+                  var event ={};
+                  event.start = response.data[i].event_date.substr(0,10) + ' '+ response.data[i].event_start;
+                  event.end = response.data[i].event_date.substr(0,10) + ' '+ response.data[i].event_end;
+                 
+                   event.name = response.data[i].event_name;
+                   
+                   event.color = response.data[i].color;
+                   event.id = response.data[i].evt_ID;
+                   event.details = response.data[i].event_desc;
+                   event.location = response.data[i].loc_ID;
 
-        async addEvent() {
-            if(this.name && this.start && this.end) {
-                await db.collection('calEvent').add({
-                    name: this.name,
-                    details: this.details,
-                    start: this.start,
-                    end: this.end,
-                    color: this.color
-                });
-                this.getEvents();
-                this.name = "";
-                this.details = "";
-                this.start = "";
-                this.end = "";
-                this.color = "";
-            }
-            else {
-                alert('Name, start and end date are required')
-            }
-        },
-
-        async updateEvent(ev) {
-            await db
-            .collection('calEvent')
-            .doc(this.currentlyEditing)
-            .update({
-                details:ev.details
+                   events.push(event);  
+                
+                }
+                this.events = events;
+                console.log(events);
             })
-            this.selectedOpen = false;
-            this.currentlyEditing = null;
-        },
+            .catch(error => {
+              console.log(error);
+                this.message = error.response.data.message;
+            });
+      },
 
-        async deleteEvent(ev) {
-            await db
-            .collection('calEvent')
-            .doc(ev)
-            .delete();
+      addEvent() {
+        console.log(this.event)
+        EventService.create(this.event)
+          .then(() => {
+            console.log(this.data)
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+        this.selectedOpen = false;
+        this.getEvents();
+        console.log("done");
+      },
 
-            this.selectedOpen = false;
-            this.getEvents();
-        },
+        // async updateEvent(ev) {
+        //     await db
+        //     .collection('calEvent')
+        //     .doc(this.currentlyEditing)
+        //     .update({
+        //         details:ev.details
+        //     })
+        //     this.selectedOpen = false;
+        //     this.currentlyEditing = null;
+        // },
+
+      updateEvent(calendarevent) {
+        this.event = {};
+        event.event_name = calendarevent.name;
+        event.event_desc = calendarevent.details;
+        event.event_date = calendarevent.start.substr(0,10);
+        event.event_start = calendarevent.start.substr(10,14);
+        event.event_end = calendarevent.end.substr(10,14);
+        event.loc_ID = calendarevent.location;
+
+        console.log(event.event_start);
+
+      EventService.update(this.currentlyEditing, event)
+        .then(response => {
+          console.log(response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+        this.selectedOpen = false;
+        this.currentlyEditing = null;
         
-        viewDay ({ date }) {
+      },
+
+      //MySQL 
+      deleteEvent() {
+        EventService.delete(this.selectedEvent.id)
+        
+        .then(response => {
+          console.log(response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+
+        this.selectedOpen = false;
+        this.getEvents();
+      },
+
+      moreEvent(currentevent) {
+        this.event = {};
+        event.evt_ID = currentevent.id;
+        this.$router.push({ name: 'eventdetails', params: { id: event.evt_ID } });
+      
+        },
+       
+      viewDay ({ date }) {
         this.focus = date
         this.type = 'day'
       },
@@ -297,18 +382,21 @@ export default {
       getEventColor (event) {
         return event.color
       },
+
       setToday () {
         this.focus = ''
       },
+
       prev () {
         this.$refs.calendar.prev()
       },
+
       next () {
         this.$refs.calendar.next()
       },
 
-      editEvent(ev) {
-          this.currentlyEditing = ev.id;
+      editEvent(event) {
+          this.currentlyEditing = event.id;
       },
 
       showEvent ({ nativeEvent, event }) {
@@ -329,15 +417,20 @@ export default {
 
         nativeEvent.stopPropagation()
       },
-      updateRange ({ start, end }) {
-        this.start = start
-        this.end = end
+
+      updateRange ({ event_start, event_end }) {
+        this.event_start = event_start
+        this.event_end = event_end
       },
 
       nth (d) {
           return d > 3 && d < 21
           ? 'th'
           : ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th','th', 'th'][d % 10]
+      }, 
+
+      reloadPage() {
+        window.location.reload()
       }
 
     }

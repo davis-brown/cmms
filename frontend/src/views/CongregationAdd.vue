@@ -15,8 +15,8 @@
     ></v-text-field>
       
        </form>
-      <v-btn color="primary" class="offset-sm4 mt-3" @click="saveCongregation">Submit</v-btn>
-      <v-btn color="primary" class="mt-3" @click="cancel">Cancel</v-btn>
+      <v-btn color="dark" class="offset-sm4 mt-3" @click="saveCongregation">Submit</v-btn>
+      <v-btn color="dark" class="mt-3" @click="cancel">Cancel</v-btn>
      </div>
   
 </template>
@@ -37,7 +37,7 @@ export default {
       console.log(this.congregation)
       CongregationServices.create(this.congregation)
         .then(() => {
-          this.$router.push({ name: "congregationdisplay" });
+          this.$router.push({ name: 'home' });
           console.log(this.data)
         })
         .catch((e) => {
@@ -45,7 +45,7 @@ export default {
         });
     },
     cancel() {
-      this.$router.push({ name: "congregationdisplay" });
+      this.$router.push({ name: 'home' });
     },
   },
 };

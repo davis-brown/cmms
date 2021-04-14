@@ -1,18 +1,189 @@
-<template> 
+<template>
 <v-main>
 <v-container>
-
-     <h1>Members of the Congregation </h1>
+<h1>Members of the Congregation </h1>
 	<v-btn
 			to="/personadd"
 			class="mr-4"
 			dark
 			color="primary"
 		>
-    New Member
+    Add Member
 		</v-btn>
+    <v-divider> </v-divider>
       <v-spacer>  </v-spacer> 
+       <v-row justify="center">
+    <v-col
+      v-for="person in persons"
+      :key="person.per_ID"
+      cols="3"
+      align="center"
+    >
+    
+   
+   <v-menu
+      v-model="menu"
+      :close-on-content-click="false"
+      :nudge-width="200"
+      offset-x
+    >
+ 
+    <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          color="dark"
+          dark
+          v-bind="attrs"
+          v-on="on"
+        >
+          {{person.frst_name}} {{person.last_name}}
+        </v-btn>
+        </template>
+
+        <v-card class="justify-center">
+          <v-list>
+          <v-list-item>
+            <v-list-item-content>
+                
+              <v-list-item-title><h2>{{person.frst_name}} {{person.last_name}} </h2></v-list-item-title>
+              <v-list-item-subtitle>Member Information:
+                <v-divider> </v-divider>
+                <v-row>
+              <v-col
+                cols="12"
+                sm="6"
+                md="4"
+              >
+            <h4>Birthdate: {{ person.bday }}</h4>  
+            
+             
+            <div v-if="person.baptised == 1"> <h3> Baptised </h3> </div>
+            <div v-if="person.baptised == 1" align="right"> <h4> Baptism Date: {{person.bapt_date}} </h4> </div>
+          
+              <v-divider class="my-3"></v-divider>
+                <v-list-item-subtitle>
+                 Notes:
+                    <h6> {{person.notes}} </h6>
+                
+                </v-list-item-subtitle>
+              </v-col>
+              </v-row>
+              </v-list-item-subtitle>
+            </v-list-item-content>
+
+            <v-list-item-action>
+          <v-btn
+          absolute
+          color="white"
+          class="black--text"
+          fab
+          @click="editPerson(person)"
+          small
+          right
+        >
+        Edit
+   
+        </v-btn>
+              </v-list-item-action>
+
+          </v-list-item>
+              </v-list>
+         
+
+          </v-card>
+
+    
+   </v-menu>
+ </v-col>
+    </v-row>
+</v-container>
+</v-main>
+</template>
+
+<script>
+import PersonDataService from "../services/PersonDataService";
+  export default {
+  data() {
+        return { 
+         persons: []
+
+         
+        
+        };
+  },
+    created() {
+        PersonDataService.getAll()
+            .then(response => {
+                this.persons = response.data;
+                console.log(this.persons);
+            })
+            .catch(error => {
+                this.message = error.response.data.message;
+            });
+    },
+    methods: {
+          editPerson(person) {
+            this.$router.push({ name: 'person-edit', params: { id: person.per_ID } });
+    
+        }
+    }
+  };
+
+</script>
+
+
+<style>
+.v-card--reveal {
+  align-items: center;
+  bottom: 0;
+  justify-content: center;
+  opacity: .5;
+  position: absolute;
+  width: 100%;
+}
+</style>
+
+    <!--
+    
+       
+ 
+    <v-card
+      class="mx-auto"
+      color="grey lighten-4"
+      max-width="700px"
+
+   >
+   
+            
+        </v-card-title>
+          </v-card>
   
+      <v-card-text
+        class="pt-6"
+        style="position: relative;"
+      >
+       <v-card-text>
+  
+           <v-row>
+             <v-col
+             cols="12"
+                sm="6"
+                md="4"
+             >
+             <v-text-field>
+             label="{{person.pub_permission}}{{person.baptised}} {{person.bapt_date}}"
+              </v-text-field>
+   
+                  <v-col>
+                      </v-row> 
+                              </v-card-text>  
+ 
+
+
+<<template> 
+<v-main>
+<v-container
+fluid
+>
       <v-spacer>  </v-spacer> 
   <v-card
     class="mx-auto"
@@ -153,19 +324,5 @@ import PersonDataService from "../services/PersonDataService";
                 this.message = error.response.data.message;
             });
     },
-    methods: {
-          editPerson(person) {
-            this.$router.push({ name: 'person-edit', params: { id: person.per_ID } });
-      
-        }
-    }
-  };
-</script>
 
-<style>
-.add-button {
-  margin-left:78%; 
-  margin-right:0;
-  margin-top: 2%;
-}
-</style>
+-->

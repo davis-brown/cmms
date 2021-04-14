@@ -17,12 +17,12 @@
         ></v-text-field>
 
 
-    <v-btn color="success" small @click="updateCongregation">
+    <v-btn color="dark" small @click="updateCongregation">
         Submit
       </v-btn>
 
-    <v-btn color="primary" small @click="cancel">
-        Cancel
+    <v-btn color="dark" small @click="deleteCongregation">
+        Delete
       </v-btn>
     
   </v-form>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import CongregationServices from "../services/CongregationServices.js";
+import CongregationServices from "../services/CongregationServices";
 
 export default {
     data(){
@@ -49,15 +49,12 @@ export default {
           console.log(e);
         });
     },
-     cancel() {
-      this.$router.push({ name: "congregationdisplay" });
-    },
     updateCongregation() {
       CongregationServices.update(this.currentCongregation.con_ID, this.currentCongregation)
         .then(response => {
           console.log(response.data);
           this.message = 'The Congregation was updated successfully!';
-          this.$router.push({ name: 'congregationdisplay' });
+          this.$router.push({ name: 'home' });
         })
         .catch(e => {
           console.log(e);
@@ -67,19 +64,19 @@ export default {
       CongregationServices.delete(this.currentCongregation.con_ID)
         .then(response => {
           console.log(response.data);
-          this.$router.push({ name: "congregationlist" });
+          this.$router.push({ name: 'home' });
         })
         .catch(e => {
           console.log(e);
         });
-    }
-
+    },
     },
   mounted() {
     this.message = '';
     this.getCongregation(this.$route.params.id);
     
   }
+    
 };
 </script>
 <style>
