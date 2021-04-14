@@ -72,7 +72,6 @@ import PersonDataService from "../services/PersonDataService";
 import CommunicationService from "../services/CommunicationService";
 import PersonContactService from "../services/PersonContactService";
 import PersonContact from "../components/AddContactInfo";
-
 export default {
   components: {
 		PersonContact
@@ -89,10 +88,6 @@ export default {
     savePerson() {
       console.log(this.$route.params)
       PersonDataService.create(this.person)
-        .then(() => {
-          console.log(this.prevRoute)
-          this.$router.push({ name: this.prevRoute.name, params: { per_ID: this.person.per_ID, id: this.$route.params.fam_ID } });
-          console.log(this.data)
         .then((response) => {
           this.personContacts.forEach(personContact => {
             personContact.per_ID = response.data.per_ID;
@@ -130,7 +125,6 @@ export default {
       vm.prevRoute = from
     })
   },
-
 };
 </script>
 

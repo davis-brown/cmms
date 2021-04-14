@@ -95,127 +95,6 @@
 
 <script>
 export default {
-  name: 'App',
-  data: () => ({
-    //
-  }),
-};
-</script>
--->
-<template>
-  <v-app>
-    <v-app-bar app
-      color="blue darken-4"
-      height="100"
-     dark>
-
-      <v-img 
-      alt="logo"
-      src="./assets/logoriverside.png"
-      :aspect-ratio="10/2"
-      align
-
-      />
-     <div class="d-flex align-center mr-2">
-        <h2 class="font-weight-light">
-          Church Membership System
-        </h2>
-      </div>
-
-      <v-spacer></v-spacer>
-     <v-btn
-        to="/home"
-        text-lg-right
-        elevation="6"
-        color="blue darken-4"
-      >
-      <span class="mr-2">
-      <v-icon>Home</v-icon>
-      </span>
-      </v-btn>
-
-      <v-btn
-        to="/congregation"
-        text-lg-right
-        elevation="6"
-        color="blue darken-4"
-      >
-        <span class="mr-2">
-        <v-icon>Congregation</v-icon>
-        </span>
-      </v-btn>
-
-      <v-btn
-        to="/person"
-        text-lg-right
-        elevation="6"
-        color="blue darken-4"
-        >
-            <span class="mr-2">
-        <v-icon>Members</v-icon>
-        </span>
-      </v-btn>
-
-  
-      <v-btn
-        to="/families"
-        text-lg-right
-        elevation="6"
-        color="blue darken-4"
-      >
-        <span class="mr-2">
-        <v-icon>Family</v-icon>
-        </span>
-      </v-btn>
-
-      <v-btn
-        to="/group"
-        text-lg-right
-        elevation="6"
-        color="blue darken-4"
-      >
-      <span class="mr-2">
-      <v-icon>Groups</v-icon>
-      </span>
-      </v-btn>
-
-      <v-btn
-        to="/lifeevent"
-        text-lg-right
-        elevation="6"
-        color="blue darken-4"
-        >
-        <span class="mr-2">
-        <v-icon> Life Events</v-icon>
-        </span>
-      </v-btn>
-
-    </v-app-bar>
-
-    <v-main>
-      <router-view/>
-    </v-main>
-  </v-app>
-</template>
-
-      
-<script>
-export default {
-  name: "app",
-  data() {
-   
-    return {
-      drawer: false,
-      items: [
-        { title: 'Home', icon: 'mdi-home', href:"/home"},
-        { title: 'Congregation Information', icon: 'mdi-church', href:"/congregation"},
-        { title: 'Members', icon: 'mdi-account-box', href:"/person" },
-        { title: 'Families', icon: 'mdi-account-group', href:"/families" },
-        { title: 'Groups', icon: 'mdi-account-group-outline', href:"/groups" },
-        { title: 'LifeGroups', icon: 'mdi-home-group', href:"/lifegroups" },
-        { title: 'Events Calendar', icon: 'mdi-calendar', href:"/calendar" },
-
-      ],
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
@@ -239,13 +118,11 @@ export default {
       this.$router.push('/homepage');
     }
   }
-
   }
 </script>
 
 <style>
   @import url('https://fonts.googleapis.com/css?family=Lato');
-
   *{
     font-family: 'Lato', sans-serif;
   }

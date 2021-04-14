@@ -32,10 +32,6 @@ export const router = new Router({
       path: "/lifeeventedit",
       name: "lifeeventedit",
       component: LifeEventEdit
-      path: '/',
-      name: 'HomePage',
-      // lazy-loaded
-      component: () => import('./views/HomePage.vue')
     },
     {
       path: '/homepage',
