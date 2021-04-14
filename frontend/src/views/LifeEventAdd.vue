@@ -6,7 +6,7 @@
 
     <v-text-field
     v-model="lifeevent.event_date"
-    label="Life Event Date"
+    label="Life Event Date: YYYY-DD-MM"
     required
     clearable
     ></v-text-field>
@@ -15,6 +15,9 @@
     <v-text-field
     v-model="lifeevent.event_note"
     label="Life Event Notes"
+    :rules="rules"
+    hide-details="auto"
+
     required
     clearable
     ></v-text-field>
