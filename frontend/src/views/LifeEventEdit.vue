@@ -5,7 +5,7 @@
         <v-text-field
         v-model="currentLifeEvent.event_date"
         :rules="[(v) => !! v || 'Date is required']"
-        label="Date"
+        label="Life Event Date YYYY-DD-MM"
         clearable
         required
         ></v-text-field>
@@ -26,6 +26,10 @@
     <v-btn color="primary" small @click="cancel">
         Cancel
       </v-btn>
+
+    <v-btn color="red" small @click="deleteLifeEvent">
+        Delete Event
+    </v-btn>
     
   </v-form>
   </div>
@@ -52,7 +56,7 @@ export default {
         });
     },
      cancel() {
-      this.$router.push({ name: "congregationdisplay" });
+      this.$router.push({ name: "lifeevent" });
     },
     updateLifeEvent() {
       LifeEventService.update(this.currentLifeEvent.event_ID, this.currentLifeEvent)
@@ -83,6 +87,7 @@ export default {
     
   }
 };
+
 </script>
 <style>
 h4 {
