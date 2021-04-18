@@ -19,7 +19,7 @@
             <v-toolbar
               flat
             >
-              <v-toolbar-title>Group Members</v-toolbar-title>
+              <v-toolbar-title>Group Member</v-toolbar-title>
               <v-divider
                 class="mx-4"
                 inset
@@ -55,7 +55,7 @@
                                 :items="people"
                                 label="Group Member"
                                 item-value="per_ID"
-                            
+                                :filter="customFilter"
                               >
                                 <template slot="selection" slot-scope="data" >
                                   {{data.item.frst_name}} {{data.item.last_name}}
@@ -65,13 +65,7 @@
                                 </template>
                               </v-autocomplete>
                         </v-col>
-                        <v-col justify="left" col="2"> 
-                            <v-text-field
-                              v-model="groupMember.grp_role"
-                              label="Group Role"
-                              required
-                            ></v-text-field>
-                        </v-col>
+                        
                       </v-row>
                     </v-container>
                   </v-card-text>
@@ -96,6 +90,13 @@
                 </v-card>
               </v-dialog>
             </v-toolbar>
+          </template>
+          <template v-slot:[`item.head`]="{ item }">
+            <v-radio-group
+              v-model="currentGroup.per_ID"
+              name="rowSelector">
+              <div class="d-flex justify-center"><v-radio :value="item.person.per_ID"/></div>
+            </v-radio-group>
           </template>
           <template v-slot:[`item.actions`]="{ item }">
               <v-icon
@@ -156,10 +157,11 @@ export default {
                     value: 'person.last_name',
                 },
                 {
-                    text: 'Role',
-                    align: 'left',
-                    value: 'grp_role',
-                }, 
+                    text: 'Group Leader',
+                    align: 'center',
+                    value: 'head',
+                    sortable: false,
+                },
                 {
                     text: 'Delete',
                     value: 'actions',
@@ -197,6 +199,7 @@ export default {
     deleteGroup() {
       GroupDataServices.delete(this.currentGroup.grp_ID)
         .then(response => {
+          //GroupMemberService.delete(this.currentGroup.gm_ID)
           console.log(response.data);
           this.$router.push({ name: "groupdisplay" });
         })
