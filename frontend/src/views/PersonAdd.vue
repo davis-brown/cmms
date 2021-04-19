@@ -1,15 +1,6 @@
 <template>
-<!--<v-form v-model="valid">
-   <v-container>
-      <v-flex sm12 offset-sm4 align-center justify-center>
-      <v-row>
-        <v-col
-          cols="19"
-          md="6"
-        >
-  -->
   <div class="submit-form mx-5 mx-auto">
-    <H1>Add a member</H1>
+    <h1>Add a member</h1>
     <form @submit.prevent="savePerson">
        <v-checkbox
       v-model="person.pub_permission"
