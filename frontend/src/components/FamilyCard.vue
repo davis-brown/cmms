@@ -15,7 +15,11 @@
         </v-card-subtitle>
 
         <v-card-subtitle>
-        Contact Information
+        Email: {{ family.fam_email }}
+        </v-card-subtitle>
+
+        <v-card-subtitle>
+        Phone: {{ family.fam_phone }}
         </v-card-subtitle>
 
         <v-card-actions>
