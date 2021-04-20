@@ -59,6 +59,7 @@
        </form>
        <PersonContact
         v-bind:personContacts="personContacts"
+        v-bind:person="person"
       ></PersonContact>
 
       <v-btn color="dark" class="offset-sm4 mt-3" @click="savePerson">Submit</v-btn>

@@ -10,6 +10,10 @@
           >
             New Family
         </v-btn>
+		<GenerateDirectory
+			v-if="families.length != 0"
+			v-bind:families="families"
+		></GenerateDirectory>
 	<v-divider> </v-divider>
         <v-row>
 			<v-col
@@ -30,11 +34,13 @@
 <script>
 import FamilyService from "../services/FamilyService";
 import FamilyCard from "../components/FamilyCard";
+import GenerateDirectory from "../components/GenerateDirectory";
 
 export default {
 	name: 'Families-List',
 	components: {
-		FamilyCard
+		FamilyCard,
+		GenerateDirectory
 	},
     data() {
         return {
