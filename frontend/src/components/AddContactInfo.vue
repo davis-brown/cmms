@@ -7,6 +7,13 @@
                 :items="emails"
                 hide-default-footer
                 >
+                <template v-slot:item.primary="{ item }">
+                    <v-radio-group
+                    v-model="person.email"
+                    name="rowSelector">
+                    <div class="d-flex justify-center"><v-radio :value="item.communication.address"/></div>
+                    </v-radio-group>
+                </template>
                 <template v-slot:item.actions="{ item }">
                     <v-icon
                         @click="deleteEmail(item)"
@@ -42,6 +49,13 @@
                 :items="phones"
                 hide-default-footer
                 >
+                    <template v-slot:item.primary="{ item }">
+                        <v-radio-group
+                        v-model="person.phone"
+                        name="rowSelector">
+                        <div class="d-flex justify-center"><v-radio :value="item.communication.number"/></div>
+                        </v-radio-group>
+                    </template>
                     <template v-slot:item.actions="{ item }">
                         <v-icon
                             @click="deletePhone(item)"
@@ -77,7 +91,7 @@
 
 export default {
 	name: 'ContactInfo',
-    props: ['personContacts'],
+    props: ['personContacts', 'person'],
     data() {
         return {
             emails: [],
@@ -106,6 +120,12 @@ export default {
                             sortable: false,
                         },
                         {
+                            text: 'Primary',
+                            align: 'center',
+                            value: 'primary',
+                            sortable: false,
+                        },
+                        {
                             text: 'Action',
                             align: 'center',
                             value: 'actions',
@@ -117,6 +137,12 @@ export default {
                             text: 'Phone Number',
                             align: 'left',
                             value: 'number',
+                            sortable: false,
+                        },
+                        {
+                            text: 'Primary',
+                            align: 'center',
+                            value: 'primary',
                             sortable: false,
                         },
                         {
@@ -161,9 +187,6 @@ export default {
             this.phones = this.phones.filter(phone => phone.number!=personcontact.number);
             this.currentPhone = {}
         },
-    },
-    mounted() {
-        this.getPersonContacts(this.person.per_ID);
     }
 };
 </script>

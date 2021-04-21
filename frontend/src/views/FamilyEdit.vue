@@ -129,6 +129,21 @@
           </template>
         </v-data-table>
       </v-card>
+
+      <v-text-field
+        v-model="currentFamily.fam_email"
+        :rules="emailRules"
+        label="Family Email"
+        required
+      ></v-text-field>
+
+      <v-text-field
+        v-model="currentFamily.fam_phone"
+        :rules="phoneRules"
+        label="Family Phone"
+        required
+      ></v-text-field>
+
       <v-divider class="my-5"></v-divider>
 
       <v-row justify="center">
@@ -169,6 +184,15 @@ export default {
       people: [],
       familyPerson: {},
       message: '',
+      emailRules: [
+          v => !!v || 'E-mail is required',
+          v => /.+@.+/.test(v) || 'E-mail must be valid',
+      ],
+      phoneRules: [
+          v => !!v || 'Phone number is required.',
+          v => (v || '').length == 10 || 'Phone number must be 10 digits',
+          v => /(?:\d{1}\s)?\(?(\d{3})\)?-?\s?(\d{3})-?\s?(\d{4})/g.test(v) || 'Phone number must be correct format'
+      ],
       headers: [
                 {
                     text: 'Name',
