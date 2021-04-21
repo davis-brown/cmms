@@ -11,7 +11,7 @@
                     <v-radio-group
                     v-model="person.email"
                     name="rowSelector">
-                    <div class="d-flex justify-center"><v-radio :value="item.communication.address"/></div>
+                    <div class="d-flex justify-center"><v-radio :value="item.address"/></div>
                     </v-radio-group>
                 </template>
                 <template v-slot:item.actions="{ item }">
@@ -53,7 +53,7 @@
                         <v-radio-group
                         v-model="person.phone"
                         name="rowSelector">
-                        <div class="d-flex justify-center"><v-radio :value="item.communication.number"/></div>
+                        <div class="d-flex justify-center"><v-radio :value="item.number"/></div>
                         </v-radio-group>
                     </template>
                     <template v-slot:item.actions="{ item }">
