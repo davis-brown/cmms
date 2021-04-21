@@ -11,11 +11,12 @@
     Add Life Event
 		</v-btn>
       <v-spacer></v-spacer> 
-    <v-col
-      v-for="lifeevent in lifeevents"
-      :key="lifeevent.event_ID"
-  
-    >
+      <v-col
+        v-for="lifeevent in lifeevents"
+        :key="lifeevent.event_ID"
+        >
+
+ 
     <v-timeline>
 
     <template v-slot:activator="{ on, attrs }">
@@ -55,7 +56,9 @@
     
 
           </v-card>
+  
         </v-timeline-item>
+
           </v-timeline>
 
  </v-col>
@@ -65,10 +68,12 @@
 
 <script>
 import LifeEventService from "../services/LifeEventService";
+
 export default {
   data() {
     return {
       lifeevents: [],
+     
     };
   },
   created() {
