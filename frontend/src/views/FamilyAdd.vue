@@ -17,6 +17,20 @@
         required
       ></v-text-field>
 
+      <v-text-field
+        v-model="family.fam_email"
+        :rules="emailRules"
+        label="Family Email"
+        required
+      ></v-text-field>
+
+      <v-text-field
+        v-model="family.fam_phone"
+        :rules="phoneRules"
+        label="Family Phone"
+        required
+      ></v-text-field>
+
       <v-card>
         <v-data-table
           :headers="headers"
@@ -131,20 +145,6 @@
           </template>
         </v-data-table>
       </v-card>
-
-      <v-text-field
-        v-model="family.fam_email"
-        :rules="emailRules"
-        label="Family Email"
-        required
-      ></v-text-field>
-
-      <v-text-field
-        v-model="family.fam_phone"
-        :rules="phoneRules"
-        label="Family Phone"
-        required
-      ></v-text-field>
 
     </form>
 
