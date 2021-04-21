@@ -15,6 +15,20 @@
         label="Family Name"
         required
       ></v-text-field>
+
+      <v-text-field
+        v-model="currentFamily.fam_email"
+        :rules="emailRules"
+        label="Family Email"
+        required
+      ></v-text-field>
+
+      <v-text-field
+        v-model="currentFamily.fam_phone"
+        :rules="phoneRules"
+        label="Family Phone"
+        required
+      ></v-text-field>
       
       <v-card>
         <v-data-table
@@ -130,19 +144,7 @@
         </v-data-table>
       </v-card>
 
-      <v-text-field
-        v-model="currentFamily.fam_email"
-        :rules="emailRules"
-        label="Family Email"
-        required
-      ></v-text-field>
-
-      <v-text-field
-        v-model="currentFamily.fam_phone"
-        :rules="phoneRules"
-        label="Family Phone"
-        required
-      ></v-text-field>
+      
 
       <v-divider class="my-5"></v-divider>
 
