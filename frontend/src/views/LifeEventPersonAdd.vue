@@ -1,5 +1,4 @@
 <template>
-
   <div class="submit-form mt-3 mx-auto">
     <H1>Add Life Event </H1>
     <form @submit.prevent="addLifeEventForPerson">
@@ -11,13 +10,9 @@
     clearable
     ></v-text-field>
 
-
     <v-text-field
     v-model="lifeventperson.event_note"
     label="Life Event Notes"
-    :rules="rules"
-    hide-details="auto"
-
     required
     clearable
     ></v-text-field>
@@ -85,8 +80,8 @@ export default {
     getLifeEventsForPerson(per_ID)  {
       LifeEventPersonService.getLifeEventPerson(per_ID)
         .then(response => {
-            this.groupMembers = response.data;
-            console.log(this.groupMembers);
+            this.lifeventpersons = response.data;
+            console.log(this.lifeventpersons);
         })
         .catch(error => {
             this.message = error.response.data.message;
@@ -112,7 +107,9 @@ export default {
             this.message = error.response.data.message;
         });
     },
-
+     cancel() {
+      this.$router.push({ name: "lifeeventperson" });
+    },
     addLifeEventForPerson() {
         this.dialog = false
         let lifeventperson = {};
@@ -129,6 +126,7 @@ export default {
           });
            
     },
+   
     close () {
         this.dialog = false
       },
