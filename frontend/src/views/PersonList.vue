@@ -10,6 +10,20 @@
 		>
     Add Member
 		</v-btn>
+
+      <v-btn
+        absolute
+        color="white"
+        class="black--text"
+        raised
+        medium
+        
+        
+        @click="download()" 
+        >
+          CSV Download
+   
+        </v-btn>
     <v-divider> </v-divider>
       <v-spacer>  </v-spacer> 
        <v-row justify="center">
@@ -102,19 +116,23 @@
         </v-btn>
               </v-list-item-action>
             </v-list>
+
           </v-list-item>
        
              
          
 
           </v-card>
-
+  
     
    </v-menu>
  </v-col>
     </v-row>
+    <v-divider> </v-divider>
+  
 </v-container>
 </v-main>
+
 </template>
 
 <script>
@@ -142,12 +160,32 @@ import PersonDataService from "../services/PersonDataService";
           editPerson(person) {
             this.$router.push({ name: 'person-edit', params: { id: person.per_ID } });
     
-        }
+        },
+        download() {
+          let text = JSON.stringify(this.persons);
+          let filename = 'members.csv';
+         
+   
+     
+          var element = document.createElement('a');
+           element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', filename);
+
+            element.style.display = 'block';
+            document.body.appendChild(element);
+
+            element.click();
+            document.body.removeChild(element); 
+     
+   }
+  
+          
+        },
     
        // findLifeEvents(person) {
          //  this.$router.push({ name: '', params: { id: person.per_ID } });
        // }
-    },
+
    
 
   
