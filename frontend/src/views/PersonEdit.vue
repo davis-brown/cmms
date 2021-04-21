@@ -1,17 +1,6 @@
 <template>
   <div v-if="currentPerson" class="edit-form py-3">
       <v-form ref="form" lazy-validation>
-      <v-checkbox
-      v-model="currentPerson.pub_permission"
-      label="Publish Permission"
-
-    ></v-checkbox>
-       <v-text-field
-        v-model="currentPerson.fam_ID"
-        :rules="[(v) => !!v || 'Family ID is required']"
-        label="Family ID"
-        required
-      ></v-text-field>
 
       <v-text-field
         v-model="currentPerson.frst_name"
@@ -53,12 +42,6 @@
         label="Employer"
         required
       ></v-text-field>
-      <v-text-field
-        v-model="currentPerson.pub_permission"
-        :rules="[(v) => !!v || 'Publish Permission is required']"
-        label="Publishing Permission "
-        required
-      ></v-text-field>
      
           <v-textarea
           v-model="currentPerson.notes"
@@ -72,20 +55,20 @@
 		></PersonContact>
        <v-divider class="my-5"></v-divider>
 
-      <v-row justify="center">
-        <v-col justify="left" col="1"> 
-          <v-btn color="dark" @click="deletePerson">
-            Delete
-          </v-btn>
-        </v-col>
-        <v-col justify="right" col="2"> 
-          <v-btn class= "float-right" color="dark" @click="updatePerson">
-            Update
-          </v-btn>
-        </v-col>
-      </v-row>
-    
-        
+
+<v-row justify="center">
+      <v-col justify="left" col="1"> 
+        <v-btn color="dark" @click="deletePerson">
+          Delete
+        </v-btn>
+      </v-col>
+      <v-col justify="right" col="2"> 
+        <v-btn class= "float-right" color="dark" @click="updatePerson">
+          Update
+        </v-btn>
+      </v-col>
+    </v-row>
+ 
      </v-form>
     <p>{{ message }}</p>
   </div>

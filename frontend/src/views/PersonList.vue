@@ -33,52 +33,70 @@
       cols="3"
       align="center"
     >
-    
-   
    <v-menu
       v-model="menu"
       :close-on-content-click="false"
-      :nudge-width="200"
+      :nudge-width="300"
       offset-x
     >
- 
     <template v-slot:activator="{ on, attrs }">
         <v-btn
           color="dark"
           dark
           v-bind="attrs"
           v-on="on"
+          
         >
           {{person.frst_name}} {{person.last_name}}
         </v-btn>
         </template>
 
-        <v-card class="justify-center" height="39vh">
+        <v-card class="justify-center" height="59vh">
           <v-list>
           <v-list-item>
             <v-list-item-content>
                 
-              <v-list-item-title><h2>{{person.frst_name}} {{person.last_name}} </h2></v-list-item-title>
-              <v-list-item-subtitle>Member Information:
+              <v-list-item-title class="text-center"><h2>{{person.frst_name}} {{person.last_name}} </h2></v-list-item-title>
+                    <h7 class="text-center">Contact Information: </h7>
                 <v-divider> </v-divider>
                 <v-row>
               <v-col
                 cols="12"
                 sm="6"
-                md="4"
+                md="6"
               >
-            <h4>Birthdate: {{ person.bday }}</h4>  
-            
-             
-            <div v-if="person.baptised == 1"> <h3> Baptised </h3> </div>
-            <div v-if="person.baptised == 1" align="right"> <h4> Baptism Date: {{person.bapt_date}} </h4> </div>
+              
+               <v-list-item-icon>
+          <v-icon color="indigo">
+            mdi-phone
+          </v-icon>
+         
+             </v-list-item-icon>
+                     <v-list-item>
+              <v-list-item-title class="text-center">{{person.phone}}  <v-spacer> </v-spacer>Mobile </v-list-item-title>
      
+                     </v-list-item>
+                 <v-list-item-icon>
+          <v-icon color="indigo">
+            mdi-email
+          </v-icon>
+             </v-list-item-icon>
+          <v-list-item>
+              <v-list-item-title class="text-center">{{person.email}} 
+                <v-spacer> </v-spacer>        
+                Email</v-list-item-title>
           
+    </v-list-item>
+
+            <v-list-item-title class="text-center" style="border: 2px transparent; width: 100%; margin-left: 50%"> <h7> Member Information: </h7></v-list-item-title>
+             <v-divider style="width: 100%; margin-left: 50%;"> </v-divider> 
+            <h5>Birthdate: {{ person.bday }}</h5>  
+            
+            <div v-if="person.baptised == 1"> <h4>Baptised</h4> </div>
+            <div v-if="person.baptised == 1"> <h5>Baptism Date: {{person.bapt_date}} </h5> </div>
               </v-col>
               </v-row>
-              </v-list-item-subtitle>
             </v-list-item-content>
-
             <v-list-item-action>
           <v-btn
           absolute
@@ -108,7 +126,6 @@
           class="black--text"
           raised
           medium
-          right
           ripple
         >
         Life Events
@@ -116,15 +133,8 @@
         </v-btn>
               </v-list-item-action>
             </v-list>
-
           </v-list-item>
-       
-             
-         
-
           </v-card>
-  
-    
    </v-menu>
  </v-col>
     </v-row>
@@ -171,7 +181,7 @@ import PersonDataService from "../services/PersonDataService";
            element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(text));
             element.setAttribute('download', filename);
 
-            element.style.display = 'block';
+            element.style.display = 'none';
             document.body.appendChild(element);
 
             element.click();
@@ -195,6 +205,10 @@ import PersonDataService from "../services/PersonDataService";
 
 
 <style>
+*{
+  padding: 0;
+margin: 0;
+}
 .v-card--reveal {
   align-items: center;
   bottom: 0;
