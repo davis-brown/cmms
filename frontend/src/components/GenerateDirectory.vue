@@ -2,7 +2,7 @@
   <v-btn
   color="primary"
   @click.native="pdfGeneration">
-    Generate <br/> Directory
+    Print <br/> Directory
   </v-btn>
 </template>
 
@@ -47,7 +47,6 @@ export default ({
 		},
         pdfGeneration()  {
             console.log(this.familyMembers)
-            this.images.default = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Vue.js_Logo_2.svg/1200px-Vue.js_Logo_2.svg.png"
             for (let j = 0; j < this.families.length; j++)
             {
                 let name = "image-" + j
@@ -55,19 +54,24 @@ export default ({
             }
             for (let i = 0; i < this.families.length; i++)
             {
-                let imageRow = {};
+                let imageRow = [];
                 let nameRow = {};
                 let emailRow = {};
                 let phoneRow = {};
 
                 if(this.families[i])  {
-                    imageRow[0] = "image-" + i;
+                    imageRow[0] = {
+                            image: "image-" + i,
+                            width: 160,
+                            height: 120,
+                            margin: [0, 20, 0, 0]
+                    }
+                    imageRow[1] = {};
                     nameRow[0] = this.families[i].fam_name
                     emailRow[0] = "Email: " + this.families[i].fam_email
                     phoneRow[0] = "Phone: " + this.families[i].fam_phone
                 }
                 else {
-                    imageRow[0] = "default";
                     nameRow[0] = "";
                     emailRow[0] = "";
                     phoneRow[0] = "";
@@ -75,13 +79,19 @@ export default ({
                 }
                 if(this.families[i + 1])  {
                     let temp = i + 1;
-                    imageRow[1] = "image-" + temp;
+                    imageRow[2] = {
+                            image: "image-" + temp,
+                            width: 160,
+                            height: 120,
+                            margin: [0, 20, 0, 0]
+                        },
+                    imageRow[3] = {};
                     nameRow[1] = this.families[i + 1].fam_name
                     emailRow[1] = "Email: " + this.families[i + 1].fam_email
                     phoneRow[1] = "Phone: " + this.families[i + 1].fam_phone
                 }
                 else {
-                    imageRow[1] = "default";
+                    imageRow[2] = {width: 160, text:""};
                     nameRow[1] = "";
                     emailRow[1] = "";
                     phoneRow[1] = "";
@@ -89,12 +99,17 @@ export default ({
                 }
                 if(this.families[i + 2])  {
                     let temp = i + 2;
-                    imageRow[2] = "image-" + temp;
+                    imageRow[4] = {
+                            image: "image-" + temp,
+                            width: 160,
+                            height: 120,
+                            margin: [0, 20, 0, 0]
+                        },
                     nameRow[2] = this.families[i + 2].fam_name
                     emailRow[2] = "Email: " + this.families[i + 2].fam_email
                     phoneRow[2] = "Phone: " + this.families[i + 2].fam_phone
                 } else {
-                    imageRow[2] = "default";
+                    imageRow[4] = {width: 160, text:""};
                     nameRow[2] = "";
                     emailRow[2] = "";
                     phoneRow[2] = "";
@@ -104,28 +119,7 @@ export default ({
 
                 let images = {
                     alignment: 'center',
-                    columns: [
-                        {
-                            image: imageRow[0],
-                            width: 160,
-                            height: 120,
-                            margin: [0, 20, 0, 0]
-                        },
-                        {},
-                        {
-                            image: imageRow[1], 
-                            width: 160,
-                            height: 120,
-                            margin: [0, 20, 0, 0]
-                        },
-                        {},
-                        {
-                            image: imageRow[2], 
-                            width: 160,
-                            height: 120,
-                            margin: [0, 20, 0, 0]
-                        }
-                    ]
+                    columns: imageRow
                 }
                 let names = {
                     fontSize: 18,

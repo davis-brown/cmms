@@ -14,11 +14,11 @@
         {{ familyNames }}
         </v-card-subtitle>
 
-        <v-card-subtitle>
+        <v-card-subtitle >
         Email: {{ family.fam_email }}
         </v-card-subtitle>
 
-        <v-card-subtitle>
+        <v-card-subtitle >
         Phone: {{ family.fam_phone }}
         </v-card-subtitle>
 
