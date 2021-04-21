@@ -15,6 +15,20 @@
         label="Family Name"
         required
       ></v-text-field>
+
+      <v-text-field
+        v-model="currentFamily.fam_email"
+        :rules="emailRules"
+        label="Family Email"
+        required
+      ></v-text-field>
+
+      <v-text-field
+        v-model="currentFamily.fam_phone"
+        :rules="phoneRules"
+        label="Family Phone"
+        required
+      ></v-text-field>
       
       <v-card>
         <v-data-table
@@ -117,7 +131,7 @@
             <v-radio-group
               v-model="currentFamily.per_ID"
               name="rowSelector">
-              <v-radio :value="item.person.per_ID"/>
+              <div class="d-flex justify-center"><v-radio :value="item.person.per_ID"/></div>
             </v-radio-group>
           </template>
           <template v-slot:item.actions="{ item }">
@@ -129,6 +143,9 @@
           </template>
         </v-data-table>
       </v-card>
+
+      
+
       <v-divider class="my-5"></v-divider>
 
       <v-row justify="center">
@@ -169,6 +186,15 @@ export default {
       people: [],
       familyPerson: {},
       message: '',
+      emailRules: [
+          v => !!v || 'E-mail is required',
+          v => /.+@.+/.test(v) || 'E-mail must be valid',
+      ],
+      phoneRules: [
+          v => !!v || 'Phone number is required.',
+          v => (v || '').length == 10 || 'Phone number must be 10 digits',
+          v => /(?:\d{1}\s)?\(?(\d{3})\)?-?\s?(\d{3})-?\s?(\d{4})/g.test(v) || 'Phone number must be correct format'
+      ],
       headers: [
                 {
                     text: 'Name',
@@ -209,7 +235,6 @@ export default {
       FamilyService.get(fam_ID)
         .then(response => {
           this.currentFamily = response.data;
-          console.log(response.data);
         })
         .catch(e => {
           console.log(e);
@@ -217,12 +242,27 @@ export default {
     },
 
     updateFamily() {
-      const formData = new FormData();
-      formData.append("file", this.selectedFile);
-      formData.append("existingPic", this.currentFamily.fam_pic);
-      FamilyService.upload(formData)
-      .then(res => {
-        this.currentFamily.fam_pic = res.data.path;
+      if(this.selectedFile.length != 0)  {
+        const formData = new FormData();
+        formData.append("file", this.selectedFile);
+        formData.append("existingPic", this.currentFamily.fam_pic);
+        FamilyService.upload(formData)
+        .then(res => {
+          this.currentFamily.fam_pic = res.data.path;
+          FamilyService.update(this.currentFamily.fam_ID, this.currentFamily)
+            .then(response => {
+              console.log(response.data);
+              this.message = 'The family was updated successfully!';
+              this.$router.push({ name: 'familieslist' });
+            })
+            .catch(e => {
+              console.log(e);
+            });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      } else {
         FamilyService.update(this.currentFamily.fam_ID, this.currentFamily)
           .then(response => {
             console.log(response.data);
@@ -232,10 +272,7 @@ export default {
           .catch(e => {
             console.log(e);
           });
-      })
-      .catch(err => {
-        console.log(err);
-      });
+      }
     },
 
     deleteFamily() {

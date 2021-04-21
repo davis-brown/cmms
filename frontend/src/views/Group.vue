@@ -1,8 +1,9 @@
 <template>
   <v-main>
-    <v-container>
+    <v-container fluid>
      <h1>Groups</h1>
      <v-btn
+      v-if="showAdminBoard"
 			to="/groupadd"
 			class="mr-4"
 			dark
@@ -18,51 +19,11 @@
       cols="6"
       align="center"
     >
-  <v-hover>
-    <template 
-    v-slot:default="{ hover }"
-    >
-      <v-card
-        class="mx-auto"
-        max-width="544"
-      >
-         <v-card-title class="justify-center">
-          <h2>
-        {{ group.grp_name }}
-        </h2>
-        </v-card-title>
-				<v-card-subtitle>
-				Members of the group: 
-        <v-divider> </v-divider>
-				</v-card-subtitle>
+    <GroupCard 
+					v-bind:key="group.grp_ID"
+					v-bind:group="group"
+				></GroupCard>
 
-        <v-expand-transition>
-          <v-overlay
-            v-if="hover"
-            class="d-flex transition-fast-in-fast-out grey darken-1 v-card--reveal display-3 white--text"
-            absolute
-            style="height: 90%;"
-        
-          >
-          <v-card-actions>
-      <v-btn
-				@click="editGroup(group)"
-				class="ma-2"
-				outlined
-				large
-				fab
-				color="black dark"
-				>
-        Edit
-				</v-btn>
-          <v-spacer></v-spacer>
-          </v-card-actions>
-          </v-overlay>
-        </v-expand-transition>
-
- </v-card>
- </template>
-  </v-hover>
   </v-col>
     </v-row>
  </v-container>
@@ -71,14 +32,26 @@
 
 <script>
 import GroupDataServices from "../services/GroupDataService";
+import GroupCard from "../components/GroupCard";
 
 export default {
+  name: 'Group-List',
+  components: {
+    GroupCard,
+  },
     data() {
         return {
-            groups: []
+            groups: [],
+        showAdminBoard() {
+      if (this.currentUser && this.currentUser.roles) {
+        return this.currentUser.roles.includes('ROLE_ADMIN');
+      }
+      return false;
+    },
         };
       },
-        created() {
+      methods: {
+        getAll() {
             GroupDataServices.getAll()
                .then(response => {
                     this.groups = response.data;
@@ -88,14 +61,14 @@ export default {
                     this.message = error.response.data.message;
                 });
             },
-       methods: {
-         editGroup(group){
-            this.$router.push({ name: 'groupedit', params: { id: group.grp_ID } });
 
-            }
+      },
+        
+       mounted() {
+         this.getAll();
+        
         }
-       };
-       
+       }; 
     </script>
 <style>
 .list {

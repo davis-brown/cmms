@@ -21,8 +21,8 @@
         Submit
       </v-btn>
 
-    <v-btn color="dark" small @click="cancel">
-        Cancel
+    <v-btn color="dark" small @click="deleteCongregation">
+        Delete
       </v-btn>
     
   </v-form>
@@ -49,15 +49,12 @@ export default {
           console.log(e);
         });
     },
-     cancel() {
-      this.$router.push({ name: "congregationdisplay" });
-    },
     updateCongregation() {
       CongregationServices.update(this.currentCongregation.con_ID, this.currentCongregation)
         .then(response => {
           console.log(response.data);
           this.message = 'The Congregation was updated successfully!';
-          this.$router.push({ name: 'congregationdisplay' });
+          this.$router.push({ name: 'home' });
         })
         .catch(e => {
           console.log(e);
@@ -67,13 +64,12 @@ export default {
       CongregationServices.delete(this.currentCongregation.con_ID)
         .then(response => {
           console.log(response.data);
-          this.$router.push({ name: "congregationlist" });
+          this.$router.push({ name: 'home' });
         })
         .catch(e => {
           console.log(e);
         });
-    }
-
+    },
     },
   mounted() {
     this.message = '';

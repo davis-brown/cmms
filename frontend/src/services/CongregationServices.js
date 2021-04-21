@@ -16,6 +16,7 @@ class CongregationServices {
   update(id, data) {
     return http.put(`congregation/${id}`, data);
   }
+  
   delete(id) {
     return http.delete(`congregation/${id}`);
   }

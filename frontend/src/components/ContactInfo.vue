@@ -1,47 +1,22 @@
 <template>
     <div>
         <v-card>
-            <v-data-table
-            :headers="emailheaders"
-            :items="emails"
-            hide-default-footer
-            >
-            <template v-slot:item.actions="{ item }">
-                <v-icon
-                    @click="deleteEmail(item)"
+            <v-form v-model="validEmail">
+                <v-data-table
+                :headers="emailheaders"
+                :items="emails"
+                hide-default-footer
                 >
-                    mdi-delete
-                </v-icon>
-            </template>
-            <template v-slot:body.append>
-                <tr>
-                    <td>
-                        <v-text-field
-                        v-model="currentEmail.address"
-                        :rules="emailRules"
-                        label="Email Address"
-                        required
-                        ></v-text-field>
-                    </td>
-                    <td center>
-                        <v-btn small @click="addEmail()" >
-                        Add
-                        </v-btn>
-                    </td>
-                </tr>
-            </template>
-            </v-data-table>
-        </v-card>
-        <v-divider></v-divider>
-        <v-card>
-            <v-data-table
-            :headers="phoneheaders"
-            :items="phones"
-            hide-default-footer
-            >
+                <template v-slot:item.primary="{ item }">
+                        <v-radio-group
+                        v-model="person.email"
+                        name="rowSelector">
+                        <div class="d-flex justify-center"><v-radio :value="item.communication.address"/></div>
+                        </v-radio-group>
+                </template>
                 <template v-slot:item.actions="{ item }">
                     <v-icon
-                        @click="deletePhone(item)"
+                        @click="deleteEmail(item)"
                     >
                         mdi-delete
                     </v-icon>
@@ -50,19 +25,63 @@
                     <tr>
                         <td>
                             <v-text-field
-                            v-model="currentPhone.number"
-                            label="Phone Number"
+                            v-model="currentEmail.address"
+                            :rules="emailRules"
+                            label="Email Address"
                             required
                             ></v-text-field>
                         </td>
                         <td center>
-                            <v-btn small @click="addPhone()" >
+                            <v-btn :disabled="!validEmail" small @click="addEmail()" >
                             Add
                             </v-btn>
                         </td>
                     </tr>
                 </template>
-            </v-data-table>
+                </v-data-table>
+            </v-form>
+        </v-card>
+        <v-divider></v-divider>
+        <v-card>
+            <v-form v-model="validPhone">
+                <v-data-table
+                :headers="phoneheaders"
+                :items="phones"
+                hide-default-footer
+                >
+                    <template v-slot:item.primary="{ item }">
+                        <v-radio-group
+                        v-model="person.phone"
+                        name="rowSelector">
+                        <div class="d-flex justify-center"><v-radio :value="item.communication.number"/></div>
+                        </v-radio-group>
+                    </template>
+                    <template v-slot:item.actions="{ item }">
+                        <v-icon
+                            @click="deletePhone(item)"
+                        >
+                            mdi-delete
+                        </v-icon>
+                    </template>
+                    <template v-slot:body.append>
+                        <tr>
+                            <td>
+                                <v-text-field
+                                v-model="currentPhone.number"
+                                :rules="phoneRules"
+                                label="Phone Number"
+                                required
+                                ></v-text-field>
+                            </td>
+                            <td center>
+                                <v-btn :disabled="!validPhone" small @click="addPhone()" >
+                                Add
+                                </v-btn>
+                            </td>
+                        </tr>
+                    </template>
+                </v-data-table>
+            </v-form>
         </v-card>
     </div>
 </template>
@@ -84,9 +103,15 @@ export default {
             currentPhone: {},
             currentAddress: {},
             validEmail: false,
+            validPhone: false,
             emailRules: [
                 v => !!v || 'E-mail is required',
                 v => /.+@.+/.test(v) || 'E-mail must be valid',
+            ],
+            phoneRules: [
+                v => !!v || 'Phone number is required.',
+                v => (v || '').length == 10 || 'Phone number must be 10 digits',
+                v => /(?:\d{1}\s)?\(?(\d{3})\)?-?\s?(\d{3})-?\s?(\d{4})/g.test(v) || 'Phone number must be correct format'
             ],
 
             emailheaders: [
@@ -94,6 +119,12 @@ export default {
                             text: 'Email Address',
                             align: 'left',
                             value: 'communication.address',
+                            sortable: false,
+                        },
+                        {
+                            text: 'Primary',
+                            align: 'center',
+                            value: 'primary',
                             sortable: false,
                         },
                         {
@@ -108,6 +139,12 @@ export default {
                             text: 'Phone Number',
                             align: 'left',
                             value: 'communication.number',
+                            sortable: false,
+                        },
+                        {
+                            text: 'Primary',
+                            align: 'center',
+                            value: 'primary',
                             sortable: false,
                         },
                         {
@@ -157,10 +194,10 @@ export default {
                     console.log(e);
                 });
         },
-        deleteEmail(personContact) {
-            PersonContactService.delete(personContact.cpc_ID)
+        deleteEmail(personcontact) {
+            PersonContactService.delete(personcontact.cpc_ID)
             .then(() => {  
-                this.personContacts = this.personContacts.filter(personContact => personContact.cpc_ID!=personContact.cpc_ID);
+                this.emails = this.emails.filter(email => email.cpc_ID!=personcontact.cpc_ID);
             })
             .catch(error => {
                 this.message = error.response.data.message;

@@ -17,6 +17,20 @@
         required
       ></v-text-field>
 
+      <v-text-field
+        v-model="family.fam_email"
+        :rules="emailRules"
+        label="Family Email"
+        required
+      ></v-text-field>
+
+      <v-text-field
+        v-model="family.fam_phone"
+        :rules="phoneRules"
+        label="Family Phone"
+        required
+      ></v-text-field>
+
       <v-card>
         <v-data-table
           :headers="headers"
@@ -114,14 +128,14 @@
               </v-dialog>
             </v-toolbar>
           </template>
-          <template v-slot: item.head="{ item }">
+          <template v-slot:item.head="{ item }">
             <v-radio-group
               v-model="family.per_ID"
               name="rowSelector">
-              <v-radio :value="item.person.per_ID"/>
+              <div class="d-flex justify-center"><v-radio :value="item.person.per_ID"/></div>
             </v-radio-group>
           </template>
-          <template v-slot: item.actions="{ item }">
+          <template v-slot:item.actions="{ item }">
               <v-icon
                 @click="deletePersonForFamily(item)"
               
@@ -131,6 +145,7 @@
           </template>
         </v-data-table>
       </v-card>
+
     </form>
 
   <v-divider class="my-5"></v-divider>
@@ -164,6 +179,15 @@ export default {
       people: [],
       familyPerson: {},
       message: '',
+      emailRules: [
+          v => !!v || 'E-mail is required',
+          v => /.+@.+/.test(v) || 'E-mail must be valid',
+      ],
+      phoneRules: [
+          v => !!v || 'Phone number is required.',
+          v => (v || '').length == 10 || 'Phone number must be 10 digits',
+          v => /(?:\d{1}\s)?\(?(\d{3})\)?-?\s?(\d{3})-?\s?(\d{4})/g.test(v) || 'Phone number must be correct format'
+      ],
       headers: [
                 {
                     text: 'Name',
