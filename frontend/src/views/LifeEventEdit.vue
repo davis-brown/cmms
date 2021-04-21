@@ -63,7 +63,7 @@ export default {
         .then(response => {
           console.log(response.data);
           this.message = 'The LifeEvent was updated successfully!';
-          this.$router.push({ name: 'lifeevent' });
+          this.$router.push({ name: 'lifeeventperson' });
         })
         .catch(e => {
           console.log(e);
@@ -73,7 +73,7 @@ export default {
       LifeEventService.delete(this.currentLifeEvent.event_ID)
         .then(response => {
           console.log(response.data);
-          this.$router.push({ name: "lifeevent" });
+          this.$router.push({ name: "lifeeventperson" });
         })
         .catch(e => {
           console.log(e);

@@ -45,7 +45,7 @@ export default {
       console.log(this.lifeevent)
       LifeEventService.create(this.lifeevent)
         .then(() => {
-          this.$router.push({ name: "lifeevent" });
+          this.$router.push({ name: "lifeeventperson" });
           console.log(this.data)
         })
         .catch((e) => {
@@ -53,7 +53,7 @@ export default {
         });
     },
     cancel() {
-      this.$router.push({ name: "lifeevent" });
+      this.$router.push({ name: "lifeeventperson" });
     },
   },
 };

@@ -1,134 +1,71 @@
 <template>
-  <div v-if="currentPerson" class="submit-form" data-app="true">
-      <v-form ref="form" lazy-validation>
-        
-      <v-text-field
-        v-model="currentPerson.per_name"
-        :rules="[(v) => !!v || 'Group name is required']"
-        label="Group's Name"
-        required
-      ></v-text-field>
-      
-      <v-card>
-        <v-data-table
-          :headers="headers"
-          :items="groupMembers"
-          hide-default-footer
-          >
-          <template v-slot:top>
-            <v-toolbar
-              flat
-            >
-              <v-toolbar-title>Group Members</v-toolbar-title>
-              <v-divider
-                class="mx-4"
-                inset
-                vertical
-              ></v-divider>
-              <v-spacer></v-spacer>
-              <v-dialog
-                v-model="dialog"
-                max-width="700px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    color="primary"
-                    dark
-                    class="mb-2"
-                    v-bind="attrs"
-                    v-on="on"
-                  >
-                    Edit/Add Life Event
-                  </v-btn>
-                </template>
-                <v-card>
-                  <v-card-title>
-                    <span>New Life Event</span>
-                  </v-card-title>
+<v-main>
+<v-container>
+<h1>List of Life Events </h1>
+	<v-btn
+			to="/lifeeventadd"
+			class="mr-4"
+			dark
+			color="primary"
+		>
+    Add Life Event
+		</v-btn>
+      <v-spacer></v-spacer> 
+      <v-col
+        v-for="lifeventperson in lifeventpersons"
+        :key="lifeventperson.lep_ID"
+        >
 
-                  <v-card-text>
-                    <v-container>
-                      <v-row justify="center" align="center">
-                        <v-col justify="left" col="1"> 
-                            <v-autocomplete
-                                v-model="groupMember.per_ID"
-                                :items="people"
-                                label="Group Member"
-                                item-value="per_ID"
-                            
-                              >
-                                <template slot="selection" slot-scope="data" >
-                                  {{data.item.frst_name}} {{data.item.last_name}}
-                                </template>
-                                <template slot="item" slot-scope="data" >
-                                  {{data.item.frst_name}} {{data.item.last_name}}
-                                </template>
-                              </v-autocomplete>
-                        </v-col>
-                        <v-col justify="left" col="2"> 
-                            <v-text-field
-                              v-model="groupMember.grp_role"
-                              label="Group Role"
-                              required
-                            ></v-text-field>
-                        </v-col>
-                      </v-row>
-                    </v-container>
-                  </v-card-text>
+ 
+    <v-timeline>
 
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                      color="blue darken-1"
-                      text
-                      @click="close"
-                    >
-                      Cancel
-                    </v-btn>
-                    <v-btn
-                      color="blue darken-1"
-                      text
-                      @click="addLifeEventForPerson()"
-                    >
-                      Save
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-            </v-toolbar>
-          </template>
-          <template v-slot:[`item.actions`]="{ item }">
-              <v-icon
-                @click="deletePersonForGroup(item)"
-              >
-                mdi-delete
-              </v-icon>
-          </template>
-        </v-data-table>
-      </v-card>
-      <v-divider class="my-5"></v-divider>
+    <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          color="dark"
+          dark
+          v-bind="attrs"
+          v-on="on"
+        >
+          {{lifeevent.event_date}}
+        </v-btn>
+        </template>
+        <v-timeline-item>
+        <v-card >
+          <v-list>
+          <v-list-item>
+            <v-list-item-content>
+                
+              <v-list-item-title><h2>{{lifeevent.event_note}}</h2></v-list-item-title>
+              <v-list-item-subtitle>{{lifeevent.event_date}}
+              </v-list-item-subtitle>
+            </v-list-item-content>
 
-      <v-row justify="center">
-        <v-col justify="left" col="1"> 
-          <v-btn color="dark" @click="deleteGroup">
-            Delete
-          </v-btn>
-        </v-col>
-        <v-col justify="right" col="2"> 
-          <v-btn class= "float-right" color="dark" @click="updateGroup">
-            Update
-          </v-btn>
-        </v-col>
-      </v-row>
-     </v-form>
-  </div>
+            <v-list-item-action>
+          <v-btn
+          @click="editLifeEvent(lifeevent)"
+          small
+          right
+        >
+        Edit
+   
+        </v-btn>
+              </v-list-item-action>
 
-  <div v-else>
-    <br />
-    <p>Please click on a Group...</p>
+          </v-list-item>
+              </v-list>
     
-  </div>
+
+          </v-card>
+  
+        </v-timeline-item>
+
+          </v-timeline>
+
+ </v-col>
+</v-container>
+</v-main>
 </template>
+
 
 <script>
 import LifeEventService from "../services/LifeEventService";
@@ -143,30 +80,7 @@ export default {
       lifeventpersons: [],
       lifeevent: [],
       lifeventperson: {},
-      message: '',
-      headers: [
-                {
-                    text: 'Name',
-                    align: 'left',
-                    value: 'person.frst_name',
-                },
-                {
-                    text: '',
-                    align: 'left',
-                    value: 'person.last_name',
-                },
-                {
-                    text: 'Role',
-                    align: 'left',
-                    value: 'grp_role',
-                }, 
-                {
-                    text: 'Delete',
-                    value: 'actions',
-                    align: 'center',
-                    sortable: false,
-                }
-            ],
+      
     }
   },
   
@@ -205,22 +119,11 @@ export default {
         });
     },
     
-    getLifeEventForPerson(per_ID)  {
-      LifeEventPersonService.getLifeEvents(per_ID)
+    getLifeEventsForPerson(per_ID)  {
+      LifeEventPersonService.getLifeEventPerson(per_ID)
         .then(response => {
             this.groupMembers = response.data;
             console.log(this.groupMembers);
-        })
-        .catch(error => {
-            this.message = error.response.data.message;
-        });
-    },
-
-    getLifeEvent() {
-      LifeEventService.getAll()
-        .then(response => {
-            this.lifeevents = response.data;
-            console.log(this.lifeevents);
         })
         .catch(error => {
             this.message = error.response.data.message;
@@ -236,6 +139,16 @@ export default {
             this.message = error.response.data.message;
         });
     },
+     getLifeEvents() {
+      LifeEventService.getAll()
+        .then(response => {
+            this.lifeevents = response.data;
+            console.log(this.lifeevents);
+        })
+        .catch(error => {
+            this.message = error.response.data.message;
+        });
+    },
 
     addLifeEventForPerson() {
         this.dialog = false
@@ -245,8 +158,8 @@ export default {
         console.log(lifeventperson)
         LifeEventPersonService.create(lifeventperson)
           .then(() => {
-                this.getPeopleForGroup(this.$route.params.id);
-                console.log(this.groupMembers);
+                this.getLifeEventsForPerson(this.$route.params.id);
+                console.log(this.lifeventpersons);
           })
           .catch(error => {
               this.message = error.response.data.message;
@@ -268,9 +181,9 @@ export default {
   },
   mounted() {
     this.message = '';
-    this.getGroup(this.$route.params.id);
-    this.getPeopleForGroup(this.$route.params.id);
-    this.getPeople();
+    this.getPerson(this.$route.params.id);
+    this.getLifeEventsForPerson(this.$route.params.id);
+    this.getLifeEvents();
   }
 };
 </script>
