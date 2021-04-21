@@ -15,9 +15,6 @@
     <v-text-field
     v-model="lifeevent.event_note"
     label="Life Event Notes"
-    :rules="rules"
-    hide-details="auto"
-
     required
     clearable
     ></v-text-field>

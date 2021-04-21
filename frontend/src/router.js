@@ -13,6 +13,7 @@ import Home from './views/Home.vue';
 import Login from './views/Login.vue';
 import Register from './views/Register.vue';
 import LifeEventPerson from "./views/LifeEventPerson"
+import LifeEventPersonAdd from "./views/LifeEventPersonAdd"
 Vue.use(Router);
 
 export const router = new Router({
@@ -38,6 +39,12 @@ export const router = new Router({
       path:"/lifeeventperson",
       name:"lifeeventperson",
       component: LifeEventPerson
+    },
+    {
+      path:"/lifeeventpersonadd",
+      name:"lifeeventpersonadd",
+      component: LifeEventPersonAdd
+
     },
     {
       path: '/homepage',

@@ -3,7 +3,7 @@
 <v-container>
 <h1>List of Life Events </h1>
 	<v-btn
-			to="/lifeeventadd"
+			to="/lifeeventpersonadd"
 			class="mr-4"
 			dark
 			color="primary"
@@ -35,14 +35,14 @@
           <v-list-item>
             <v-list-item-content>
                 
-              <v-list-item-title><h2>{{lifeevent.event_note}}</h2></v-list-item-title>
-              <v-list-item-subtitle>{{lifeevent.event_date}}
+              <v-list-item-title><h2>{{lifeeventperson.event_note}}</h2></v-list-item-title>
+              <v-list-item-subtitle>{{lifeeventperson.event_date}}
               </v-list-item-subtitle>
             </v-list-item-content>
 
             <v-list-item-action>
           <v-btn
-          @click="editLifeEvent(lifeevent)"
+          @click="editLifeEvent(lifeeventperson)"
           small
           right
         >
@@ -101,7 +101,7 @@ export default {
         .then(response => {
           console.log(response.data);
           this.message = 'The Group was updated successfully!';
-          this.$router.push({ name: 'groupdisplay' });
+          this.$router.push({ name: 'lifeeventperson' });
         })
         .catch(e => {
           console.log(e);
@@ -112,7 +112,7 @@ export default {
       PersonDataService.delete(this.currentPerson.per_ID)
         .then(response => {
           console.log(response.data);
-          this.$router.push({ name: "groupdisplay" });
+          this.$router.push({ name: "lifeeventperson" });
         })
         .catch(e => {
           console.log(e);
@@ -122,8 +122,8 @@ export default {
     getLifeEventsForPerson(per_ID)  {
       LifeEventPersonService.getLifeEventPerson(per_ID)
         .then(response => {
-            this.groupMembers = response.data;
-            console.log(this.groupMembers);
+            this.lifeventpersons = response.data;
+            console.log(this.lifeventpersons);
         })
         .catch(error => {
             this.message = error.response.data.message;
