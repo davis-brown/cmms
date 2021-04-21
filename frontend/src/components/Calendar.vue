@@ -147,7 +147,7 @@
               :color="selectedEvent.color"
               dark
             >
-              <v-btn @click="deleteEvent(selectedEvent.id)" icon>
+              <v-btn v-if="showAdminBoard" @click="deleteEvent(selectedEvent.id)" icon>
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
               <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>

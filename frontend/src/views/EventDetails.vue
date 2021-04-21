@@ -1,11 +1,10 @@
 <template>
-    <div class="container">
+    <div v-if="currentEvent" class="container">
         <h1>Event Details</h1>
         <br>
         <v-card max-width="700px" class="mx-auto">
             <v-toolbar :color = "currentEvent.color">
                 <v-card-title style="color: white; font-size:x-large">{{currentEvent.event_name}}</v-card-title>
-                <v-btn class="ml-auto">Attending?</v-btn>
             </v-toolbar>
             <v-card-text style="padding-left:2rem">
                 <p><strong>Description: </strong>{{currentEvent.event_desc}}</p>
@@ -16,26 +15,39 @@
             
         </v-card>
         <br>
-        <h3>Bringing something?</h3>
         <br>
-        <v-btn :color="currentEvent.color" @click="openText = true" dark>Add contribution</v-btn>
-        <br><br>
-        <v-row>
-        <v-text-field v-if="openText" label="contribution" class="mx-5"></v-text-field>
-        <v-icon v-if="openText" @click="openText = false" color="error">mdi-close</v-icon>
+        
+        <br>
+        <h2>Bringing something?</h2>
+        <br>
+        
+        <v-row style="margin-bottom:12px">
+        <v-text-field label="Add your contribution" class="mx-5" v-model="attendees.contribution"></v-text-field>
         </v-row>
-        <v-spacer></v-spacer>
-        <v-btn v-if="openText" block color="success" onclick="openText = false">Save</v-btn>
+      
+        <v-btn block color="success" @click="addAttendance()">RSVP for Event</v-btn>
+        <br>
+        <br>
+      
     </div>
 </template>
 
 <script>
 import EventService from "../services/EventService";
+import AttendeeService from "../services/AttendeeService";
 export default {
     data: () => ({
     currentEvent: null,
     openText: false,
+    attendees: {},
+
     }),
+
+  computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    }
+  },
 
 
    created() {
@@ -55,7 +67,28 @@ export default {
         });
     },
 
-    
+    getAttendeeForEvent(evt_ID) {
+      EventService.getAttendee(evt_ID)
+      .then(response => {
+        this.attendees = response.data;
+        console.log(response.data);
+      })
+    },
+
+    addAttendance() {
+      console.log("works");
+      this.attendees.evt_ID = this.currentEvent.evt_ID;
+      this.attendees.user_ID = this.currentUser.id;
+
+      console.log(this.attendees.evt_ID);
+      AttendeeService.create(this.attendees)
+          .then(() => {
+            console.log(this.data)
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+    }
    
   }
 }
