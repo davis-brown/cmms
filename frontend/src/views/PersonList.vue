@@ -10,11 +10,25 @@
 		>
     Add Member
 		</v-btn>
+
+      <v-btn
+        absolute
+        color="white"
+        class="black--text"
+        raised
+        medium
+        
+        
+        @click="download()" 
+        >
+          CSV Download
+   
+        </v-btn>
     <v-divider> </v-divider>
       <v-spacer>  </v-spacer> 
        <v-row justify="center">
     <v-col
-      v-for="person in persons"
+      v-for="person in persons" 
       :key="person.per_ID"
       cols="3"
       align="center"
@@ -39,7 +53,7 @@
         </v-btn>
         </template>
 
-        <v-card class="justify-center">
+        <v-card class="justify-center" height="39vh">
           <v-list>
           <v-list-item>
             <v-list-item-content>
@@ -58,13 +72,8 @@
              
             <div v-if="person.baptised == 1"> <h3> Baptised </h3> </div>
             <div v-if="person.baptised == 1" align="right"> <h4> Baptism Date: {{person.bapt_date}} </h4> </div>
+     
           
-              <v-divider class="my-3"></v-divider>
-                <v-list-item-subtitle>
-                 Notes:
-                    <h6> {{person.notes}} </h6>
-                
-                </v-list-item-subtitle>
               </v-col>
               </v-row>
               </v-list-item-subtitle>
@@ -79,24 +88,51 @@
           @click="editPerson(person)"
           small
           right
+          ripple
         >
         Edit
    
         </v-btn>
               </v-list-item-action>
+            
 
           </v-list-item>
               </v-list>
+
+          <v-list-item>
+              <v-list>
+               <v-list-item-action>
+          <v-btn
+          absolute
+          color="white"
+          class="black--text"
+          raised
+          medium
+          right
+          ripple
+        >
+        Life Events
+   
+        </v-btn>
+              </v-list-item-action>
+            </v-list>
+
+          </v-list-item>
+       
+             
          
 
           </v-card>
-
+  
     
    </v-menu>
  </v-col>
     </v-row>
+    <v-divider> </v-divider>
+  
 </v-container>
 </v-main>
+
 </template>
 
 <script>
@@ -124,8 +160,35 @@ import PersonDataService from "../services/PersonDataService";
           editPerson(person) {
             this.$router.push({ name: 'person-edit', params: { id: person.per_ID } });
     
-        }
-    }
+        },
+        download() {
+          let text = JSON.stringify(this.persons);
+          let filename = 'members.csv';
+         
+   
+     
+          var element = document.createElement('a');
+           element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', filename);
+
+            element.style.display = 'block';
+            document.body.appendChild(element);
+
+            element.click();
+            document.body.removeChild(element); 
+     
+   }
+  
+          
+        },
+    
+       // findLifeEvents(person) {
+         //  this.$router.push({ name: '', params: { id: person.per_ID } });
+       // }
+
+   
+
+  
   };
 
 </script>
