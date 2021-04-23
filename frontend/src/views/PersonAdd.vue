@@ -1,21 +1,9 @@
 <template>
-<!--<v-form v-model="valid">
-   <v-container>
-      <v-flex sm12 offset-sm4 align-center justify-center>
-      <v-row>
-        <v-col
-          cols="19"
-          md="6"
-        >
-  -->
   <div class="submit-form mx-5 mx-auto">
-    <H1>Add a member</H1>
+    <h1>Add a member</h1>
     <form @submit.prevent="savePerson">
-       <v-checkbox
-      v-model="person.pub_permission"
-      label="Publish Permission"
       
-    ></v-checkbox>
+
       <v-text-field
         v-model="person.frst_name"
         label="First Name"
@@ -61,9 +49,19 @@
         v-bind:personContacts="personContacts"
         v-bind:person="person"
       ></PersonContact>
-
-      <v-btn color="dark" class="offset-sm4 mt-3" @click="savePerson">Submit</v-btn>
-      <v-btn color="dark" class="mt-3" @click="cancel">Cancel</v-btn>
+      <v-divider class="my-5"></v-divider>
+    <v-row justify="center">
+      <v-col justify="left" col="1"> 
+        <v-btn color="dark" @click="cancel">
+          Cancel
+        </v-btn>
+      </v-col>
+      <v-col justify="right" col="2"> 
+        <v-btn class= "float-right" color="dark" @click="Submit">
+          Submit
+        </v-btn>
+      </v-col>
+    </v-row>
      </div>
   
 </template>
@@ -83,7 +81,8 @@ export default {
       person: {},
       people: {},
       prevRoute: "",
-      personContacts: []
+      personContacts: [],
+ 
     };
   },
   methods: {
@@ -121,7 +120,7 @@ export default {
     cancel() {
       this.$router.go(-1);
     },
-  },
+   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.prevRoute = from
