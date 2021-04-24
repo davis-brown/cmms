@@ -31,6 +31,7 @@
           >
           <v-card-actions>
       <v-btn
+        v-if="showAdminBoard()"
 				@click="editGroup(group)"
 				class="ma-2"
 				outlined

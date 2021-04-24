@@ -2,12 +2,14 @@
   <v-main>
     <v-container fluid>
      <h1>Groups</h1>
+
      <v-btn
-      v-if="showAdminBoard"
+      v-if="showAdminBoard()"
 			to="/groupadd"
 			class="mr-4"
 			dark
 			color="primary"
+      
 		>
     Add Group
 		</v-btn>
@@ -26,6 +28,7 @@
 
   </v-col>
     </v-row>
+    
  </v-container>
 </v-main>
 </template>
@@ -42,7 +45,7 @@ export default {
     data() {
         return {
             groups: [],
-        showAdminBoard() {
+       showAdminBoard() {
       if (this.currentUser && this.currentUser.roles) {
         return this.currentUser.roles.includes('ROLE_ADMIN');
       }

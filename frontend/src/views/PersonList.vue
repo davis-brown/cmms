@@ -3,6 +3,7 @@
 <v-container>
 <h1>Members of the Congregation </h1>
 	<v-btn
+      v-if="showAdminBoard()"
 			to="/personadd"
 			class="mr-4"
 			dark
@@ -11,6 +12,7 @@
     Add Member
 		</v-btn>
       <v-btn
+      v-if="showAdminBoard()"
         absolute
         color="white"
         class="black--text"
@@ -99,6 +101,7 @@
             </v-list-item-content>
             <v-list-item-action>
           <v-btn
+          v-if="showAdminBoard()"
           absolute
           color="white"
           class="black--text"
@@ -169,11 +172,18 @@ import PersonDataService from "../services/PersonDataService";
                 this.message = error.response.data.message;
             });
     },
+    
     methods: {
           editPerson(person) {
             this.$router.push({ name: 'person-edit', params: { id: person.per_ID } });
     
         },
+          showAdminBoard() {
+      if (this.currentUser && this.currentUser.roles) {
+        return this.currentUser.roles.includes('ROLE_ADMIN');
+      }
+      return false;
+    },
       filterMembers() {
 			this.searchMembers = this.persons.filter((person) => {
 				return person.frst_name.toLowerCase().includes(this.search.toLowerCase());
