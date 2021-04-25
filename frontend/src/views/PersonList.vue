@@ -2,15 +2,21 @@
 <v-main>
 <v-container>
 <h1>Members of the Congregation </h1>
+ <div v-if="showAdminBoard || showModeratorBoard">
 	<v-btn
+      
 			to="/personadd"
 			class="mr-4"
 			dark
 			color="primary"
+      
 		>
     Add Member
 		</v-btn>
+    </div>
+    <div v-if="showAdminBoard || showModeratorBoard">
       <v-btn
+      
         absolute
         color="white"
         class="black--text"
@@ -20,6 +26,7 @@
         >
           CSV Download
         </v-btn>
+        </div>
         <v-text-field
 					v-model="search"
 					label="Search Members"
@@ -98,7 +105,9 @@
               </v-row>
             </v-list-item-content>
             <v-list-item-action>
+                  <div v-if="showAdminBoard">
           <v-btn
+       
           absolute
           color="white"
           class="black--text"
@@ -111,6 +120,7 @@
         Edit
    
         </v-btn>
+        </div>
               </v-list-item-action>
             
 
@@ -148,6 +158,23 @@
 <script>
 import PersonDataService from "../services/PersonDataService";
   export default {
+      computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
+    showAdminBoard() {
+      if (this.currentUser && this.currentUser.roles) {
+        return this.currentUser.roles.includes('ROLE_ADMIN');
+      }
+      return false;
+    },
+    showModeratorBoard() {
+      if (this.currentUser && this.currentUser.roles) {
+        return this.currentUser.roles.includes('ROLE_MODERATOR');
+      }
+      return false;
+    }
+  },
   data() {
         return { 
          persons: [],
@@ -169,11 +196,14 @@ import PersonDataService from "../services/PersonDataService";
                 this.message = error.response.data.message;
             });
     },
+      
+    
     methods: {
           editPerson(person) {
             this.$router.push({ name: 'person-edit', params: { id: person.per_ID } });
     
         },
+    
       filterMembers() {
 			this.searchMembers = this.persons.filter((person) => {
 				return person.frst_name.toLowerCase().includes(this.search.toLowerCase());
