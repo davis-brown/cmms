@@ -10,6 +10,7 @@
          <v-card-title class="justify-center">
           <h2>
        {{group.grp_name }}
+   
         </h2>
         </v-card-title>
 				<v-card-subtitle>
@@ -30,8 +31,9 @@
         
           >
           <v-card-actions>
+            <div v-if="showAdminBoard || showModeratorBoard">
       <v-btn
-        v-if="showAdminBoard()"
+    
 				@click="editGroup(group)"
 				class="ma-2"
 				outlined
@@ -41,6 +43,7 @@
 				>
         Edit
 				</v-btn>
+        </div>
           <v-spacer></v-spacer>
           </v-card-actions>
           </v-overlay>
@@ -54,6 +57,23 @@
 import GroupMemberService from "../services/GroupMemberService";
 
 export default {
+    computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
+    showAdminBoard() {
+      if (this.currentUser && this.currentUser.roles) {
+        return this.currentUser.roles.includes('ROLE_ADMIN');
+      }
+      return false;
+    },
+    showModeratorBoard() {
+      if (this.currentUser && this.currentUser.roles) {
+        return this.currentUser.roles.includes('ROLE_MODERATOR');
+      }
+      return false;
+    }
+  },
 	name: 'Group-List',
     props: ['group'],
     data() {
