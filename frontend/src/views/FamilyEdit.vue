@@ -15,6 +15,27 @@
         label="Family Name"
         required
       ></v-text-field>
+
+      <v-text-field
+        v-model="currentFamily.fam_email"
+        :rules="emailRules"
+        label="Family Email"
+        required
+      ></v-text-field>
+
+      <v-text-field
+        v-model="currentFamily.fam_phone"
+        :rules="phoneRules"
+        label="Family Phone"
+        required
+      ></v-text-field>
+
+      <v-text-field
+        v-model="currentFamily.fam_address"
+        :rules="addressRules"
+        label="Family Address"
+        required
+      ></v-text-field>
       
       <v-card>
         <v-data-table
@@ -82,11 +103,12 @@
                               </v-autocomplete>
                         </v-col>
                         <v-col justify="left" col="2"> 
-                            <v-text-field
+                            <v-select
                               v-model="familyPerson.fam_role"
+                              :items="familyRoles"
                               label="Family Role"
                               required
-                            ></v-text-field>
+                            ></v-select>
                         </v-col>
                       </v-row>
                     </v-container>
@@ -129,6 +151,9 @@
           </template>
         </v-data-table>
       </v-card>
+
+      
+
       <v-divider class="my-5"></v-divider>
 
       <v-row justify="center">
@@ -166,9 +191,22 @@ export default {
       dialog: false,
       currentFamily: null,
       familyPersons: [],
+      familyRoles: ["Primary", "Spouse", "Child"],
       people: [],
       familyPerson: {},
       message: '',
+      emailRules: [
+          v => !!v || 'E-mail is required',
+          v => /^\S{1,}@\S{2,}\.\S{2,}$/.test(v) || 'E-mail must be valid',
+      ],
+      phoneRules: [
+          v => !!v || 'Phone number is required.',
+          v => (v || '').length == 12 || 'Phone number must be 10 digits',
+          v => /(\d{3})-?(\d{3})-?(\d{4})/.test(v) || 'Phone number must be format ###-###-####'
+      ],
+      addressRules: [
+                v => !!v || 'Address is required.'
+      ],
       headers: [
                 {
                     text: 'Name',

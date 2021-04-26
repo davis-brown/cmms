@@ -7,14 +7,21 @@
                 :items="emails"
                 hide-default-footer
                 >
-                <template v-slot:item.actions="{ item }">
+                <template v-slot:[`item.primary`]="{ item }">
+                    <v-radio-group
+                    v-model="person.email"
+                    name="rowSelector">
+                    <div class="d-flex justify-center"><v-radio :value="item.address"/></div>
+                    </v-radio-group>
+                </template>
+                <template v-slot:[`item.actions`]="{ item }">
                     <v-icon
                         @click="deleteEmail(item)"
                     >
                         mdi-delete
                     </v-icon>
                 </template>
-                <template v-slot:body.append>
+                <template v-slot:[`body.append`]>
                     <tr>
                         <td>
                             <v-text-field
@@ -42,14 +49,21 @@
                 :items="phones"
                 hide-default-footer
                 >
-                    <template v-slot:item.actions="{ item }">
+                    <template v-slot:[`item.primary`]="{ item }">
+                        <v-radio-group
+                        v-model="person.phone"
+                        name="rowSelector">
+                        <div class="d-flex justify-center"><v-radio :value="item.number"/></div>
+                        </v-radio-group>
+                    </template>
+                    <template v-slot:[`item.actions`]="{ item }">
                         <v-icon
                             @click="deletePhone(item)"
                         >
                             mdi-delete
                         </v-icon>
                     </template>
-                    <template v-slot:body.append>
+                    <template v-slot:[`body.append`]>
                         <tr>
                             <td>
                                 <v-text-field
@@ -69,6 +83,48 @@
                 </v-data-table>
             </v-form>
         </v-card>
+        <v-divider></v-divider>
+        <v-card>
+            <v-form v-model="validAddress">
+                <v-data-table
+                :headers="addressheaders"
+                :items="addresses"
+                hide-default-footer
+                >
+                    <template v-slot:item.primary="{ item }">
+                        <v-radio-group
+                        v-model="person.address"
+                        name="rowSelector">
+                        <div class="d-flex justify-center"><v-radio :value="item.address"/></div>
+                        </v-radio-group>
+                    </template>
+                    <template v-slot:item.actions="{ item }">
+                        <v-icon
+                            @click="deletePhone(item)"
+                        >
+                            mdi-delete
+                        </v-icon>
+                    </template>
+                    <template v-slot:body.append>
+                        <tr>
+                            <td>
+                                <v-text-field
+                                v-model="currentAddress.address"
+                                :rules="addressRules"
+                                label="Street Address"
+                                required
+                                ></v-text-field>
+                            </td>
+                            <td center>
+                                <v-btn :disabled="!validAddress" small @click="addAddress()" >
+                                Add
+                                </v-btn>
+                            </td>
+                        </tr>
+                    </template>
+                </v-data-table>
+            </v-form>
+        </v-card>
     </div>
 </template>
 
@@ -77,7 +133,7 @@
 
 export default {
 	name: 'ContactInfo',
-    props: ['personContacts'],
+    props: ['personContacts', 'person'],
     data() {
         return {
             emails: [],
@@ -88,21 +144,30 @@ export default {
             currentAddress: {},
             validEmail: false,
             validPhone: false,
+            validAddress: false,
             emailRules: [
                 v => !!v || 'E-mail is required',
-                v => /.+@.+/.test(v) || 'E-mail must be valid',
+                v => /^\S{1,}@\S{2,}\.\S{2,}$/.test(v) || 'E-mail must be valid',
             ],
             phoneRules: [
                 v => !!v || 'Phone number is required.',
-                v => (v || '').length == 10 || 'Phone number must be 10 digits',
-                v => /(?:\d{1}\s)?\(?(\d{3})\)?-?\s?(\d{3})-?\s?(\d{4})/g.test(v) || 'Phone number must be correct format'
+                v => (v || '').length == 10 || 'Phone number must be format ###-###-####',
+                v => /(\d{3})-?(\d{3})-?(\d{4})/.test(v) || 'Phone number must be format ###-###-####'
             ],
-
+            addressRules: [
+                v => !!v || 'Address is required.'
+            ],
             emailheaders: [
                         {
                             text: 'Email Address',
                             align: 'left',
                             value: 'address',
+                            sortable: false,
+                        },
+                        {
+                            text: 'Primary',
+                            align: 'center',
+                            value: 'primary',
                             sortable: false,
                         },
                         {
@@ -117,6 +182,32 @@ export default {
                             text: 'Phone Number',
                             align: 'left',
                             value: 'number',
+                            sortable: false,
+                        },
+                        {
+                            text: 'Primary',
+                            align: 'center',
+                            value: 'primary',
+                            sortable: false,
+                        },
+                        {
+                            text: 'Action',
+                            align: 'center',
+                            value: 'actions',
+                            sortable: false,
+                        }
+                    ],
+            addressheaders: [
+                        {
+                            text: 'Street Address',
+                            align: 'left',
+                            value: 'address',
+                            sortable: false,
+                        },
+                        {
+                            text: 'Primary',
+                            align: 'center',
+                            value: 'primary',
                             sortable: false,
                         },
                         {
@@ -139,7 +230,7 @@ export default {
             email.number = "";
             this.personContacts.push(email);
             this.emails.push(email);
-            
+            this.currentEmail = {}
         },
         deleteEmail(personcontact) {
             this.personContacts = this.personContacts.filter(personContact => personContact.address!=personcontact.address);
@@ -154,16 +245,28 @@ export default {
             phone.address = "";
             this.personContacts.push(phone);
             this.phones.push(phone);
-            
+            this.currentPhone = {}
         },
         deletePhone(personcontact) {
             this.personContacts = this.personContacts.filter(personContact => personContact.number!=personcontact.number);
             this.phones = this.phones.filter(phone => phone.number!=personcontact.number);
             this.currentPhone = {}
         },
-    },
-    mounted() {
-        this.getPersonContacts(this.person.per_ID);
+        addAddress() {
+            let address = {}
+            address.address = this.currentAddress.address;
+            address.vvg_ID = 1;
+            address.vve_ID = 3;
+            address.number = "";
+            this.personContacts.push(address);
+            this.addresses.push(address);
+            this.currentAddress = {}
+        },
+        deleteAddress(personcontact) {
+            this.personContacts = this.personContacts.filter(personContact => personContact.address!=personcontact.address);
+            this.addresses = this.addresses.filter(address => address.address!=personcontact.address);
+            this.currentAddress = {}
+        },
     }
 };
 </script>

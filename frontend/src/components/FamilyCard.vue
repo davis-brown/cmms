@@ -14,18 +14,27 @@
         {{ familyNames }}
         </v-card-subtitle>
 
-        <v-card-subtitle>
-        Contact Information
+        <v-card-subtitle >
+        Email: {{ family.fam_email }}
+        </v-card-subtitle>
+
+        <v-card-subtitle >
+        Phone: {{ family.fam_phone }}
+        </v-card-subtitle>
+
+        <v-card-subtitle >
+        Address: {{ family.fam_address }}
         </v-card-subtitle>
 
         <v-card-actions>
         <v-btn
-        @click="editFamily(family)"
-        class="ma-2"
-        outlined
-        fab
-        color="blue darken-4"
-        align="right"
+            @click="editFamily(family)"
+            class="ma-2"
+            outlined
+            fab
+            color="blue darken-4"
+            align="right"
+            v-if="showModeratorBoard || showAdminBoard"
         >
         <v-icon>mdi-pencil</v-icon>
         </v-btn>				
@@ -46,6 +55,23 @@ export default {
             path: ""
             
         };
+    },
+    computed: {
+        currentUser() {
+            return this.$store.state.auth.user;
+        },
+        showAdminBoard() {
+            if (this.currentUser && this.currentUser.roles) {
+                return this.currentUser.roles.includes('ROLE_ADMIN');
+            }
+            return false;
+        },
+        showModeratorBoard() {
+            if (this.currentUser && this.currentUser.roles) {
+                return this.currentUser.roles.includes('ROLE_MODERATOR');
+            }
+            return false;
+        }
     },
     
 	methods: {

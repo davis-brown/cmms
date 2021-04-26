@@ -2,15 +2,18 @@
   <v-main>
     <v-container fluid>
      <h1>Groups</h1>
+      <div v-if="showAdminBoard || showModeratorBoard">
      <v-btn
-      v-if="showAdminBoard"
+      
 			to="/groupadd"
 			class="mr-4"
 			dark
 			color="primary"
+      
 		>
     Add Group
 		</v-btn>
+    </div>
         <v-divider> </v-divider>
     <v-row>
     <v-col
@@ -26,6 +29,7 @@
 
   </v-col>
     </v-row>
+    
  </v-container>
 </v-main>
 </template>
@@ -35,6 +39,23 @@ import GroupDataServices from "../services/GroupDataService";
 import GroupCard from "../components/GroupCard";
 
 export default {
+  computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
+    showAdminBoard() {
+      if (this.currentUser && this.currentUser.roles) {
+        return this.currentUser.roles.includes('ROLE_ADMIN');
+      }
+      return false;
+    },
+    showModeratorBoard() {
+      if (this.currentUser && this.currentUser.roles) {
+        return this.currentUser.roles.includes('ROLE_MODERATOR');
+      }
+      return false;
+    }
+  },
   name: 'Group-List',
   components: {
     GroupCard,
@@ -42,12 +63,7 @@ export default {
     data() {
         return {
             groups: [],
-        showAdminBoard() {
-      if (this.currentUser && this.currentUser.roles) {
-        return this.currentUser.roles.includes('ROLE_ADMIN');
-      }
-      return false;
-    },
+     
         };
       },
       methods: {

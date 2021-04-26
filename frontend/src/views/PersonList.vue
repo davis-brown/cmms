@@ -2,76 +2,112 @@
 <v-main>
 <v-container>
 <h1>Members of the Congregation </h1>
+ <div v-if="showAdminBoard || showModeratorBoard">
 	<v-btn
+      
 			to="/personadd"
 			class="mr-4"
 			dark
 			color="primary"
+      
 		>
     Add Member
 		</v-btn>
+    </div>
+    <div v-if="showAdminBoard || showModeratorBoard">
+      <v-btn
+      
+        absolute
+        color="white"
+        class="black--text"
+        raised
+        medium
+        @click="download()" 
+        >
+          CSV Download
+        </v-btn>
+        </div>
+        <v-text-field
+					v-model="search"
+					label="Search Members"
+					@input="filterMembers"
+				></v-text-field>
     <v-divider> </v-divider>
       <v-spacer>  </v-spacer> 
        <v-row justify="center">
     <v-col
-      v-for="person in persons"
+      v-for="person in searchMembers" 
       :key="person.per_ID"
       cols="3"
       align="center"
     >
-    
-   
    <v-menu
       v-model="menu"
       :close-on-content-click="false"
-      :nudge-width="200"
+      :nudge-width="150"
       offset-x
     >
- 
     <template v-slot:activator="{ on, attrs }">
         <v-btn
           color="dark"
           dark
           v-bind="attrs"
           v-on="on"
+          
         >
           {{person.frst_name}} {{person.last_name}}
         </v-btn>
         </template>
 
-        <v-card class="justify-center">
+        <v-card height="55vh">
           <v-list>
           <v-list-item>
             <v-list-item-content>
                 
-              <v-list-item-title><h2>{{person.frst_name}} {{person.last_name}} </h2></v-list-item-title>
-              <v-list-item-subtitle>Member Information:
+              <v-list-item-title class="text-center"><h2>{{person.frst_name}} {{person.last_name}} </h2></v-list-item-title>
+                    <h7 class="text-center">Contact Information: </h7>
                 <v-divider> </v-divider>
                 <v-row>
-              <v-col
-                cols="12"
-                sm="6"
-                md="4"
-              >
-            <h4>Birthdate: {{ person.bday }}</h4>  
-            
+              <v-col>
+              
+               <v-list-item-icon>
+          <v-icon color="indigo">
+            mdi-phone
+             <v-spacer> </v-spacer> 
+          </v-icon>
+           
+                     <v-list-item class="text-center">
+              <v-list-item-title class="text-center" style="border: 2px transparent">{{person.phone}}  <v-spacer> </v-spacer>  Mobile </v-list-item-title>
+     
+                     </v-list-item>
+                                 </v-list-item-icon>
+                 <v-list-item-icon>
+          <v-icon color="indigo">
+            mdi-email
+              <v-spacer> </v-spacer> 
+          </v-icon>
              
-            <div v-if="person.baptised == 1"> <h3> Baptised </h3> </div>
-            <div v-if="person.baptised == 1" align="right"> <h4> Baptism Date: {{person.bapt_date}} </h4> </div>
-          
-              <v-divider class="my-3"></v-divider>
-                <v-list-item-subtitle>
-                 Notes:
-                    <h6> {{person.notes}} </h6>
-                
-                </v-list-item-subtitle>
+          <v-list-item class="text-center">
+              <v-list-item-title class="text-center" style="border: 2px transparent">{{person.email}} 
+                <v-spacer> </v-spacer>        
+                Email</v-list-item-title>
+      
+    </v-list-item>
+    </v-list-item-icon>
+             <v-divider style="width: 100%; margin-right: 50%;"> </v-divider> 
+            <v-list-item-title class="text-center" style="border: 2px transparent; margin-left: 5%"> <h5> Member Information: </h5></v-list-item-title>
+             <v-divider style="width: 100%; margin-right: 50%;"> </v-divider> 
+            <h5>Birthdate: {{ person.bday }}</h5>  
+            
+            <div style="border: 2px transparent; margin-right: 85%" v-if="person.baptised == 1"> <h4>Baptised</h4> </div>
+            <div v-if="person.baptised == 1"> <h5>Baptism Date: {{person.bapt_date}} </h5> </div>
               </v-col>
               </v-row>
-              </v-list-item-subtitle>
             </v-list-item-content>
-
             <v-list-item-action>
+                  <div v-if="showAdminBoard">
           <v-btn
+       
           absolute
           color="white"
           class="black--text"
@@ -79,32 +115,71 @@
           @click="editPerson(person)"
           small
           right
+          ripple
         >
         Edit
    
         </v-btn>
+        </div>
               </v-list-item-action>
+            
 
           </v-list-item>
               </v-list>
-         
 
+          <v-list-item>
+              <v-list>
+               <v-list-item-action>
+          <v-btn
+          absolute
+          color="white"
+          class="black--text"
+          raised
+          medium
+          ripple
+        >
+        Life Events
+   
+        </v-btn>
+              </v-list-item-action>
+            </v-list>
+          </v-list-item>
           </v-card>
-
-    
    </v-menu>
  </v-col>
     </v-row>
+    <v-divider> </v-divider>
+  
 </v-container>
 </v-main>
+
 </template>
 
 <script>
 import PersonDataService from "../services/PersonDataService";
   export default {
+      computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
+    showAdminBoard() {
+      if (this.currentUser && this.currentUser.roles) {
+        return this.currentUser.roles.includes('ROLE_ADMIN');
+      }
+      return false;
+    },
+    showModeratorBoard() {
+      if (this.currentUser && this.currentUser.roles) {
+        return this.currentUser.roles.includes('ROLE_MODERATOR');
+      }
+      return false;
+    }
+  },
   data() {
         return { 
-         persons: []
+         persons: [],
+         searchMembers: [],
+         search: ""
 
          
         
@@ -114,24 +189,64 @@ import PersonDataService from "../services/PersonDataService";
         PersonDataService.getAll()
             .then(response => {
                 this.persons = response.data;
+                this.searchMembers = response.data;
                 console.log(this.persons);
             })
             .catch(error => {
                 this.message = error.response.data.message;
             });
     },
+      
+    
     methods: {
           editPerson(person) {
             this.$router.push({ name: 'person-edit', params: { id: person.per_ID } });
     
-        }
-    }
+        },
+    
+      filterMembers() {
+			this.searchMembers = this.persons.filter((person) => {
+				return person.frst_name.toLowerCase().includes(this.search.toLowerCase());
+			});
+		},
+        download() {
+          let text = JSON.stringify(this.persons);
+          let filename = 'members.csv';
+         
+   
+     
+          var element = document.createElement('a');
+           element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', filename);
+
+            element.style.display = 'none';
+            document.body.appendChild(element);
+
+            element.click();
+            document.body.removeChild(element); 
+     
+   }
+  
+          
+        },
+    
+       // findLifeEvents(person) {
+         //  this.$router.push({ name: '', params: { id: person.per_ID } });
+       // }
+
+   
+
+  
   };
 
 </script>
 
 
 <style>
+*{
+  padding: 0;
+margin: 0;
+}
 .v-card--reveal {
   align-items: center;
   bottom: 0;
