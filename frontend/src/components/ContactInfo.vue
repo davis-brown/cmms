@@ -83,6 +83,48 @@
                 </v-data-table>
             </v-form>
         </v-card>
+        <v-divider></v-divider>
+        <v-card>
+            <v-form v-model="validAddress">
+                <v-data-table
+                :headers="addressheaders"
+                :items="addresses"
+                hide-default-footer
+                >
+                    <template v-slot:item.primary="{ item }">
+                        <v-radio-group
+                        v-model="person.address"
+                        name="rowSelector">
+                        <div class="d-flex justify-center"><v-radio :value="item.communication.address"/></div>
+                        </v-radio-group>
+                    </template>
+                    <template v-slot:item.actions="{ item }">
+                        <v-icon
+                            @click="deletePhone(item)"
+                        >
+                            mdi-delete
+                        </v-icon>
+                    </template>
+                    <template v-slot:body.append>
+                        <tr>
+                            <td>
+                                <v-text-field
+                                v-model="currentAddress.address"
+                                :rules="addressRules"
+                                label="Street Address"
+                                required
+                                ></v-text-field>
+                            </td>
+                            <td center>
+                                <v-btn :disabled="!validAddress" small @click="addAddress()" >
+                                Add
+                                </v-btn>
+                            </td>
+                        </tr>
+                    </template>
+                </v-data-table>
+            </v-form>
+        </v-card>
     </div>
 </template>
 
@@ -104,14 +146,18 @@ export default {
             currentAddress: {},
             validEmail: false,
             validPhone: false,
+            validAddress: false,
             emailRules: [
                 v => !!v || 'E-mail is required',
-                v => /.+@.+/.test(v) || 'E-mail must be valid',
+                v => /^\S{1,}@\S{2,}\.\S{2,}$/.test(v) || 'E-mail must be valid',
             ],
             phoneRules: [
                 v => !!v || 'Phone number is required.',
-                v => (v || '').length == 10 || 'Phone number must be 10 digits',
-                v => /(?:\d{1}\s)?\(?(\d{3})\)?-?\s?(\d{3})-?\s?(\d{4})/g.test(v) || 'Phone number must be correct format'
+                v => (v || '').length == 12 || 'Phone number must be format ###-###-####',
+                v => /(\d{3})-?(\d{3})-?(\d{4})/.test(v) || 'Phone number must be format ###-###-####'
+            ],
+            addressRules: [
+                v => !!v || 'Address is required.'
             ],
 
             emailheaders: [
@@ -139,6 +185,26 @@ export default {
                             text: 'Phone Number',
                             align: 'left',
                             value: 'communication.number',
+                            sortable: false,
+                        },
+                        {
+                            text: 'Primary',
+                            align: 'center',
+                            value: 'primary',
+                            sortable: false,
+                        },
+                        {
+                            text: 'Action',
+                            align: 'center',
+                            value: 'actions',
+                            sortable: false,
+                        }
+                    ],
+            addressheaders: [
+                        {
+                            text: 'Street Address',
+                            align: 'left',
+                            value: 'communication.address',
                             sortable: false,
                         },
                         {
@@ -235,6 +301,37 @@ export default {
                 .catch(error => {
                     this.message = error.response.data.message;
                 });
+            })
+            .catch(error => {
+                this.message = error.response.data.message;
+            });
+        },
+        addAddress() {
+            this.currentAddress.vvg_ID = 1;
+            this.currentAddress.vve_ID = 3;
+            this.currentAddress.number = 0;
+            CommunicationService.create(this.currentAddress)
+                .then(response => {
+                    let personContact = {com_ID : response.data.com_ID, per_ID : this.person.per_ID};
+                    PersonContactService.create(personContact)
+                    .then(response => {
+                        console.log(response.data);
+                        this.getPersonContacts(this.person.per_ID);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+                    console.log(response.data);
+                    this.currentAddress = {};
+                })
+                .catch(e => {
+                    console.log(e);
+                });
+        },
+        deleteAddress(personcontact) {
+            PersonContactService.delete(personcontact.cpc_ID)
+            .then(() => {  
+                this.addresses = this.addresses.filter(address => address.cpc_ID!=personcontact.cpc_ID);
             })
             .catch(error => {
                 this.message = error.response.data.message;
