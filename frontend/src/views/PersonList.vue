@@ -2,31 +2,29 @@
 <v-main>
 <v-container>
 <h1>Members of the Congregation </h1>
- <div v-if="showAdminBoard || showModeratorBoard">
 	<v-btn
-      
+      v-
 			to="/personadd"
 			class="mr-4"
 			dark
 			color="primary"
-      
+      v-if="showAdminBoard || showModeratorBoard"
 		>
     Add Member
 		</v-btn>
-    </div>
-    <div v-if="showAdminBoard || showModeratorBoard">
+
       <v-btn
-      
         absolute
         color="white"
         class="black--text"
         raised
         medium
         @click="download()" 
+        v-if="showAdminBoard || showModeratorBoard"
         >
           CSV Download
         </v-btn>
-        </div>
+
         <v-text-field
 					v-model="search"
 					label="Search Members"
