@@ -5,19 +5,46 @@ import FamilyAdd from "./views/FamilyAdd"
 import FamilyEdit from "./views/FamilyEdit"
 import Calendar from "./components/Calendar"
 import CongregationEdit from "./views/CongregationEdit"
+import HomePage from "./views/HomePage"
+import LifeEventList from "./views/LifeEventList"
+import LifeEventAdd from "./views/LifeEventAdd"
+import LifeEventEdit from "./views/LifeEventEdit"
 import Home from './views/Home.vue';
 import Login from './views/Login.vue';
 import Register from './views/Register.vue';
+import LifeEventPerson from "./views/LifeEventPerson"
+import LifeEventPersonAdd from "./views/LifeEventPersonAdd"
 Vue.use(Router);
 
 export const router = new Router({
   mode: "history",
   routes: [
     {
-      path: '/',
-      name: 'HomePage',
-      // lazy-loaded
-      component: () => import('./views/HomePage.vue')
+      path: "/lifeevent",
+      name: "lifeevent",
+      component: LifeEventList
+    },
+    {
+      path: "/lifeeventadd",
+      name: "lifeeventadd",
+      component: LifeEventAdd
+
+    },
+    {
+      path: "/lifeeventedit",
+      name: "lifeeventedit",
+      component: LifeEventEdit
+    },
+    {
+      path:"/lifeeventperson",
+      name:"lifeeventperson",
+      component: LifeEventPerson
+    },
+    {
+      path:"/lifeeventpersonadd",
+      name:"lifeeventpersonadd",
+      component: LifeEventPersonAdd
+
     },
     {
       path: '/homepage',
@@ -121,6 +148,17 @@ export const router = new Router({
 
   },
   {
+    path: "/congregationadd",
+    name: "congregationadd",
+    component: () => import("./views/CongregationAdd")
+  },
+  {
+    path:"/home",
+    name:"home",
+    component: HomePage
+  },
+  {
+
     path: "/groupadd",
     name: "groupadd",
     component: () => import("./views/GroupAdd")

@@ -71,7 +71,6 @@ import PersonDataService from "../services/PersonDataService";
 import CommunicationService from "../services/CommunicationService";
 import PersonContactService from "../services/PersonContactService";
 import PersonContact from "../components/AddContactInfo";
-
 export default {
   components: {
 		PersonContact
@@ -126,7 +125,6 @@ export default {
       vm.prevRoute = from
     })
   },
-
 };
 </script>
 
