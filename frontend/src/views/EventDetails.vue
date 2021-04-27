@@ -14,13 +14,13 @@
                 <p><strong>Location: </strong>{{currentEvent.loc_ID}}</p>
                 <p><strong>Date: </strong>{{currentEvent.event_date.substr(0,10)}}</p>
                 <p><strong>Event Duration : </strong>{{currentEvent.event_start.substr(0,5)}} - {{currentEvent.event_end.substr(0,5)}}</p>
-                <p><strong>Attendance: </strong>{{currentEvent.attendance}}</p>
+                <p><strong>Attendance: </strong>{{currentEvent.attendance==null ? 0 : currentEvent.attendance}}</p>
             </v-card-text>
             
         </v-card>
         <br>
         
-        <v-card class="mx-auto" tile max-width="800" v-if="attendees.contribution">
+        <v-card class="mx-auto" tile max-width="800" v-if="attendees.length != 0"> 
           <v-toolbar color = "primary">
                 <v-card-title style="color: white; font-size:x-large">Contributions</v-card-title>
             </v-toolbar>
@@ -102,7 +102,6 @@ export default {
         });
         
         this.currentEvent.attendance = this.uniqueAttendees.length;
-        console.log('Hi there I just put ' + this.currentEvent.attendance);
         EventService.update(evt_ID, this.currentEvent)
         .then(response => {
           console.log(response.data);
@@ -129,7 +128,9 @@ export default {
                    attendeeNames.push(event.username);
                 }
                 this.attendees = attendance;
-                console.log(attendance);
+                console.log('Testing');
+                console.log(this.attendees);
+                console.log('Done');
                 this.getNumberofAttendees(attendeeNames);
             })
             .catch(error => {
