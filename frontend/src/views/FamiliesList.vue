@@ -9,6 +9,7 @@
 					color="primary"
 					to="/familyadd"
 					dark
+					v-if="showModeratorBoard || showAdminBoard"
 				>
 					New Family
 				</v-btn>
@@ -61,6 +62,23 @@ export default {
 			searchFamilies: [],
 			search: ""
         };
+    },
+	computed: {
+        currentUser() {
+            return this.$store.state.auth.user;
+        },
+        showAdminBoard() {
+            if (this.currentUser && this.currentUser.roles) {
+                return this.currentUser.roles.includes('ROLE_ADMIN');
+            }
+            return false;
+        },
+        showModeratorBoard() {
+            if (this.currentUser && this.currentUser.roles) {
+                return this.currentUser.roles.includes('ROLE_MODERATOR');
+            }
+            return false;
+        }
     },
 	methods: {
 		getFamilies()  {

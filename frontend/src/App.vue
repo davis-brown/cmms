@@ -118,13 +118,11 @@ export default {
       this.$router.push('/homepage');
     }
   }
-
   }
 </script>
 
 <style>
   @import url('https://fonts.googleapis.com/css?family=Lato');
-
   *{
     font-family: 'Lato', sans-serif;
   }

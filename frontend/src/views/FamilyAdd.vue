@@ -31,6 +31,13 @@
         required
       ></v-text-field>
 
+      <v-text-field
+        v-model="family.fam_address"
+        :rules="addressRules"
+        label="Family Address"
+        required
+      ></v-text-field>
+
       <v-card>
         <v-data-table
           :headers="headers"
@@ -97,11 +104,12 @@
                               </v-autocomplete>
                         </v-col>
                         <v-col justify="left" col="2"> 
-                            <v-text-field
+                            <v-select
                               v-model="familyPerson.fam_role"
+                              :items="familyRoles"
                               label="Family Role"
                               required
-                            ></v-text-field>
+                            ></v-select>
                         </v-col>
                       </v-row>
                     </v-container>
@@ -176,17 +184,18 @@ export default {
       dialog: false,
       family: {},
       familyPersons: [],
+      familyRoles: ["Primary", "Spouse", "Child"],
       people: [],
       familyPerson: {},
       message: '',
       emailRules: [
           v => !!v || 'E-mail is required',
-          v => /.+@.+/.test(v) || 'E-mail must be valid',
+          v => /^\S{1,}@\S{2,}\.\S{2,}$/.test(v) || 'E-mail must be valid',
       ],
       phoneRules: [
           v => !!v || 'Phone number is required.',
-          v => (v || '').length == 10 || 'Phone number must be 10 digits',
-          v => /(?:\d{1}\s)?\(?(\d{3})\)?-?\s?(\d{3})-?\s?(\d{4})/g.test(v) || 'Phone number must be correct format'
+          v => (v || '').length == 12 || 'Phone number must be 10 digits',
+          v => /(\d{3})-?(\d{3})-?(\d{4})/.test(v) || 'Phone number must be format ###-###-####'
       ],
       headers: [
                 {
