@@ -116,6 +116,12 @@ export const router = new Router({
     },
 
     {
+      path: "/viewattendees",
+      name: "viewattendees",
+      component: () => import("./views/ViewAttendees")
+    },
+
+    {
       path: "/person",
       name: "personlist",
       component: () => import("./views/PersonList")

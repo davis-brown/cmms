@@ -147,11 +147,16 @@
               :color="selectedEvent.color"
               dark
             >
-              <v-btn @click="deleteEvent(selectedEvent.id)" icon>
+              <v-btn v-if="showAdminBoard" @click="deleteEvent(selectedEvent.id)" icon>
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
               <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
               <v-spacer></v-spacer>
+              <v-btn color= "transparent" @click="attendeeDetails(selectedEvent)">
+              <v-icon primary>mdi-account-multiple-check</v-icon>
+              <v-divider vertical></v-divider>
+              {{selectedEvent.attendance}}
+              </v-btn>
               
             </v-toolbar>
             <v-card-text>
@@ -186,7 +191,6 @@
               </v-btn>
               <v-btn
                 text
-                
                 v-else-if="showAdminBoard"
                 @click.prevent="updateEvent(selectedEvent)"
               >
@@ -230,20 +234,20 @@ export default {
     
     data: () => ({
 
-       
+        today: new Date().toISOString(),
+        focus: new Date().toISOString(),
           event: {
             evt_ID: null,
             event_name: null,
             event_desc: null,
-            event_date: null,
-            event_end: null,
-            event_start: null,
+            event_date: "2021-05-02 00:00:00",
+            event_end: "12:00:00",
+            event_start: "12:00:00",
             color: "#1976D2",
             loc_id: null,
+            attendance: null,
           },
-        
-        today: new Date().toISOString(),
-        focus: new Date().toISOString(),
+      
       
         
         type: "month",
@@ -266,7 +270,6 @@ export default {
 
     created() { 
       this.getEvents();
-     
     },
 
     
@@ -291,6 +294,7 @@ export default {
                    event.id = response.data[i].evt_ID;
                    event.details = response.data[i].event_desc;
                    event.location = response.data[i].loc_ID;
+                   event.attendance = response.data[i].attendance;
 
                    events.push(event);  
                 
@@ -315,19 +319,9 @@ export default {
           });
         this.selectedOpen = false;
         this.getEvents();
+        this.reloadPage();
         console.log("done");
       },
-
-        // async updateEvent(ev) {
-        //     await db
-        //     .collection('calEvent')
-        //     .doc(this.currentlyEditing)
-        //     .update({
-        //         details:ev.details
-        //     })
-        //     this.selectedOpen = false;
-        //     this.currentlyEditing = null;
-        // },
 
       updateEvent(calendarevent) {
         this.event = {};
@@ -337,6 +331,7 @@ export default {
         event.event_start = calendarevent.start.substr(10,14);
         event.event_end = calendarevent.end.substr(10,14);
         event.loc_ID = calendarevent.location;
+        event.attendance = calendarevent.attendance;
 
         console.log(event.event_start);
 
@@ -365,6 +360,12 @@ export default {
 
         this.selectedOpen = false;
         this.getEvents();
+      },
+
+      attendeeDetails(currentevent) {
+        this.event = {};
+        event.evt_ID = currentevent.id;
+        this.$router.push({ name: 'viewattendees', params: { id: event.evt_ID } });
       },
 
       moreEvent(currentevent) {
