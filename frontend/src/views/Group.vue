@@ -13,8 +13,20 @@
 		>
     Add Group
 		</v-btn>
+      <v-btn
+        absolute
+        color="white"
+        class="black--text"
+        raised
+        medium
+        @click="download()" 
+        v-if="showAdminBoard || showModeratorBoard"
+        >
+         PDF Download
+        </v-btn>
     </div>
         <v-divider> </v-divider>
+        <div id="pdf">
     <v-row>
     <v-col
       v-for="group in groups"
@@ -29,7 +41,7 @@
 
   </v-col>
     </v-row>
-    
+    </div>
  </v-container>
 </v-main>
 </template>
@@ -37,7 +49,9 @@
 <script>
 import GroupDataServices from "../services/GroupDataService";
 import GroupCard from "../components/GroupCard";
-
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts.js";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export default {
   computed: {
     currentUser() {
@@ -76,8 +90,7 @@ export default {
                 .catch(error => {
                     this.message = error.response.data.message;
                 });
-            },
-
+            }
       },
         
        mounted() {

@@ -162,6 +162,12 @@ export default {
                     value: 'head',
                     sortable: false,
                 },
+                   {
+                    text: 'Contact',
+                    align: 'center',
+                    value: 'person.phone',
+                    sortable: false,
+                },
                 {
                     text: 'Delete',
                     value: 'actions',
