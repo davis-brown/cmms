@@ -30,8 +30,6 @@
             </v-list-item>
           </v-list>
         </v-card>
-        <p>{{attendees.length}}</p>
-        <p>{{num}}</p>
         <br>
         
         <br>
