@@ -100,8 +100,8 @@ export default {
         .catch(e => {
           console.log(e);
         });
-        
-        this.currentEvent.attendance = this.uniqueAttendees.length;
+        console.log('Hi' + this.uniqueAttendees.length);
+        this.currentEvent.attendance = this.uniqueAttendees.length + 1;
         EventService.update(evt_ID, this.currentEvent)
         .then(response => {
           console.log(response.data);
