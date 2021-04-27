@@ -2,7 +2,7 @@ import http from "../http-common";
 
 class AttendeeService {
   getAttendee(id) {
-    return http.get("/attendee?event=" + id);
+    return http.get("/attendee?events=" +id);
   }
 
   get(id) {
