@@ -29,7 +29,7 @@
               <v-spacer></v-spacer>
               <v-dialog
                 v-model="dialog"
-                max-width="500px"
+                max-width="700px"
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
@@ -54,9 +54,9 @@
                             <v-autocomplete
                                 v-model="groupMember.per_ID"
                                 :items="people"
-                                label="Group"
+                                label="Group Member"
                                 item-value="per_ID"
-                                
+                                :filter="customFilter"
                               >
                                 <template slot="selection" slot-scope="data" >
                                   {{data.item.frst_name}} {{data.item.last_name}}
@@ -66,13 +66,6 @@
                                 </template>
     
                               </v-autocomplete>
-                        </v-col>
-                        <v-col justify="left" col="2"> 
-                            <v-text-field
-                              v-model="groupMember.grp_role"
-                              label="Role in Group"
-                              required
-                            ></v-text-field>
                         </v-col>
                       </v-row>
                     </v-container>
@@ -99,6 +92,17 @@
               </v-dialog>
             </v-toolbar>
           </template>
+             <template v-slot:[`item.head`]="{ item }">
+            <v-radio-group
+              v-model="group.per_ID"
+              name="rowSelector">
+              <div class="d-flex justify-center"><v-radio :value="item.person.per_ID"  id="lead"/> 
+             
+   
+              </div>
+            </v-radio-group>
+           
+          </template>
           <template v-slot:[`item.actions`]="{ item }">
               <v-icon
               @click="deletePersonForGroup(item)"
@@ -107,6 +111,7 @@
               </v-icon>
           </template>
         </v-data-table>
+
       </v-card>
     </form>
 
@@ -134,6 +139,7 @@ import GroupMemberService from "../services/GroupMemberService";
 export default {
   data() {
     return {
+  
       dialog: false,
       group: {},
       groupMembers: [],
@@ -151,10 +157,17 @@ export default {
                     align: 'left',
                     value: 'person.last_name',
                 },
-                {
-                    text: 'Group Role',
-                    align: 'left',
-                    value: 'grp_role',
+                 {
+                    text: 'Group Leader',
+                    align: 'center',
+                    value: 'head',
+                    sortable: false,
+                },
+                 {
+                    text: 'Contact',
+                    align: 'center',
+                    value: 'person.phone',
+                    sortable: false,
                 },
                 {
                     text: 'Action',
@@ -163,6 +176,7 @@ export default {
                     sortable: false,
                 }
             ],
+           
     };
   },
   methods: {
@@ -198,7 +212,7 @@ export default {
     },
 
     deletePersonForGroup(groupmember) {
-      this.groupMembers = this.groupMembers.filter(groupMember => groupMember.gm_ID!=groupmember.gm_ID);
+      this.groupMembers = this.groupMembers.filter(groupMember => groupMember.per_ID!=groupmember.per_ID);
     },
 
     addMemberForGroup(groupMember) {
@@ -221,6 +235,7 @@ export default {
           groupMember.person = response.data;
           console.log(groupMember)
           this.groupMembers.push(groupMember)
+         //this.groupMember = {};
         })
         .catch(e => {
           console.log(e);
@@ -237,7 +252,7 @@ export default {
 
       return textOne.indexOf(searchText) > -1 ||
         textTwo.indexOf(searchText) > -1
-    }
+    },
   },
   mounted() {
     this.message = '';
@@ -248,7 +263,7 @@ export default {
 
 <style>
 .submit-form {
-  max-width: 400px;
+  max-width: 500px;
   margin: auto;
   font-size: 20px;
 }
