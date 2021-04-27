@@ -16,10 +16,8 @@
 				<v-card-subtitle>
 				Members of the group: 
         <v-divider> </v-divider>
-         {{ groupNames }}
+         {{ groupNames }} 
 				</v-card-subtitle>
-  
-
 
 
         <v-expand-transition>
@@ -94,9 +92,11 @@ export default {
       GroupMemberService.getGroupMembers(grp_ID)
         .then(response => {
             this.groupMembers = response.data;
-            this.groupMembers.forEach( groupMember => {this.groupNames += groupMember.person.frst_name + " " + groupMember.person.last_name +", "});
-            console.log(this.groupMembers);
-            this.groupNames = this.groupNames.slice(0, -2);
+  
+                  
+           this.groupMembers.forEach( groupMember => {this.groupNames += groupMember.person.frst_name + " " + groupMember.person.last_name +" ("+ groupMember.person.phone+") , "});
+          this.groupNames = this.groupNames.slice(0, -2);
+          
              console.log(this.groupNames);
         })
         .catch(error => {
