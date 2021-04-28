@@ -18,6 +18,7 @@
       @click.native="exportToPDF">
         Print <br/> Groups
     </v-btn>
+    </div>
     <v-divider> </v-divider>
     <div ref="document">
       <v-row>

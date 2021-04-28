@@ -116,6 +116,8 @@
             </div>
             <div class="text-center" style="border: 2px transparent;" v-if="person.baptised == 1"> <h4><u>Baptised</u></h4> </div>
             <div class="text-center" v-if="person.baptised == 1"> <h6>Baptism Date: {{person.bapt_date}} </h6> </div>
+            <div class="text-center" v-if="person.pub_permission == 'Active'" style="color: blue;"> <h6>Status: {{person.pub_permission}} </h6> </div>
+            <div class="text-center" v-if="person.pub_permission == 'Inactive'" style="color: red;"> <h6>Status: {{person.pub_permission}} </h6> </div>
               </v-col>
               </v-row>
             </v-list-item-content>
