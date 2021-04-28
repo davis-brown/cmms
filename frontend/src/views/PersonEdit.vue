@@ -48,6 +48,12 @@
           solo
           label="Notes"
         ></v-textarea>
+     <v-select
+         v-model="currentPerson.pub_permission"
+         :items="status"
+         label="Status"
+        required
+        ></v-select>
 
     <PersonContact
       v-bind:key="currentPerson.per_ID"
@@ -92,6 +98,11 @@ export default {
   data() {
     return {
       currentPerson: null,
+      select: null,
+      status: ["Active", "Inactive"]
+    
+     
+  
      
     };
   },
@@ -147,7 +158,7 @@ h4 {
   text-align: center;
 }
 .edit-form {
-  max-width: 400px;
+  max-width: 600px;
   margin: auto;
 }
 </style>

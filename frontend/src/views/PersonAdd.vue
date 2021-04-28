@@ -130,7 +130,7 @@ export default {
 
 <style>
 .submit-form {
-  max-width: 400px;
+  max-width: 600px;
   margin: auto;
   font-size: 20px;
 }

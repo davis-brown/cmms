@@ -28,7 +28,7 @@
               <v-spacer></v-spacer>
               <v-dialog
                 v-model="dialog"
-                max-width="700px"
+                max-width="900px"
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
@@ -290,9 +290,9 @@ h4 {
   font-size: 25px;
   text-align: center;
 }
-.edit-form {
+.submit-form {
   max-width: 600px;
-  max-height: 900px;
+  max-height: 700px;
   margin: auto;
 }
 </style>

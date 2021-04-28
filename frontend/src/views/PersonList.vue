@@ -152,7 +152,7 @@
           raised
           medium
           ripple
-          to="/lifeeventperson"
+          to="/lifeevent"
         >
         Life Events
    
@@ -242,14 +242,13 @@ import PersonDataService from "../services/PersonDataService";
             document.body.removeChild(element); 
      
    }
-  
-          
+     
         },
     
-       findLifeEvents(person) {
-       this.$router.push({ name: '', params: { id: person.per_ID } });
+       /*findLifeEvents(person) {
+         this.$router.push({ name: 'lifeeventadd', params: { id: person.per_ID } });
        }
-
+*/
    
 
   
