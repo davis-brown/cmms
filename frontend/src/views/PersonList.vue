@@ -58,12 +58,14 @@
         </v-btn>
         </template>
 
-        <v-card height="55vh">
+        <v-card height="50vh" width="80vh">
           <v-list>
           <v-list-item>
             <v-list-item-content>
                 
               <v-list-item-title class="text-center"><h2>{{person.frst_name}} {{person.last_name}} </h2></v-list-item-title>
+              <div class="text-center"><h6>Birthdate: {{ person.bday }}</h6>  
+            </div>
                     <h5 class="text-center">Contact Information: </h5>
                 <v-divider> </v-divider>
                 <v-row>
@@ -112,12 +114,14 @@
              <v-divider style="width: 100%; margin-right: 50%;"> </v-divider> 
             <v-list-item-title class="text-center" style="border: 2px transparent; margin-left: 5%"> <h5> Member Information: </h5></v-list-item-title>
              <v-divider style="width: 100%; margin-right: 50%;"> </v-divider> 
-            <div class="text-center"><h5>Birthdate: {{ person.bday }}</h5>  
-            </div>
+              <div class="text-center" v-if="person.pub_permission == 'Active'" style="color: blue;"> <h6>Status: {{person.pub_permission}} </h6> </div>
+            <div class="text-center" v-if="person.pub_permission == 'Inactive'" style="color: red;"> <h6>Status: {{person.pub_permission}} </h6> </div>
+             <div class="text-center"> <h6> Ministry Position: {{person.church_pos}} </h6> </div>
+
+            
             <div class="text-center" style="border: 2px transparent;" v-if="person.baptised == 1"> <h4><u>Baptised</u></h4> </div>
             <div class="text-center" v-if="person.baptised == 1"> <h6>Baptism Date: {{person.bapt_date}} </h6> </div>
-            <div class="text-center" v-if="person.pub_permission == 'Active'" style="color: blue;"> <h6>Status: {{person.pub_permission}} </h6> </div>
-            <div class="text-center" v-if="person.pub_permission == 'Inactive'" style="color: red;"> <h6>Status: {{person.pub_permission}} </h6> </div>
+           
               </v-col>
               </v-row>
             </v-list-item-content>
@@ -261,10 +265,7 @@ import PersonDataService from "../services/PersonDataService";
 
 
 <style>
-*{
-  padding: 0;
-margin: 0;
-}
+
 .v-card--reveal {
   align-items: center;
   bottom: 0;

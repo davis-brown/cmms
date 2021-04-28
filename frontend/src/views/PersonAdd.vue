@@ -50,6 +50,12 @@
          label="Status"
         required
         ></v-select>
+        <v-select
+         v-model="person.church_pos"
+         :items="position"
+         label="Church Position"
+        required
+        ></v-select>
        </form>
        <PersonContact
         v-bind:personContacts="personContacts"
@@ -89,7 +95,8 @@ export default {
       prevRoute: "",
       personContacts: [],
       select: null,
-      status: ["Active", "Inactive"]
+      status: ["Active", "Inactive"],
+      position: ['Prayer Leader', 'Choir Leader', 'Communion Helper', 'Youth Minister', 'VBS Staff', 'Minister']
  
     };
   },
