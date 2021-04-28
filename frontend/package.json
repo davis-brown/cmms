@@ -17,6 +17,7 @@
     "common": "^0.2.5",
     "core-js": "^3.6.5",
     "firebase": "^8.2.8",
+    "html2pdf.js": "^0.9.3",
     "jquery": "^3.6.0",
     "moment": "^2.29.1",
     "pdfmake": "^0.1.71",

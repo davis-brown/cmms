@@ -197,6 +197,9 @@ export default {
           v => (v || '').length == 12 || 'Phone number must be 10 digits',
           v => /(\d{3})-?(\d{3})-?(\d{4})/.test(v) || 'Phone number must be format ###-###-####'
       ],
+      addressRules: [
+                v => !!v || 'Address is required.'
+      ],
       headers: [
                 {
                     text: 'Name',
