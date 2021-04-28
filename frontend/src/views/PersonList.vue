@@ -1,9 +1,11 @@
 <template>
 <v-main>
-<v-container>
+<v-container fluid>
 <h1>Members of the Congregation </h1>
+<v-row align="end">
+			<v-col lg="2" align="center">
 	<v-btn
-      v-
+      
 			to="/personadd"
 			class="mr-4"
 			dark
@@ -12,11 +14,19 @@
 		>
     Add Member
 		</v-btn>
-
+    </v-col>
+    <v-col>
+     <v-text-field
+					v-model="search"
+					label="Search Members"
+					@input="filterMembers"
+				></v-text-field>
+        </v-col>
+  <v-col lg="2" align="center">
       <v-btn
-        absolute
-        color="white"
-        class="black--text"
+  
+        color="primary"
+        class="white--text"
         raised
         medium
         @click="download()" 
@@ -24,14 +34,10 @@
         >
           CSV Download
         </v-btn>
-
-        <v-text-field
-					v-model="search"
-					label="Search Members"
-					@input="filterMembers"
-				></v-text-field>
+</v-col>
+</v-row>
     <v-divider> </v-divider>
-      <v-spacer>  </v-spacer> 
+      
       
        <v-row justify="center">
     <v-col
@@ -65,6 +71,8 @@
                 
               <v-list-item-title class="text-center"><h2>{{person.frst_name}} {{person.last_name}} </h2></v-list-item-title>
               <div class="text-center"><h6>Birthdate: {{ person.bday }}</h6>  
+            </div>
+            <div class="text-center"><h6>Employer: {{ person.employer }}</h6>  
             </div>
                     <h5 class="text-center">Contact Information: </h5>
                 <v-divider> </v-divider>
