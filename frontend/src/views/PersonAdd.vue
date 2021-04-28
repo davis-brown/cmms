@@ -88,6 +88,7 @@ export default {
       people: {},
       prevRoute: "",
       personContacts: [],
+      select: null,
       status: ["Active", "Inactive"]
  
     };
