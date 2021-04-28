@@ -54,6 +54,12 @@
          label="Status"
         required
         ></v-select>
+      <v-select
+         v-model="currentPerson.church_pos"
+         :items="position"
+         label="Church Position"
+        required
+        ></v-select>
 
     <PersonContact
       v-bind:key="currentPerson.per_ID"
@@ -99,7 +105,8 @@ export default {
     return {
       currentPerson: null,
       select: null,
-      status: ["Active", "Inactive"]
+      status: ["Active", "Inactive"],
+      position: ['Prayer Leader', 'Choir Leader', 'Communion Helper', 'Youth Minister', 'VBS Staff', 'Minister']
     
      
   
