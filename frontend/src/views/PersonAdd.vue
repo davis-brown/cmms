@@ -55,7 +55,7 @@
         v-bind:personContacts="personContacts"
         v-bind:person="person"
       ></PersonContact>
-       </form>
+      
       <v-divider class="my-5"></v-divider>
     <v-row justify="center">
       <v-col justify="left" col="1"> 
