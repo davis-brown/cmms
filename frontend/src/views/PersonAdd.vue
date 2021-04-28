@@ -45,7 +45,7 @@
           label="Notes"
         ></v-textarea>
         <v-select
-         v-model="currentPerson.pub_permission"
+         v-model="person.pub_permission"
          :items="status"
          label="Status"
         required
