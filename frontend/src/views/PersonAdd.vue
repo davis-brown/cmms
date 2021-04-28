@@ -44,11 +44,18 @@
           solo
           label="Notes"
         ></v-textarea>
+        <v-select
+         v-model="currentPerson.pub_permission"
+         :items="status"
+         label="Status"
+        required
+        ></v-select>
        </form>
        <PersonContact
         v-bind:personContacts="personContacts"
         v-bind:person="person"
       ></PersonContact>
+       </form>
       <v-divider class="my-5"></v-divider>
     <v-row justify="center">
       <v-col justify="left" col="1"> 
@@ -57,7 +64,7 @@
         </v-btn>
       </v-col>
       <v-col justify="right" col="2"> 
-        <v-btn class= "float-right" color="dark" @click="Submit">
+        <v-btn class= "float-right" color="dark" @click="savePerson">
           Submit
         </v-btn>
       </v-col>
@@ -81,6 +88,7 @@ export default {
       people: {},
       prevRoute: "",
       personContacts: [],
+      status: ["Active", "Inactive"]
  
     };
   },
@@ -130,7 +138,7 @@ export default {
 
 <style>
 .submit-form {
-  max-width: 400px;
+  max-width: 600px;
   margin: auto;
   font-size: 20px;
 }

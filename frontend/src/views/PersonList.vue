@@ -32,6 +32,7 @@
 				></v-text-field>
     <v-divider> </v-divider>
       <v-spacer>  </v-spacer> 
+      
        <v-row justify="center">
     <v-col
       v-for="person in searchMembers" 
@@ -63,7 +64,7 @@
             <v-list-item-content>
                 
               <v-list-item-title class="text-center"><h2>{{person.frst_name}} {{person.last_name}} </h2></v-list-item-title>
-                    <h7 class="text-center">Contact Information: </h7>
+                    <h5 class="text-center">Contact Information: </h5>
                 <v-divider> </v-divider>
                 <v-row>
               <v-col>
@@ -92,13 +93,31 @@
       
     </v-list-item>
     </v-list-item-icon>
+    <v-list-item-icon>
+          <v-icon color="indigo">
+            mdi-home
+             <v-spacer> </v-spacer> 
+          </v-icon>
+           
+                     <v-list-item class="text-center">
+              <v-list-item-title class="text-center" style="border: 2px transparent;"> {{person.address}}  
+                <v-spacer> </v-spacer>  
+                Home </v-list-item-title>
+     
+                     </v-list-item>
+                                 </v-list-item-icon>
+
+
+
              <v-divider style="width: 100%; margin-right: 50%;"> </v-divider> 
             <v-list-item-title class="text-center" style="border: 2px transparent; margin-left: 5%"> <h5> Member Information: </h5></v-list-item-title>
              <v-divider style="width: 100%; margin-right: 50%;"> </v-divider> 
-            <h5>Birthdate: {{ person.bday }}</h5>  
-            
-            <div style="border: 2px transparent; margin-right: 85%" v-if="person.baptised == 1"> <h4>Baptised</h4> </div>
-            <div v-if="person.baptised == 1"> <h5>Baptism Date: {{person.bapt_date}} </h5> </div>
+            <div class="text-center"><h5>Birthdate: {{ person.bday }}</h5>  
+            </div>
+            <div class="text-center" style="border: 2px transparent;" v-if="person.baptised == 1"> <h4><u>Baptised</u></h4> </div>
+            <div class="text-center" v-if="person.baptised == 1"> <h6>Baptism Date: {{person.bapt_date}} </h6> </div>
+            <div class="text-center" v-if="person.pub_permission == 'Active'" style="color: blue;"> <h6>Status: {{person.pub_permission}} </h6> </div>
+            <div class="text-center" v-if="person.pub_permission == 'Inactive'" style="color: red;"> <h6>Status: {{person.pub_permission}} </h6> </div>
               </v-col>
               </v-row>
             </v-list-item-content>
@@ -135,7 +154,7 @@
           raised
           medium
           ripple
-          to="/lifeeventperson"
+          to="/lifeevent"
         >
         Life Events
    
@@ -225,14 +244,13 @@ import PersonDataService from "../services/PersonDataService";
             document.body.removeChild(element); 
      
    }
-  
-          
+     
         },
     
-       findLifeEvents(person) {
-       this.$router.push({ name: '', params: { id: person.per_ID } });
+       /*findLifeEvents(person) {
+         this.$router.push({ name: 'lifeeventadd', params: { id: person.per_ID } });
        }
-
+*/
    
 
   
