@@ -145,7 +145,7 @@
               </v-list>
 
           <v-list-item>
-              <v-list>
+             <!-- <v-list>
                <v-list-item-action>
           <v-btn
           absolute
@@ -160,7 +160,8 @@
    
         </v-btn>
               </v-list-item-action>
-            </v-list>
+              
+            </v-list> -->
           </v-list-item>
           </v-card>
    </v-menu>
