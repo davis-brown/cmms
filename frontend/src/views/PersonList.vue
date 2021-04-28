@@ -3,10 +3,12 @@
 <v-container>
 <h1>Members of the Congregation </h1>
 	<v-btn
+      v-
 			to="/personadd"
 			class="mr-4"
 			dark
 			color="primary"
+      v-if="showAdminBoard || showModeratorBoard"
 		>
     Add Member
 		</v-btn>
@@ -17,18 +19,22 @@
         class="black--text"
         raised
         medium
-        
-        
         @click="download()" 
+        v-if="showAdminBoard || showModeratorBoard"
         >
           CSV Download
-   
         </v-btn>
+
+        <v-text-field
+					v-model="search"
+					label="Search Members"
+					@input="filterMembers"
+				></v-text-field>
     <v-divider> </v-divider>
       <v-spacer>  </v-spacer> 
        <v-row justify="center">
     <v-col
-      v-for="person in persons" 
+      v-for="person in searchMembers" 
       :key="person.per_ID"
       cols="3"
       align="center"
@@ -36,7 +42,7 @@
    <v-menu
       v-model="menu"
       :close-on-content-click="false"
-      :nudge-width="300"
+      :nudge-width="150"
       offset-x
     >
     <template v-slot:activator="{ on, attrs }">
@@ -51,7 +57,7 @@
         </v-btn>
         </template>
 
-        <v-card class="justify-center" height="59vh">
+        <v-card height="55vh">
           <v-list>
           <v-list-item>
             <v-list-item-content>
@@ -60,45 +66,46 @@
                     <h7 class="text-center">Contact Information: </h7>
                 <v-divider> </v-divider>
                 <v-row>
-              <v-col
-                cols="12"
-                sm="6"
-                md="6"
-              >
+              <v-col>
               
                <v-list-item-icon>
           <v-icon color="indigo">
             mdi-phone
+             <v-spacer> </v-spacer> 
           </v-icon>
-         
-             </v-list-item-icon>
-                     <v-list-item>
-              <v-list-item-title class="text-center">{{person.phone}}  <v-spacer> </v-spacer>Mobile </v-list-item-title>
+           
+                     <v-list-item class="text-center">
+              <v-list-item-title class="text-center" style="border: 2px transparent">{{person.phone}}  <v-spacer> </v-spacer>  Mobile </v-list-item-title>
      
                      </v-list-item>
+                                 </v-list-item-icon>
                  <v-list-item-icon>
           <v-icon color="indigo">
             mdi-email
+              <v-spacer> </v-spacer> 
           </v-icon>
-             </v-list-item-icon>
-          <v-list-item>
-              <v-list-item-title class="text-center">{{person.email}} 
+             
+          <v-list-item class="text-center">
+              <v-list-item-title class="text-center" style="border: 2px transparent">{{person.email}} 
                 <v-spacer> </v-spacer>        
                 Email</v-list-item-title>
-          
+      
     </v-list-item>
-
-            <v-list-item-title class="text-center" style="border: 2px transparent; width: 100%; margin-left: 50%"> <h7> Member Information: </h7></v-list-item-title>
-             <v-divider style="width: 100%; margin-left: 50%;"> </v-divider> 
+    </v-list-item-icon>
+             <v-divider style="width: 100%; margin-right: 50%;"> </v-divider> 
+            <v-list-item-title class="text-center" style="border: 2px transparent; margin-left: 5%"> <h5> Member Information: </h5></v-list-item-title>
+             <v-divider style="width: 100%; margin-right: 50%;"> </v-divider> 
             <h5>Birthdate: {{ person.bday }}</h5>  
             
-            <div v-if="person.baptised == 1"> <h4>Baptised</h4> </div>
+            <div style="border: 2px transparent; margin-right: 85%" v-if="person.baptised == 1"> <h4>Baptised</h4> </div>
             <div v-if="person.baptised == 1"> <h5>Baptism Date: {{person.bapt_date}} </h5> </div>
               </v-col>
               </v-row>
             </v-list-item-content>
             <v-list-item-action>
+                  <div v-if="showAdminBoard">
           <v-btn
+       
           absolute
           color="white"
           class="black--text"
@@ -111,6 +118,7 @@
         Edit
    
         </v-btn>
+        </div>
               </v-list-item-action>
             
 
@@ -127,6 +135,7 @@
           raised
           medium
           ripple
+          to="/lifeeventperson"
         >
         Life Events
    
@@ -148,9 +157,28 @@
 <script>
 import PersonDataService from "../services/PersonDataService";
   export default {
+      computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
+    showAdminBoard() {
+      if (this.currentUser && this.currentUser.roles) {
+        return this.currentUser.roles.includes('ROLE_ADMIN');
+      }
+      return false;
+    },
+    showModeratorBoard() {
+      if (this.currentUser && this.currentUser.roles) {
+        return this.currentUser.roles.includes('ROLE_MODERATOR');
+      }
+      return false;
+    }
+  },
   data() {
         return { 
-         persons: []
+         persons: [],
+         searchMembers: [],
+         search: ""
 
          
         
@@ -160,17 +188,26 @@ import PersonDataService from "../services/PersonDataService";
         PersonDataService.getAll()
             .then(response => {
                 this.persons = response.data;
+                this.searchMembers = response.data;
                 console.log(this.persons);
             })
             .catch(error => {
                 this.message = error.response.data.message;
             });
     },
+      
+    
     methods: {
           editPerson(person) {
             this.$router.push({ name: 'person-edit', params: { id: person.per_ID } });
     
         },
+    
+      filterMembers() {
+			this.searchMembers = this.persons.filter((person) => {
+				return person.frst_name.toLowerCase().includes(this.search.toLowerCase());
+			});
+		},
         download() {
           let text = JSON.stringify(this.persons);
           let filename = 'members.csv';
@@ -192,9 +229,9 @@ import PersonDataService from "../services/PersonDataService";
           
         },
     
-       // findLifeEvents(person) {
-         //  this.$router.push({ name: '', params: { id: person.per_ID } });
-       // }
+       findLifeEvents(person) {
+       this.$router.push({ name: '', params: { id: person.per_ID } });
+       }
 
    
 

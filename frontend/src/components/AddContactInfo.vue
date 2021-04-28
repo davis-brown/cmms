@@ -7,21 +7,21 @@
                 :items="emails"
                 hide-default-footer
                 >
-                <template v-slot:item.primary="{ item }">
+                <template v-slot:[`item.primary`]="{ item }">
                     <v-radio-group
                     v-model="person.email"
                     name="rowSelector">
                     <div class="d-flex justify-center"><v-radio :value="item.address"/></div>
                     </v-radio-group>
                 </template>
-                <template v-slot:item.actions="{ item }">
+                <template v-slot:[`item.actions`]="{ item }">
                     <v-icon
                         @click="deleteEmail(item)"
                     >
                         mdi-delete
                     </v-icon>
                 </template>
-                <template v-slot:body.append>
+                <template v-slot:[`body.append`]>
                     <tr>
                         <td>
                             <v-text-field
@@ -49,21 +49,21 @@
                 :items="phones"
                 hide-default-footer
                 >
-                    <template v-slot:item.primary="{ item }">
+                    <template v-slot:[`item.primary`]="{ item }">
                         <v-radio-group
                         v-model="person.phone"
                         name="rowSelector">
                         <div class="d-flex justify-center"><v-radio :value="item.number"/></div>
                         </v-radio-group>
                     </template>
-                    <template v-slot:item.actions="{ item }">
+                    <template v-slot:[`item.actions`]="{ item }">
                         <v-icon
                             @click="deletePhone(item)"
                         >
                             mdi-delete
                         </v-icon>
                     </template>
-                    <template v-slot:body.append>
+                    <template v-slot:[`body.append`]>
                         <tr>
                             <td>
                                 <v-text-field

@@ -75,7 +75,7 @@
 
     <footer class="footer">
       <h3>Riverside Community Church</h3>
-      <h8>100 Main St, Springfield</h8>
+      <h6>100 Main St, Springfield</h6>
       <p>555-555-0100</p>
       <p>Copyright &copy;2021</p>
 
