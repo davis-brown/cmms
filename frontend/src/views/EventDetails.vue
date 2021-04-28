@@ -26,7 +26,7 @@
             </v-toolbar>
           <v-list>
             <v-list-item v-for="attendee in attendees" :key="attendee.atd_ID">
-              {{attendee.username}}: {{attendee.contribution}}
+              <p v-show="attendee.contribution">{{attendee.username}}:{{attendee.contribution}}</p>
             </v-list-item>
           </v-list>
         </v-card>
