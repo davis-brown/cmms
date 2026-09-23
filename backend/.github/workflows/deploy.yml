@@ -8,6 +8,8 @@ on:
 
 jobs:
     aws-deploy:
+        # "closed" also fires for PRs closed without merging; only deploy merges
+        if: github.event.pull_request.merged == true
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2

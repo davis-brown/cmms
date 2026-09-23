@@ -74,11 +74,11 @@ exports.update = (req, res) => {
     .then(num => {
         if (num == 1) {
             res.send({
-                message: "Family was updated successfully."
+                message: "Communication was updated successfully."
             });
         } else {
             res.send({
-                message: `Cannot update Family with id=${id}. Maybe Family was not found or req.body is empty!`
+                message: `Cannot update Communication with id=${id}. Maybe Communication was not found or req.body is empty!`
             });
         }
     })
@@ -126,7 +126,7 @@ exports.deleteAll = (req, res) => {
     })
     .then(nums => {
         res.send({
-            message: `${nums} Families were deleted successfully!`
+            message: `${nums} Communications were deleted successfully!`
         });
     })
     .catch(err => {

@@ -1,0 +1,17 @@
+[Unit]
+Description=Congregation backend
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/nodeapps/congregation-backend
+# Secrets (JWT_SECRET, DB_HOST, DB_USER, DB_PASSWORD, ...) live outside the
+# deploy directory so rsync --delete doesn't remove them
+EnvironmentFile=/home/ubuntu/nodeapps/congregation-backend.env
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

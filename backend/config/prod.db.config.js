@@ -1,9 +1,9 @@
 module.exports = {
-    HOST: "REMOVED",
-    PORT: 3306,
-    USER: "admin",
-    PASSWORD: "REMOVED",
-    DB: 'congregations',
+    HOST: process.env.DB_HOST,
+    PORT: process.env.DB_PORT || 3306,
+    USER: process.env.DB_USER,
+    PASSWORD: process.env.DB_PASSWORD,
+    DB: process.env.DB_NAME || 'congregations',
     dialect: 'mysql',
     pool: {
       max: 5,

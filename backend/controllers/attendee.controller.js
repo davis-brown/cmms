@@ -1,6 +1,5 @@
 const db = require("../models");
 const Attendee = db.attendee;
-const Op = db.Sequelize.Op;
 
 // Create and Save a new Attendee
 exports.create = (req, res) => {
@@ -35,13 +34,8 @@ exports.create = (req, res) => {
 // Retrieve all Attendees from the database.
 exports.findAttendeeForEvent = (req, res) => {
     const evt_ID = req.query.events;  
-    console.log('Hi');
 
-    var condition = evt_ID ? {
-        evt_ID: {
-        [Op.like]: `%${evt_ID}%`
-        }
-    } : null;
+    var condition = evt_ID ? { evt_ID: String(evt_ID) } : null;
 
     Attendee.findAll({include:["event"], where: condition }) 
     .then(data => {

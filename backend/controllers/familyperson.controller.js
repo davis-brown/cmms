@@ -1,6 +1,5 @@
 const db = require("../models");
 const Familyperson = db.familyperson;
-const Op = db.Sequelize.Op;
 
 // Create and Save a new Familyperson
 exports.create = (req, res) => {
@@ -35,11 +34,7 @@ exports.create = (req, res) => {
 exports.findPeopleForFamily = (req, res) => {
     const fam_ID = req.query.family;
 
-    var condition = fam_ID ? {
-        fam_ID: {
-        [Op.like]: `%${fam_ID}%`
-        }
-    } : null;
+    var condition = fam_ID ? { fam_ID: String(fam_ID) } : null;
 
     Familyperson.findAll({include:["person", "family"], where: condition })
     .then(data => {
@@ -80,11 +75,11 @@ exports.update = (req, res) => {
     .then(num => {
         if (num == 1) {
             res.send({
-                message: "Family was updated successfully."
+                message: "Familyperson was updated successfully."
             });
         } else {
             res.send({
-                message: `Cannot update Family with id=${id}. Maybe Family was not found or req.body is empty!`
+                message: `Cannot update Familyperson with id=${id}. Maybe Familyperson was not found or req.body is empty!`
             });
         }
     })
@@ -132,7 +127,7 @@ exports.deleteAll = (req, res) => {
     })
     .then(nums => {
         res.send({
-            message: `${nums} Families were deleted successfully!`
+            message: `${nums} Familypersons were deleted successfully!`
         });
     })
     .catch(err => {

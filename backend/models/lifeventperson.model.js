@@ -10,7 +10,7 @@ module.exports = (sequelize, Sequelize) => {
       event_ID: {
         type: Sequelize.INTEGER
       },
-      lep_ID: {
+      per_ID: {
         type: Sequelize.INTEGER
       },
       vvg_ID: {

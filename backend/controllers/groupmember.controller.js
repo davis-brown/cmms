@@ -1,6 +1,5 @@
 const db = require("../models");
 const Groupmember = db.groupmember;
-const Op = db.Sequelize.Op;
 
 // Create and Save a new Groupmember
 exports.create = (req, res) => {
@@ -37,11 +36,7 @@ exports.create = (req, res) => {
 exports.findMemberForGroup = (req, res) => {
     const grp_ID = req.query.group;
     
-    var condition = grp_ID ? {
-        grp_ID: {
-        [Op.like]: `%${grp_ID}%`
-        }
-    } : null;
+    var condition = grp_ID ? { grp_ID: String(grp_ID) } : null;
 
     Groupmember.findAll({include:["person", "group"], where: condition })
     .then(data => {

@@ -3,8 +3,8 @@ const dbConfig = require("../config/db.config.js");
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
+  port: dbConfig.PORT,
   dialect: dbConfig.dialect,
-  operatorsAliases: false,
 
   pool: {
     max: dbConfig.pool.max,
@@ -78,6 +78,18 @@ db.lifeevent.hasMany(db.lifeventperson,{
   as: 'lifeventperson',
   foreignKey: 'event_ID'
 });
+db.lifeventperson.belongsTo(db.lifeevent, {
+  as: 'lifeevent',
+  foreignKey: 'event_ID'
+});
+db.person.hasMany(db.lifeventperson, {
+  as: 'lifeventperson',
+  foreignKey: 'per_ID'
+});
+db.lifeventperson.belongsTo(db.person, {
+  as: 'person',
+  foreignKey: 'per_ID'
+});
 
 db.person.hasMany(db.groupmember, {
   as: 'groupmember',
@@ -121,6 +133,6 @@ db.personcontact.belongsTo(db.communication, {
   as: 'communication',
   foreignKey: 'com_ID'
 });
-db.ROLES = ["user", "admin", "moderator"];
+db.ROLES = ["user", "moderator", "admin", "leader"];
 
 module.exports = db;
