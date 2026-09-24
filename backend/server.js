@@ -6,8 +6,9 @@ const path = require("path");
 
 const app = express();
 
+// Comma-separated list of frontend URLs allowed to call the API
 var corsOptions = {
-  origin: "http://localhost:8081"
+  origin: (process.env.CORS_ORIGIN || "http://localhost:8081").split(",").map(o => o.trim())
 };
 
 app.use(cors(corsOptions));

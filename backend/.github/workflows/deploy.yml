@@ -24,7 +24,7 @@ jobs:
                   SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
                   ARGS: '-rltgoDzvO --delete'
                   SOURCE: 'deploy/'
-                  REMOTE_HOST: 'example.com'
+                  REMOTE_HOST: ${{ secrets.SERVER_HOST }}
                   REMOTE_USER: ubuntu
                   TARGET: 'nodeapps/congregation-backend'
             - name: Execute SSH commmands on remote server
@@ -32,7 +32,7 @@ jobs:
               env:
                   NAME: 'Root'
               with:
-                  hosts: 'ubuntu@example.com'
+                  hosts: ubuntu@${{ secrets.SERVER_HOST }}
                   privateKey: ${{ secrets.SERVER_SSH_KEY }}
                   debug: false
                   command: |
