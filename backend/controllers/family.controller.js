@@ -2,6 +2,21 @@ const db = require("../models");
 const Family = db.family;
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs')
+const path = require('path')
+
+const IMAGES_DIR = path.join(__dirname, '../public/images');
+const ALLOWED_IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+
+// Delete a picture from the images folder. Only the file name is used, so the
+// caller can't escape the folder with paths like "../../server.js".
+const removePicture = (pic) => {
+    const fileName = path.basename(String(pic));
+    fs.unlink(path.join(IMAGES_DIR, fileName), (err) => {
+        if (err) {
+          console.error(err)
+        }
+    })
+};
 
 
 // Create and Save a new Family
@@ -40,30 +55,26 @@ exports.create = (req, res) => {
 exports.upload = (req, res) => {
     const oldPic = req.body.existingPic;
 
-    if (!req.files) {
-        return res.status(500).send({ msg: "file is not found" })
-    }
-
-    if (oldPic) {
-        const path = "./public/images" + oldPic;
-        fs.unlink(path, (err) => {
-            if (err) {
-              console.error(err)
-              return
-            }
-        })
+    if (!req.files || !req.files.file || Array.isArray(req.files.file)) {
+        return res.status(400).send({ msg: "file is not found" })
     }
 
     const myFile = req.files.file;
-    let newName = myFile.name.split(".");
-    newName[0] = uuidv4();
+    const extension = path.extname(myFile.name).toLowerCase();
 
-    myFile.name = newName[0] + "." + newName[1];
+    if (!ALLOWED_IMAGE_EXTENSIONS.includes(extension) || !myFile.mimetype.startsWith('image/')) {
+        return res.status(400).send({ msg: "Only image files are allowed" })
+    }
 
-    myFile.mv(`./public/images/${myFile.name}`, function (err) {
+    myFile.name = uuidv4() + extension;
+
+    myFile.mv(path.join(IMAGES_DIR, myFile.name), function (err) {
         if (err) {
             console.log(err)
             return res.status(500).send({ msg: "Error occured" });
+        }
+        if (oldPic) {
+            removePicture(oldPic);
         }
         return res.send({name: myFile.name, path: `/${myFile.name}`});
     });
@@ -129,34 +140,28 @@ exports.update = (req, res) => {
 // Delete a Family with the specified id in the request
 exports.delete = (req, res) => {
     const id = req.params.id;
-    const fam_pic = req.body.fam_pic;
 
-    console.log(fam_pic);
-    if (fam_pic) {
-        const path = "./public/images" + fam_pic;
-        fs.unlink(path, (err) => {
-            if (err) {
-              console.error(err)
-              return
+    Family.findByPk(id)
+    .then(family => {
+        return Family.destroy({
+            where: {
+                fam_ID: id
             }
         })
-    }
-
-    Family.destroy({
-        where: {
-            fam_ID: id
-        }
-    })
-    .then(num => {
-        if (num == 1) {
-            res.send({
-                message: "Family was deleted successfully!"
-            });
-        } else {
-            res.send({
-                message: `Cannot delete Family with id=${id}. Maybe Family was not found!`
-            });
-        }
+        .then(num => {
+            if (num == 1) {
+                if (family && family.fam_pic) {
+                    removePicture(family.fam_pic);
+                }
+                res.send({
+                    message: "Family was deleted successfully!"
+                });
+            } else {
+                res.send({
+                    message: `Cannot delete Family with id=${id}. Maybe Family was not found!`
+                });
+            }
+        });
     })
     .catch(err => {
         res.status(500).send({

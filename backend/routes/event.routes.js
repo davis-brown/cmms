@@ -1,7 +1,12 @@
+const { authJwt } = require("../middleware");
+
 module.exports = app => {
     const Event = require("../controllers/event.controller.js");
     
     var router = require("express").Router();
+
+    // All routes below require a logged-in user
+    router.use(authJwt.verifyToken);
   
     // Create a new Event
     router.post("/", Event.create);

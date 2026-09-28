@@ -1,7 +1,12 @@
+const { authJwt } = require("../middleware");
+
 module.exports = app => {
     const Congregation = require("../controllers/congregation.controller.js");
     
     var router = require("express").Router();
+
+    // All routes below require a logged-in user
+    router.use(authJwt.verifyToken);
   
     // Create a new Person
     router.post("/", Congregation.create);

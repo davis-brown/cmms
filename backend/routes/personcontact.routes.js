@@ -1,7 +1,12 @@
+const { authJwt } = require("../middleware");
+
 module.exports = app => {
     const Personcontact = require("../controllers/personcontact.controller.js");
     
     var router = require("express").Router();
+
+    // All routes below require a logged-in user
+    router.use(authJwt.verifyToken);
   
     // Create a new Course
     router.post("/", Personcontact.create);

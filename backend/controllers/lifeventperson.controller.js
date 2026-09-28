@@ -1,6 +1,5 @@
 const db = require("../models");
-const lifeeventperson = db.lifeeventperson;
-const Op = db.Sequelize.Op;
+const LifeEventPerson = db.lifeventperson;
 
 // Create and Save a life event person
 exports.create = (req, res) => {
@@ -12,7 +11,7 @@ exports.create = (req, res) => {
     }
 
     // Create a life event person
-    const groupmember = {
+    const lifeEventPerson = {
         lep_ID: req.body.lep_ID,
         event_ID: req.body.event_ID,
         per_ID: req.body.per_ID,
@@ -21,7 +20,7 @@ exports.create = (req, res) => {
     };
 
     // Save life event in the database
-    lifeventperson.create(lifeventperson)
+    LifeEventPerson.create(lifeEventPerson)
     .then(data => {
         res.send(data);
     })
@@ -32,17 +31,17 @@ exports.create = (req, res) => {
     });
 };
 
-// Retrieve all groupmember from the database.
+// Retrieve life event people, optionally filtered by ?person= or ?event=
 exports.findLifeEventForPerson = (req, res) => {
-    const event_ID = req.query.group;
-    
-    var condition = event_ID ? {
-        event_ID: {
-        [Op.like]: `%${event_ID}%`
-        }
-    } : null;
+    const condition = {};
+    if (req.query.person) {
+        condition.per_ID = String(req.query.person);
+    }
+    if (req.query.event) {
+        condition.event_ID = String(req.query.event);
+    }
 
-    lifeeventperson.findAll({include:["lifevent", "person"], where: condition })
+    LifeEventPerson.findAll({include:["lifeevent", "person"], where: condition })
     .then(data => {
         res.send(data);
     })
@@ -58,7 +57,7 @@ exports.findLifeEventForPerson = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    lifeeventperson.findByPk(id)
+    LifeEventPerson.findByPk(id)
     .then(data => {
         res.send(data);
     })
@@ -72,7 +71,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
     const id = req.params.id;
 
-    lifeeventperson.update(req.body, {
+    LifeEventPerson.update(req.body, {
         where: {
             lep_ID: id
         }
@@ -98,7 +97,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    lifeventperson.destroy({
+    LifeEventPerson.destroy({
         where: {
             lep_ID: id
         }
@@ -123,7 +122,7 @@ exports.delete = (req, res) => {
 
 exports.deleteAll = (req, res) => {
     const id = req.query.id;
-    lifeeventperson.destroy({
+    LifeEventPerson.destroy({
         where: {event_ID: id},
         truncate: false
     })
