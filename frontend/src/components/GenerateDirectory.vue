@@ -216,7 +216,7 @@ export default ({
         if (process.env.NODE_ENV === "development") {
             this.path = "http://localhost:8080/api/images";
         } else {
-            this.path = "http://example.com/api/images";
+            this.path = "/api/images";
         }
     }
 })
