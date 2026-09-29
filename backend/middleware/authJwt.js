@@ -3,7 +3,7 @@ const config = require("../config/auth.config.js");
 const db = require("../models");
 const User = db.user;
 
-verifyToken = (req, res, next) => {
+const verifyToken = (req, res, next) => {
   let token = req.headers["x-access-token"];
 
   if (!token) {
@@ -12,7 +12,7 @@ verifyToken = (req, res, next) => {
     });
   }
 
-  jwt.verify(token, config.secret, (err, decoded) => {
+  jwt.verify(token, config.secret, { algorithms: ["HS256"] }, (err, decoded) => {
     if (err) {
       return res.status(401).send({
         message: "Unauthorized!"
@@ -23,62 +23,34 @@ verifyToken = (req, res, next) => {
   });
 };
 
-isAdmin = (req, res, next) => {
-  User.findByPk(req.userId).then(user => {
-    user.getRoles().then(roles => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === "admin") {
-          next();
-          return;
-        }
+// Returns middleware that allows the request if the user has any of the given roles
+const requireRole = (roleNames, message) => (req, res, next) => {
+  User.findByPk(req.userId)
+    .then(user => {
+      if (!user) {
+        return res.status(401).send({
+          message: "Unauthorized!"
+        });
       }
 
-      res.status(403).send({
-        message: "Require Admin Role!"
-      });
-      return;
-    });
-  });
-};
-
-isModerator = (req, res, next) => {
-  User.findByPk(req.userId).then(user => {
-    user.getRoles().then(roles => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === "moderator") {
-          next();
-          return;
-        }
-      }
-
-      res.status(403).send({
-        message: "Require Moderator Role!"
-      });
-    });
-  });
-};
-
-isModeratorOrAdmin = (req, res, next) => {
-  User.findByPk(req.userId).then(user => {
-    user.getRoles().then(roles => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === "moderator") {
-          next();
-          return;
+      return user.getRoles().then(roles => {
+        if (roles.some(role => roleNames.includes(role.name))) {
+          return next();
         }
 
-        if (roles[i].name === "admin") {
-          next();
-          return;
-        }
-      }
-
-      res.status(403).send({
-        message: "Require Moderator or Admin Role!"
+        res.status(403).send({ message });
+      });
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Unable to validate user role!"
       });
     });
-  });
 };
+
+const isAdmin = requireRole(["admin"], "Require Admin Role!");
+const isModerator = requireRole(["moderator"], "Require Moderator Role!");
+const isModeratorOrAdmin = requireRole(["moderator", "admin"], "Require Moderator or Admin Role!");
 
 const authJwt = {
   verifyToken: verifyToken,

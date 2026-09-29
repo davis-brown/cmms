@@ -6,20 +6,29 @@ const path = require("path");
 
 const app = express();
 
+// Comma-separated list of frontend URLs allowed to call the API
 var corsOptions = {
-  origin: "http://localhost:8081"
+  origin: (process.env.CORS_ORIGIN || "http://localhost:8081").split(",").map(o => o.trim())
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors);
-app.use(fileUpload());
+app.use(fileUpload({
+  limits: { fileSize: 5 * 1024 * 1024 },
+  abortOnLimit: true,
+  createParentPath: true
+}));
 app.use('/api/images', express.static(path.join(__dirname , '/public/images')));
 
 const db = require("./models");
 const Role = db.role;
 
 
-db.sequelize.sync();
+db.sequelize.sync()
+  .then(() => initial())
+  .catch(err => {
+    console.error("Database setup failed:", err);
+    process.exit(1);
+  });
 
 
 // parse requests of content-type - application/json
@@ -28,25 +37,18 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Make sure the roles exist; safe to run on every start
 function initial() {
-  Role.create({
-    id: 1,
-    name: "user"
-  });
- 
-  Role.create({
-    id: 2,
-    name: "moderator"
-  });
- 
-  Role.create({
-    id: 3,
-    name: "admin"
-  });
-  Role.create({
-    id: 4,
-    name: "leader"
-  });
+  const roles = [
+    { id: 1, name: "user" },
+    { id: 2, name: "moderator" },
+    { id: 3, name: "admin" },
+    { id: 4, name: "leader" }
+  ];
+
+  return roles.reduce((prev, role) => prev.then(() =>
+    Role.findOrCreate({ where: { id: role.id }, defaults: role })
+  ), Promise.resolve());
 }
 
 

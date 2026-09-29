@@ -1,6 +1,5 @@
 const db = require("../models");
 const Personcontact = db.personcontact;
-const Op = db.Sequelize.Op;
 
 // Create and Save a new Personcontact
 exports.create = (req, res) => {
@@ -34,11 +33,7 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
     const per_ID = req.query.person;
 
-    var condition = per_ID ? {
-        per_ID: {
-        [Op.like]: `%${per_ID}%`
-        }
-    } : null;
+    var condition = per_ID ? { per_ID: String(per_ID) } : null;
 
     Personcontact.findAll({include:["person", "communication"], where: condition })
     .then(data => {
@@ -73,17 +68,17 @@ exports.update = (req, res) => {
 
     Personcontact.update(req.body, {
         where: {
-            fp_ID: id
+            cpc_ID: id
         }
     })
     .then(num => {
         if (num == 1) {
             res.send({
-                message: "Family was updated successfully."
+                message: "Personcontact was updated successfully."
             });
         } else {
             res.send({
-                message: `Cannot update Family with id=${id}. Maybe Family was not found or req.body is empty!`
+                message: `Cannot update Personcontact with id=${id}. Maybe Personcontact was not found or req.body is empty!`
             });
         }
     })
@@ -131,7 +126,7 @@ exports.deleteAll = (req, res) => {
     })
     .then(nums => {
         res.send({
-            message: `${nums} Families were deleted successfully!`
+            message: `${nums} Personcontacts were deleted successfully!`
         });
     })
     .catch(err => {
