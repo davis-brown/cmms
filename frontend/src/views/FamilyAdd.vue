@@ -193,10 +193,10 @@ export default {
           v => !!v || 'E-mail is required',
           v => /^\S{1,}@\S{2,}\.\S{2,}$/.test(v) || 'E-mail must be valid',
       ],
+      // Any usual format (555-0101, (405) 555-0101, +1 405.555.0101) with 7 to 15 digits
       phoneRules: [
           v => !!v || 'Phone number is required.',
-          v => (v || '').length == 12 || 'Phone number must be 10 digits',
-          v => /(\d{3})-?(\d{3})-?(\d{4})/.test(v) || 'Phone number must be format ###-###-####'
+          v => (/^[0-9+().\s-]+$/.test(v || '') && /^\d{7,15}$/.test((v || '').replace(/\D/g, ''))) || 'Enter a valid phone number',
       ],
       addressRules: [
                 v => !!v || 'Address is required.'
@@ -253,10 +253,13 @@ export default {
       upload
         .then(() => FamilyService.create(this.family))
         .then(response => {
-          this.familyPersons.forEach(familyPerson => {
+          // Wait for the members to be saved so the list page shows them
+          return Promise.all(this.familyPersons.map(familyPerson => {
             familyPerson.fam_ID = response.data.fam_ID;
-            this.addPersonForFamily(familyPerson)
-          })
+            return this.addPersonForFamily(familyPerson);
+          }));
+        })
+        .then(() => {
           this.$router.push({ name: "familieslist" });
         })
         .catch(err => {
@@ -290,7 +293,7 @@ export default {
     },
 
     addPersonForFamily(familyPerson) {
-        FamilyPersonService.create(familyPerson)
+        return FamilyPersonService.create(familyPerson)
           .then(() => {
           })
           .catch(error => {

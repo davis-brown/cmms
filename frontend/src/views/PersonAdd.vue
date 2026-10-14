@@ -109,10 +109,13 @@ export default {
       }
       PersonDataService.create(this.person)
         .then((response) => {
-          this.personContacts.forEach(personContact => {
+          // Save the contacts before leaving the page
+          return Promise.all(this.personContacts.map(personContact => {
             personContact.per_ID = response.data.per_ID;
-            this.savePersonContact(personContact)
-          })
+            return this.savePersonContact(personContact);
+          })).then(() => response);
+        })
+        .then((response) => {
           // Opened from a family's edit page: go back there and offer to add the new member
           const fam_ID = this.$route.params.fam_ID;
           if (fam_ID) {
@@ -128,17 +131,10 @@ export default {
         });
     },
     savePersonContact(contact) {
-      CommunicationService.create(contact)
+      return CommunicationService.create(contact)
       .then(response => {
           let personContact = {com_ID : response.data.com_ID, per_ID : contact.per_ID};
-          PersonContactService.create(personContact)
-          .then(response => {
-              console.log(response.data);
-          })
-          .catch(e => {
-              console.log(e);
-          });
-          console.log(response.data);
+          return PersonContactService.create(personContact);
       })
       .catch(e => {
           console.log(e);

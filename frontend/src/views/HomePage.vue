@@ -11,9 +11,9 @@
         >
           <div class="display-3" style="background-color: rgba(0, 0, 0, 0.33); width:100%; height:100%;">
                <div class="heading">
-                <h3 style="font-size: 3.2rem; text-align: center; font-weight:600">Riverside Community Church</h3>
+                <h3 class="heading-title">Riverside Community Church</h3>
                 
-                <p style="font-size:1.2rem; text-align: center; margin-top:-1rem">100 Main St, Springfield</p>
+                <p class="heading-address">100 Main St, Springfield</p>
                </div>
                 
               
@@ -153,6 +153,18 @@ export default {
    padding-top:18%;
  }
 
+ .heading-title {
+   font-size: 3.2rem;
+   text-align: center;
+   font-weight: 600;
+ }
+
+ .heading-address {
+   font-size: 1.2rem;
+   text-align: center;
+   margin-top: -1rem;
+ }
+
  .section {
    min-height: 400px;
  }
@@ -171,6 +183,20 @@ export default {
    }
    .textcontainer h2 {
      font-size: 40px;
+   }
+   /* Text before its picture in every section, so pictures don't pair up */
+   .textcontainer {
+     order: -1;
+   }
+   .heading {
+     padding: 30% 1rem 0;
+   }
+   .heading-title {
+     font-size: 2rem;
+   }
+   .heading-address {
+     font-size: 1rem;
+     margin-top: 0;
    }
  }
 

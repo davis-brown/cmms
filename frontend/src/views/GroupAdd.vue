@@ -185,14 +185,15 @@ export default {
       if (!this.$refs.form.validate()) {
         return;
       }
-      console.log(this.group)
       GroupDataServices.create(this.group)
         .then(response => {
-          console.log(response.data.grp_ID)
-          this.groupMembers.forEach(groupMember => {
+          // Wait for the members to be saved so the list page shows them
+          return Promise.all(this.groupMembers.map(groupMember => {
             groupMember.grp_ID = response.data.grp_ID;
-            this.addMemberForGroup(groupMember)
-          })
+            return this.addMemberForGroup(groupMember);
+          }));
+        })
+        .then(() => {
           this.$router.push({ name: "groupdisplay" });
         })
         .catch((e) => {
@@ -220,7 +221,7 @@ export default {
     },
 
     addMemberForGroup(groupMember) {
-        GroupMemberService.create(groupMember)
+        return GroupMemberService.create(groupMember)
           .then(() => {
           })
           .catch(error => {
