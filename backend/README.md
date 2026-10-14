@@ -1,10 +1,18 @@
-# Church Membership Management System
+# Church Membership Management System: Backend
+
 The church membership management application is a web application made for a local church to help store information about the church members, and keep track of events that involved the church.
 
-This is the backend of the web application.
+This folder is the REST API. The Vue frontend is in [`../frontend`](../frontend).
 
-## Running locally
-Requires Node 22+ and MySQL.
+**Stack:** Node.js, Express, Sequelize, MySQL, JWT authentication
+
+## Quick start with Docker (recommended)
+
+Run `docker compose up --build` from the repo root; see the [root README](../README.md).
+
+## Running without Docker
+
+Requires Node 22+ and MySQL 8.
 
 ```sh
 brew install mysql && brew services start mysql   # macOS; any MySQL 8 works
@@ -14,27 +22,61 @@ npm install
 npm run dev
 ```
 
-The API runs on `http://localhost:8080` and restarts when you edit code. Tables and
-user roles are created automatically on first start. New sign-ups get the `user`
-role; to make yourself an admin:
+The API runs on `http://localhost:8080/api/` and restarts when you edit code. Tables and
+user roles are created automatically on first start, and because `.env.example` sets
+`SEED_DEMO_DATA=true`, so are the `demo` / `demo1234` login and sample data.
+
+Then start the frontend by following the instructions in [`../frontend`](../frontend/README.md#running-without-docker).
+
+New sign-ups get the `user` role; to make an account an admin:
 
 ```sh
 mysql -u root congregations -e "INSERT INTO user_roles (userId, roleId) SELECT id, 3 FROM users WHERE username = 'you';"
 ```
 
 ## Configuration
-The server reads secrets from environment variables:
+
+All settings are environment variables; see [`.env.example`](.env.example).
 
 | Variable | Required | Description |
 | --- | --- | --- |
 | `JWT_SECRET` | Yes | Secret used to sign login tokens. Use a long random value, e.g. `openssl rand -hex 32`. |
-| `DB_HOST`, `DB_USER`, `DB_PASSWORD` | Production | MySQL connection details (see `config/prod.db.config.js`). |
+| `DB_HOST`, `DB_USER`, `DB_PASSWORD` | Production | MySQL connection. Locally they default to `localhost`, `root` and an empty password. |
 | `DB_PORT`, `DB_NAME` | No | Default to `3306` and `congregations`. |
+| `DB_LOGGING` | No | `true` prints every SQL query. |
+| `PORT` | No | API port. Defaults to `8080`. |
 | `CORS_ORIGIN` | Production | Comma-separated frontend URLs allowed to call the API. Defaults to `http://localhost:8081`. |
+| `SEED_DEMO_DATA` | No | `true` creates the demo user and sample data on an empty database. Never set it on a real server. |
+| `DEMO_USERNAME`, `DEMO_PASSWORD` | No | Demo login. Default to `demo` and `demo1234`. |
 
-Locally, these come from `.env` (see `.env.example`). On the server, put them in
-`/home/ubuntu/nodeapps/congregation-backend.env`, which `congregation-backend.service` loads.
+On the server, put these in `/home/ubuntu/nodeapps/congregation-backend.env`, which
+`congregation-backend.service` loads.
 
 Deploys run from GitHub Actions when a PR into `dev-branch` is merged. They need two
 repository secrets: `SERVER_HOST` (the server's hostname or IP) and `SERVER_SSH_KEY`
 (a private key whose public key is in the server's `~/.ssh/authorized_keys`).
+
+## Project layout
+
+```
+server.js        Express app setup, startup, database sync
+seed.js          Roles, plus the optional demo user and sample data
+config/          Database and auth settings (read from environment)
+models/          Sequelize models and associations
+controllers/     Route handlers
+routes/          API route definitions
+middleware/      JWT verification and sign-up checks
+```
+
+## API overview
+
+| Resource | Base path |
+| --- | --- |
+| Auth (sign up / sign in) | `/api/auth` |
+| People | `/api/person` |
+| Families / family members | `/api/families`, `/api/familyperson` |
+| Groups / group members | `/api/group`, `/api/groupmember` |
+| Events / attendees | `/api/events`, `/api/attendee` |
+| Life events | `/api/lifeevent`, `/api/lifeventperson` |
+| Contacts | `/api/communications`, `/api/personcontact` |
+| Congregations | `/api/congregation` |

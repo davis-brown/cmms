@@ -2,7 +2,7 @@
 
 The church membership management application is a web application made for a local church to help store information about the church members, and keep track of events that involved the church.
 
-This repository is the Vue single-page app. The REST API lives in [cmms-backend](https://github.com/davis-brown/cmms-backend).
+This folder is the Vue single-page app. The REST API is in [`../backend`](../backend).
 
 **Stack:** Vue 2, Vuetify, Vue Router, Vuex, Axios
 
@@ -10,22 +10,13 @@ This repository is the Vue single-page app. The REST API lives in [cmms-backend]
 
 ## Quick start with Docker (recommended)
 
-The backend repo has a `docker-compose.yml` that runs MySQL, the API and this frontend together. Clone both repositories into the same parent folder:
-
-```bash
-git clone https://github.com/davis-brown/cmms-backend.git
-git clone https://github.com/davis-brown/cmms-frontend.git
-cd cmms-backend
-docker compose up --build
-```
-
-Then open **http://localhost:8081** and log in with **`demo` / `demo1234`**. The database starts with sample members, families, groups and events.
+Run `docker compose up --build` from the repo root, then open **http://localhost:8081** and log in with **`demo` / `demo1234`**. See the [root README](../README.md).
 
 ## Running without Docker
 
 Needs Node.js 18 or newer (see `.nvmrc`).
 
-1. Start the backend first. It must be running on `http://localhost:8080`; see the [backend README](https://github.com/davis-brown/cmms-backend#running-without-docker).
+1. Start the backend first. It must be running on `http://localhost:8080`; see the [backend README](../backend/README.md#running-without-docker).
 2. Install and start the dev server:
    ```bash
    npm install

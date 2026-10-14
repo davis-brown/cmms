@@ -1,0 +1,47 @@
+# Runs the whole app locally: MySQL, the API, and the Vue frontend.
+#   docker compose up --build
+# then open http://localhost:8081 and log in with demo / demo1234.
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: cmms
+      MYSQL_DATABASE: congregations
+    ports:
+      - "3307:3306" # exposed on 3307 so it won't clash with a local MySQL
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-pcmms"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build: ./backend
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: cmms
+      DB_NAME: congregations
+      JWT_SECRET: docker-local-secret
+      CORS_ORIGIN: http://localhost:8081
+      SEED_DEMO_DATA: "true"
+    ports:
+      - "8080:8080"
+    volumes:
+      - uploads:/app/public/images
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8081:80"
+    depends_on:
+      - backend
+
+volumes:
+  db-data:
+  uploads:

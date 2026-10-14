@@ -3,6 +3,7 @@ const fileUpload = require('express-fileupload');
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
+const fs = require("fs");
 
 const app = express();
 
@@ -17,40 +18,18 @@ app.use(fileUpload({
   abortOnLimit: true,
   createParentPath: true
 }));
+// Uploaded family photos are stored here; make sure the folder exists.
+fs.mkdirSync(path.join(__dirname, "public/images"), { recursive: true });
 app.use('/api/images', express.static(path.join(__dirname , '/public/images')));
 
 const db = require("./models");
-const Role = db.role;
-
-
-db.sequelize.sync()
-  .then(() => initial())
-  .catch(err => {
-    console.error("Database setup failed:", err);
-    process.exit(1);
-  });
-
+const seed = require("./seed");
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// Make sure the roles exist; safe to run on every start
-function initial() {
-  const roles = [
-    { id: 1, name: "user" },
-    { id: 2, name: "moderator" },
-    { id: 3, name: "admin" },
-    { id: 4, name: "leader" }
-  ];
-
-  return roles.reduce((prev, role) => prev.then(() =>
-    Role.findOrCreate({ where: { id: role.id }, defaults: role })
-  ), Promise.resolve());
-}
-
 
 require("./routes/communication.routes")(app);
 require("./routes/person.routes")(app);
@@ -73,6 +52,17 @@ require("./routes/lifeeventperson.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-});
+
+// Create any missing tables and seed roles (and demo data, if enabled) before accepting requests.
+db.sequelize
+  .sync()
+  .then(seed)
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}.`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to start: could not set up the database.", err);
+    process.exit(1);
+  });
