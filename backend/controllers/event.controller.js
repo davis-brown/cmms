@@ -101,10 +101,10 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    Event.destroy({
-        where: {
-            evt_ID: id
-        }
+    // Remove the event's RSVPs along with the event itself
+    db.sequelize.transaction(transaction => {
+        return db.attendee.destroy({ where: { evt_ID: id }, transaction })
+        .then(() => Event.destroy({ where: { evt_ID: id }, transaction }));
     })
     .then(num => {
         if (num == 1) {

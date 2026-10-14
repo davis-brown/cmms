@@ -19,8 +19,10 @@ module.exports = (sequelize, Sequelize) => {
       last_name: {
         type: Sequelize.STRING,
       },
+      // Login username linked to this member; at most one member per login
       user_name: {
         type: Sequelize.STRING,
+        unique: true,
       },
       role_value: {
         type: Sequelize.INTEGER,

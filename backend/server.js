@@ -24,6 +24,7 @@ app.use('/api/images', express.static(path.join(__dirname , '/public/images')));
 
 const db = require("./models");
 const seed = require("./seed");
+const ensureUniqueIndexes = require("./unique-indexes");
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
@@ -56,6 +57,7 @@ const PORT = process.env.PORT || 8080;
 // Create any missing tables and seed roles (and demo data, if enabled) before accepting requests.
 db.sequelize
   .sync()
+  .then(ensureUniqueIndexes)
   .then(seed)
   .then(() => {
     app.listen(PORT, () => {

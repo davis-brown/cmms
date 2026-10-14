@@ -23,6 +23,11 @@ exports.signup = (req, res) => {
       res.send({ message: "User was registered successfully!" });
     })
     .catch(err => {
+      // Two sign-ups racing for the same name get past the duplicate check;
+      // the unique index stops the second one
+      if (err instanceof db.Sequelize.UniqueConstraintError) {
+        return res.status(400).send({ message: "Failed! Username is already in use!" });
+      }
       res.status(500).send({ message: err.message });
     });
 };
@@ -55,7 +60,11 @@ exports.signin = (req, res) => {
       });
 
       var authorities = [];
-      return user.getRoles().then(roles => {
+      return Promise.all([
+        user.getRoles(),
+        // The member record linked to this login, if an admin has set one up
+        db.person.findOne({ where: { user_name: user.username } })
+      ]).then(([roles, person]) => {
         for (let i = 0; i < roles.length; i++) {
           authorities.push("ROLE_" + roles[i].name.toUpperCase());
         }
@@ -64,6 +73,7 @@ exports.signin = (req, res) => {
           username: user.username,
           email: user.email,
           roles: authorities,
+          per_ID: person ? person.per_ID : null,
           accessToken: token
         });
       });

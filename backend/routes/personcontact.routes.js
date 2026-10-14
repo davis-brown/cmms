@@ -9,7 +9,7 @@ module.exports = app => {
     router.use(authJwt.verifyToken);
   
     // Create a new Course
-    router.post("/", Personcontact.create);
+    router.post("/", authJwt.isModeratorOrAdmin, Personcontact.create);
   
     // Retrieve all Majors
     router.get("/", Personcontact.findAll);
@@ -18,13 +18,13 @@ module.exports = app => {
     router.get("/:id", Personcontact.findOne);
   
     // Update a Course with id
-    router.put("/:id", Personcontact.update);
+    router.put("/:id", authJwt.isModeratorOrAdmin, Personcontact.update);
   
     // Delete a Course with id
-    router.delete("/:id", Personcontact.delete);
+    router.delete("/:id", authJwt.isModeratorOrAdmin, Personcontact.delete);
   
     // Delete all Majors
-    router.delete("/", Personcontact.deleteAll);
+    router.delete("/", authJwt.isModeratorOrAdmin, Personcontact.deleteAll);
   
     app.use('/api/personcontact', router);
 };

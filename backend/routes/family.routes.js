@@ -9,9 +9,11 @@ module.exports = app => {
     router.use(authJwt.verifyToken);
   
     // Create a new Course
-    router.post("/", Family.create);
+    router.post("/", authJwt.isModeratorOrAdmin, Family.create);
 
-    router.post('/upload', Family.upload);
+    // With a fam_ID the photo replaces that family's photo; without one it's
+    // a photo for a family that's about to be created
+    router.post('/upload', authJwt.isFamilyMemberOrModerator(req => req.body.fam_ID), Family.upload);
   
     // Retrieve all Majors
     router.get("/", Family.findAll);
@@ -20,10 +22,10 @@ module.exports = app => {
     router.get("/:id", Family.findOne);
   
     // Update a Course with id
-    router.put("/:id", Family.update);
+    router.put("/:id", authJwt.isFamilyMemberOrModerator(req => req.params.id), Family.update);
   
     // Delete a Course with id
-    router.delete("/:id", Family.delete);
+    router.delete("/:id", authJwt.isModeratorOrAdmin, Family.delete);
   
     // Delete all Majors
     router.delete("/", authJwt.isAdmin, Family.deleteAll);

@@ -118,10 +118,13 @@ exports.delete = (req, res) => {
 
 // Delete all Personcontacts from the database.
 exports.deleteAll = (req, res) => {
-    const id = req.query.id;
+    const id = req.query.person;
+    if (!id) {
+        return res.status(400).send({ message: "The person query parameter is required." });
+    }
 
     Personcontact.destroy({
-        where: {per_ID: id},
+        where: {per_ID: String(id)},
         truncate: false
     })
     .then(nums => {

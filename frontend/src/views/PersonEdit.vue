@@ -42,7 +42,13 @@
         label="Employer"
         required
       ></v-text-field>
-     
+      <v-text-field
+        v-model="currentPerson.user_name"
+        label="Login username"
+        hint="Links this member to a login so they can edit their own family"
+        persistent-hint
+      ></v-text-field>
+
           <v-textarea
           v-model="currentPerson.notes"
           solo
@@ -82,7 +88,7 @@
     </v-row>
  
      </v-form>
-    <p>{{ message }}</p>
+    <v-alert v-if="message" type="error" dense>{{ message }}</v-alert>
   </div>
 
   <div v-else>
@@ -104,6 +110,7 @@ export default {
   data() {
     return {
       currentPerson: null,
+      message: '',
       select: null,
       status: ["Active", "Inactive"],
       position: ['Prayer Leader', 'Choir Leader', 'Communion Helper', 'Youth Minister', 'VBS Staff', 'Minister']
@@ -135,7 +142,8 @@ export default {
           this.$router.push({ name: 'personlist' });
         })
         .catch(e => {
-          console.log(e);
+          // e.g. the login username is already linked to another member
+          this.message = (e.response && e.response.data && e.response.data.message) || e.message;
         });
     },
     deletePerson() {

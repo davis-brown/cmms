@@ -9,7 +9,7 @@ module.exports = app => {
     router.use(authJwt.verifyToken);
   
     // Create a new Course
-    router.post("/", Group.create);
+    router.post("/", authJwt.isModeratorOrAdmin, Group.create);
   
     // Retrieve all Majors
     router.get("/", Group.findAll);
@@ -18,10 +18,10 @@ module.exports = app => {
     router.get("/:id", Group.findOne);
   
     // Update a Course with id
-    router.put("/:id", Group.update);
+    router.put("/:id", authJwt.isModeratorOrAdmin, Group.update);
     
     // Delete a Course with id
-    router.delete("/:id", Group.delete);
+    router.delete("/:id", authJwt.isModeratorOrAdmin, Group.delete);
   
 
   

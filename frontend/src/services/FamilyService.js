@@ -21,8 +21,8 @@ class FamilyService {
     return http.put(`families/${id}`, data);
   }
 
-  delete(id, fam_pic) {
-    return http.delete(`families/${id}`, { data: {fam_pic: fam_pic}});
+  delete(id) {
+    return http.delete(`families/${id}`);
   }
 
 }

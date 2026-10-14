@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch --env-file=.env server.js",
-    "bundle": "mkdir deploy && cp -r config controllers middleware models routes server.js seed.js package.json package-lock.json congregation-backend.service deploy && rm deploy/config/db.config.js && mv deploy/config/prod.db.config.js deploy/config/db.config.js"
+    "bundle": "mkdir deploy && cp -r config controllers middleware models routes server.js seed.js unique-indexes.js package.json package-lock.json congregation-backend.service deploy && rm deploy/config/db.config.js && mv deploy/config/prod.db.config.js deploy/config/db.config.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

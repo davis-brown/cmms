@@ -9,7 +9,7 @@ module.exports = app => {
     router.use(authJwt.verifyToken);
   
     // Create a new Person
-    router.post("/", Congregation.create);
+    router.post("/", authJwt.isModeratorOrAdmin, Congregation.create);
   
     // Retrieve all People
     router.get("/", Congregation.findAll);
@@ -18,7 +18,7 @@ module.exports = app => {
     router.get("/:id", Congregation.findOne);
   
     // Update a Person with id
-    router.put("/:id", Congregation.update);
-    router.delete("/:id", Congregation.delete);
+    router.put("/:id", authJwt.isModeratorOrAdmin, Congregation.update);
+    router.delete("/:id", authJwt.isModeratorOrAdmin, Congregation.delete);
     app.use('/api/congregation', router);
 };

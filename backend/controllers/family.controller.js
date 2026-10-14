@@ -52,8 +52,10 @@ exports.create = (req, res) => {
     });
 };
 
+// Save an uploaded family photo. With a fam_ID it becomes that family's photo
+// (replacing the old one); without one the caller passes the path to create().
 exports.upload = (req, res) => {
-    const oldPic = req.body.existingPic;
+    const fam_ID = req.body.fam_ID;
 
     if (!req.files || !req.files.file || Array.isArray(req.files.file)) {
         return res.status(400).send({ msg: "file is not found" })
@@ -73,12 +75,34 @@ exports.upload = (req, res) => {
             console.log(err)
             return res.status(500).send({ msg: "Error occured" });
         }
-        if (oldPic) {
-            removePicture(oldPic);
+        const picture = {name: myFile.name, path: `/${myFile.name}`};
+        if (!fam_ID) {
+            return res.send(picture);
         }
-        return res.send({name: myFile.name, path: `/${myFile.name}`});
+
+        Family.findByPk(fam_ID)
+        .then(family => {
+            if (!family) {
+                removePicture(picture.name);
+                return res.status(404).send({ msg: "Family not found" });
+            }
+            const oldPic = family.fam_pic;
+            return family.update({ fam_pic: picture.path }).then(() => {
+                if (oldPic) {
+                    removePicture(oldPic);
+                }
+                res.send(picture);
+            });
+        })
+        .catch(err => {
+            removePicture(picture.name);
+            res.status(500).send({ msg: "Error occured" });
+        });
     });
 };
+
+// Fields that can be changed through update(); the photo changes through upload()
+const EDITABLE_FIELDS = ['fam_name', 'per_ID', 'fam_email', 'fam_phone', 'fam_address'];
 // Retrieve all Familys from the database.
 exports.findAll = (req, res) => {
 
@@ -115,6 +139,7 @@ exports.update = (req, res) => {
     const id = req.params.id;
 
     Family.update(req.body, {
+        fields: EDITABLE_FIELDS,
         where: {
             fam_ID: id
         }
@@ -141,27 +166,28 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    Family.findByPk(id)
-    .then(family => {
-        return Family.destroy({
-            where: {
-                fam_ID: id
-            }
-        })
-        .then(num => {
-            if (num == 1) {
-                if (family && family.fam_pic) {
-                    removePicture(family.fam_pic);
-                }
-                res.send({
-                    message: "Family was deleted successfully!"
-                });
-            } else {
-                res.send({
-                    message: `Cannot delete Family with id=${id}. Maybe Family was not found!`
-                });
-            }
+    // Remove the family's member links along with the family itself
+    db.sequelize.transaction(transaction => {
+        return Family.findByPk(id, { transaction })
+        .then(family => {
+            return db.familyperson.destroy({ where: { fam_ID: id }, transaction })
+            .then(() => Family.destroy({ where: { fam_ID: id }, transaction }))
+            .then(num => ({ family, num }));
         });
+    })
+    .then(({ family, num }) => {
+        if (num == 1) {
+            if (family && family.fam_pic) {
+                removePicture(family.fam_pic);
+            }
+            res.send({
+                message: "Family was deleted successfully!"
+            });
+        } else {
+            res.send({
+                message: `Cannot delete Family with id=${id}. Maybe Family was not found!`
+            });
+        }
     })
     .catch(err => {
         res.status(500).send({

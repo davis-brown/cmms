@@ -4,7 +4,7 @@
 
       <v-file-input
         v-model="selectedFile"
-        accept="image/png, image/jpeg, image/bmp"
+        accept="image/png, image/jpeg, image/gif, image/webp"
         prepend-icon="mdi-camera"
         label="Family Photo"
       ></v-file-input>
@@ -59,6 +59,7 @@
                     dark
                     class="mb-2"
                     @click="addNewMember"
+                    v-if="isModeratorOrAdmin"
                   >
                     New Member
               </v-btn>
@@ -158,7 +159,7 @@
 
       <v-row justify="center">
         <v-col justify="left" col="1"> 
-          <v-btn color="dark" @click="deleteFamily">
+          <v-btn color="dark" @click="deleteFamily" v-if="isModeratorOrAdmin">
             Delete
           </v-btn>
         </v-col>
@@ -187,7 +188,7 @@ import FamilyPersonService from "../services/FamilyPersonService";
 export default {
   data() {
     return {
-      selectedFile: [],
+      selectedFile: null,
       dialog: false,
       currentFamily: null,
       familyPersons: [],
@@ -242,6 +243,16 @@ export default {
     }
   },
   
+  computed: {
+    // Family members can edit their family; only moderators and admins can
+    // delete it or create new member records
+    isModeratorOrAdmin() {
+      const user = this.$store.state.auth.user;
+      return !!(user && user.roles) &&
+        (user.roles.includes('ROLE_MODERATOR') || user.roles.includes('ROLE_ADMIN'));
+    }
+  },
+
   methods: {
     getFamily(fam_ID) {
       FamilyService.get(fam_ID)
@@ -254,56 +265,34 @@ export default {
     },
 
     updateFamily() {
-      if(this.selectedFile.length != 0)  {
+      // A new photo is saved straight onto the family, replacing the old one
+      let upload = Promise.resolve();
+      if (this.selectedFile)  {
         const formData = new FormData();
         formData.append("file", this.selectedFile);
-        formData.append("existingPic", this.currentFamily.fam_pic);
-        FamilyService.upload(formData)
-        .then(res => {
-          this.currentFamily.fam_pic = res.data.path;
-          FamilyService.update(this.currentFamily.fam_ID, this.currentFamily)
-            .then(response => {
-              console.log(response.data);
-              this.message = 'The family was updated successfully!';
-              this.$router.push({ name: 'familieslist' });
-            })
-            .catch(e => {
-              console.log(e);
-            });
-        })
-        .catch(err => {
-          console.log(err);
-        });
-      } else {
-        FamilyService.update(this.currentFamily.fam_ID, this.currentFamily)
-          .then(response => {
-            console.log(response.data);
-            this.message = 'The family was updated successfully!';
-            this.$router.push({ name: 'familieslist' });
-          })
-          .catch(e => {
-            console.log(e);
-          });
+        formData.append("fam_ID", this.currentFamily.fam_ID);
+        upload = FamilyService.upload(formData);
       }
+
+      upload
+        .then(() => FamilyService.update(this.currentFamily.fam_ID, this.currentFamily))
+        .then(() => {
+          this.$router.push({ name: 'familieslist' });
+        })
+        .catch(e => {
+          console.log(e);
+        });
     },
 
     deleteFamily() {
-      console.log(this.currentFamily.fam_pic);
-      FamilyService.delete(this.currentFamily.fam_ID, this.currentFamily.fam_pic)
-        .then(response => {
-          console.log(response.data);
+      // The server also removes the family's member links
+      FamilyService.delete(this.currentFamily.fam_ID)
+        .then(() => {
+          this.$router.push({ name: "familieslist" });
         })
         .catch(e => {
           console.log(e);
         });
-      FamilyPersonService.deleteAll(this.currentFamily.fam_ID)
-        .then(response => {
-          console.log(response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
-      this.$router.push({ name: "familieslist" });
     },
     
     getPeopleForFamily(fam_ID)  {

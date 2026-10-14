@@ -8,15 +8,15 @@ module.exports = app => {
     // All routes below require a logged-in user
     router.use(authJwt.verifyToken);
 
-    router.post("/", Communication.create);
+    router.post("/", authJwt.isModeratorOrAdmin, Communication.create);
   
     router.get("/", Communication.findAll);
   
     router.get("/:id", Communication.findOne);
   
-    router.put("/:id", Communication.update);
+    router.put("/:id", authJwt.isModeratorOrAdmin, Communication.update);
 
-    router.delete("/:id", Communication.delete);
+    router.delete("/:id", authJwt.isModeratorOrAdmin, Communication.delete);
   
     app.use('/api/communications', router);
 };

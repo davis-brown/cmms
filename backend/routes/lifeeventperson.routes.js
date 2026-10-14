@@ -9,7 +9,7 @@ module.exports = app => {
     router.use(authJwt.verifyToken);
   
     // Create a new life event person
-    router.post("/", lifeeventperson.create);
+    router.post("/", authJwt.isModeratorOrAdmin, lifeeventperson.create);
   
     // Retrieve all life events
     router.get("/", lifeeventperson.findLifeEventForPerson);
@@ -17,12 +17,12 @@ module.exports = app => {
 
     router.get("/:id", lifeeventperson.findOne);
 
-    router.put("/:id", lifeeventperson.update);
+    router.put("/:id", authJwt.isModeratorOrAdmin, lifeeventperson.update);
   
     
-    router.delete("/:id", lifeeventperson.delete);
+    router.delete("/:id", authJwt.isModeratorOrAdmin, lifeeventperson.delete);
     
-    router.delete("/", lifeeventperson.deleteAll);
+    router.delete("/", authJwt.isModeratorOrAdmin, lifeeventperson.deleteAll);
   
     app.use('/api/lifeventperson', router);
 };

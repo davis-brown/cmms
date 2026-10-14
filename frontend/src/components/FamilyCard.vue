@@ -1,6 +1,7 @@
 <template>
 	<v-card class="mx-auto">
         <v-img
+        v-if="family.fam_pic"
         :src="this.path + family.fam_pic"
         height = "300px"
         width = "400px"
@@ -34,7 +35,7 @@
             fab
             color="blue darken-4"
             align="right"
-            v-if="showModeratorBoard || showAdminBoard"
+            v-if="canEdit"
         >
         <v-icon>mdi-pencil</v-icon>
         </v-btn>				
@@ -71,6 +72,14 @@ export default {
                 return this.currentUser.roles.includes('ROLE_MODERATOR');
             }
             return false;
+        },
+        // Moderators and admins can edit any family; other users only their own
+        canEdit() {
+            if (this.showModeratorBoard || this.showAdminBoard) {
+                return true;
+            }
+            const per_ID = this.currentUser && this.currentUser.per_ID;
+            return !!per_ID && this.familyPersons.some(familyPerson => familyPerson.per_ID == per_ID);
         }
     },
     

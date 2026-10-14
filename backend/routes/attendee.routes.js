@@ -18,10 +18,10 @@ module.exports = app => {
     router.get("/:id", Attendee.findOne);
   
     // Update a Attendee with id
-    router.put("/:id", Attendee.update);
+    router.put("/:id", authJwt.isModeratorOrAdmin, Attendee.update);
   
     // Delete a Attendee with id
-    router.delete("/:id", Attendee.delete);
+    router.delete("/:id", authJwt.isModeratorOrAdmin, Attendee.delete);
   
   
     app.use('/api/attendee', router);

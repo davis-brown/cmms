@@ -120,10 +120,21 @@ exports.delete = (req, res) => {
     });
 };
 
+// Delete life event people by ?person= or ?event=
 exports.deleteAll = (req, res) => {
-    const id = req.query.id;
+    const condition = {};
+    if (req.query.person) {
+        condition.per_ID = String(req.query.person);
+    }
+    if (req.query.event) {
+        condition.event_ID = String(req.query.event);
+    }
+    if (Object.keys(condition).length == 0) {
+        return res.status(400).send({ message: "The person or event query parameter is required." });
+    }
+
     LifeEventPerson.destroy({
-        where: {event_ID: id},
+        where: condition,
         truncate: false
     })
     .then(nums => {
