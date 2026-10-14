@@ -5,6 +5,7 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   port: dbConfig.PORT,
   dialect: dbConfig.dialect,
+  logging: process.env.DB_LOGGING === "true" ? console.log : false,
 
   pool: {
     max: dbConfig.pool.max,
