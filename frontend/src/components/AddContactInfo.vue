@@ -129,7 +129,14 @@
 </template>
 
 <script>
-
+// Remove an item from an array in place. personContacts belongs to the parent
+// form, so it has to be changed rather than replaced for the parent to see it.
+const removeItem = (list, item) => {
+    const index = list.indexOf(item);
+    if (index != -1) {
+        list.splice(index, 1);
+    }
+};
 
 export default {
 	name: 'ContactInfo',
@@ -233,8 +240,8 @@ export default {
             this.currentEmail = {}
         },
         deleteEmail(personcontact) {
-            this.personContacts = this.personContacts.filter(personContact => personContact.address!=personcontact.address);
-            this.emails = this.emails.filter(email => email.address!=personcontact.address);
+            removeItem(this.personContacts, personcontact);
+            removeItem(this.emails, personcontact);
             this.currentEmail = {}
         },
         addPhone() {
@@ -248,8 +255,8 @@ export default {
             this.currentPhone = {}
         },
         deletePhone(personcontact) {
-            this.personContacts = this.personContacts.filter(personContact => personContact.number!=personcontact.number);
-            this.phones = this.phones.filter(phone => phone.number!=personcontact.number);
+            removeItem(this.personContacts, personcontact);
+            removeItem(this.phones, personcontact);
             this.currentPhone = {}
         },
         addAddress() {
@@ -263,8 +270,8 @@ export default {
             this.currentAddress = {}
         },
         deleteAddress(personcontact) {
-            this.personContacts = this.personContacts.filter(personContact => personContact.address!=personcontact.address);
-            this.addresses = this.addresses.filter(address => address.address!=personcontact.address);
+            removeItem(this.personContacts, personcontact);
+            removeItem(this.addresses, personcontact);
             this.currentAddress = {}
         },
     }

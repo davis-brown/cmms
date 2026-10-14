@@ -15,6 +15,7 @@
     <h1> Congregation Information</h1>
      <v-btn
 			to="/congregationadd"
+			v-if="isModeratorOrAdmin"
 			class="mr-4"
 			dark
 			color="primary"
@@ -53,6 +54,7 @@
       <v-card-actions>
       <v-btn
 				@click="editCongregation(congregation)"
+				v-if="isModeratorOrAdmin"
 				class="ma-2"
 				outlined
 				large
@@ -78,6 +80,13 @@ import CongregationServices from "../services/CongregationServices";
 
 export default {
   name: 'Home',
+  computed: {
+    isModeratorOrAdmin() {
+      const user = this.$store.state.auth.user;
+      return !!(user && user.roles) &&
+        (user.roles.includes('ROLE_MODERATOR') || user.roles.includes('ROLE_ADMIN'));
+    }
+  },
   data() {
     return {
       congregations: {},
@@ -105,7 +114,7 @@ export default {
                     console.log(this.congregations);
                 })
                 .catch(error => {
-                    this.message = error.response.data.message;
+                    this.message = (error.response && error.response.data.message) || error.message;
                 });
             },
        methods: {

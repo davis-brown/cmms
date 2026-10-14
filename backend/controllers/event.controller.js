@@ -75,6 +75,7 @@ exports.update = (req, res) => {
     const id = req.params.id;
 
     Event.update(req.body, {
+        fields: db.updatableFields(Event),
         where: {
             evt_ID: id
         }

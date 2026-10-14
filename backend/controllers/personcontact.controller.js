@@ -67,6 +67,7 @@ exports.update = (req, res) => {
     const id = req.params.id;
 
     Personcontact.update(req.body, {
+        fields: db.updatableFields(Personcontact),
         where: {
             cpc_ID: id
         }

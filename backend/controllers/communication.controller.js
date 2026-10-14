@@ -67,6 +67,7 @@ exports.update = (req, res) => {
     const id = req.params.id;
 
     Communication.update(req.body, {
+        fields: db.updatableFields(Communication),
         where: {
             com_ID: id
         }

@@ -68,6 +68,7 @@ exports.update = (req, res) => {
     const id = req.params.id;
 
     LifeEvent.update(req.body, {
+        fields: db.updatableFields(LifeEvent),
         where: {
             event_ID: id
         }
@@ -86,6 +87,32 @@ exports.update = (req, res) => {
     .catch(err => {
         res.status(500).send({
             message: "Error updating Life Event with id=" + id
+        });
+    });
+};
+
+// Delete a Life Event, along with its links to people
+exports.delete = (req, res) => {
+    const id = req.params.id;
+
+    db.sequelize.transaction(transaction => {
+        return db.lifeventperson.destroy({ where: { event_ID: id }, transaction })
+        .then(() => LifeEvent.destroy({ where: { event_ID: id }, transaction }));
+    })
+    .then(num => {
+        if (num == 1) {
+            res.send({
+                message: "Life Event was deleted successfully!"
+            });
+        } else {
+            res.send({
+                message: `Cannot delete Life Event with id=${id}. Maybe Life Event was not found!`
+            });
+        }
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: "Could not delete Life Event with id=" + id
         });
     });
 };

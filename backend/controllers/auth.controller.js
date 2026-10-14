@@ -39,19 +39,12 @@ exports.signin = (req, res) => {
     }
   })
     .then(user => {
-      if (!user) {
-        return res.status(404).send({ message: "User Not found." });
-      }
-
-      var passwordIsValid = bcrypt.compareSync(
-        req.body.password,
-        user.password
-      );
-
-      if (!passwordIsValid) {
+      // Same answer for an unknown username and a wrong password, so the
+      // response doesn't reveal which usernames exist
+      if (!user || !bcrypt.compareSync(String(req.body.password || ""), user.password)) {
         return res.status(401).send({
           accessToken: null,
-          message: "Invalid Password!"
+          message: "Invalid username or password."
         });
       }
 

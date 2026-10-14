@@ -238,6 +238,18 @@ export default {
                 console.log(e);
             });
         },
+        // Remove the contact link and the email/phone/address it points to,
+        // then drop it from the list shown on screen
+        deleteContact(personcontact, list) {
+            PersonContactService.delete(personcontact.cpc_ID)
+            .then(() => {
+                this[list] = this[list].filter(contact => contact.cpc_ID != personcontact.cpc_ID);
+                return CommunicationService.delete(personcontact.com_ID);
+            })
+            .catch(error => {
+                this.message = (error.response && error.response.data.message) || error.message;
+            });
+        },
         addEmail() {
             this.currentEmail.vvg_ID = 1;
             this.currentEmail.vve_ID = 1;
@@ -261,13 +273,7 @@ export default {
                 });
         },
         deleteEmail(personcontact) {
-            PersonContactService.delete(personcontact.cpc_ID)
-            .then(() => {  
-                this.emails = this.emails.filter(email => email.cpc_ID!=personcontact.cpc_ID);
-            })
-            .catch(error => {
-                this.message = error.response.data.message;
-            });
+            this.deleteContact(personcontact, 'emails');
         },
         addPhone() {
             this.currentPhone.vvg_ID = 1;
@@ -292,19 +298,7 @@ export default {
                 }); 
         },
         deletePhone(personcontact) {
-            PersonContactService.delete(personcontact.cpc_ID)
-            .then(() => {  
-                this.personContacts = this.personContacts.filter(personContact => personContact.cpc_ID!=personcontact.cpc_ID);
-                CommunicationService.delete(personcontact.com_ID)
-                .then(() => {  
-                })
-                .catch(error => {
-                    this.message = error.response.data.message;
-                });
-            })
-            .catch(error => {
-                this.message = error.response.data.message;
-            });
+            this.deleteContact(personcontact, 'phones');
         },
         addAddress() {
             this.currentAddress.vvg_ID = 1;
@@ -329,13 +323,7 @@ export default {
                 });
         },
         deleteAddress(personcontact) {
-            PersonContactService.delete(personcontact.cpc_ID)
-            .then(() => {  
-                this.addresses = this.addresses.filter(address => address.cpc_ID!=personcontact.cpc_ID);
-            })
-            .catch(error => {
-                this.message = error.response.data.message;
-            });
+            this.deleteContact(personcontact, 'addresses');
         },
     },
     mounted() {

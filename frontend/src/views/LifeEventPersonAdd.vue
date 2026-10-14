@@ -5,7 +5,7 @@
 
     <v-text-field
     v-model="lifeventperson.event_date"
-    label="Life Event Date: YYYY-DD-MM"
+    label="Life Event Date: YYYY-MM-DD"
     required
     clearable
     ></v-text-field>
@@ -84,7 +84,7 @@ export default {
             console.log(this.lifeventpersons);
         })
         .catch(error => {
-            this.message = error.response.data.message;
+            this.message = (error.response && error.response.data.message) || error.message;
         });
     },
 
@@ -94,7 +94,7 @@ export default {
           this.lifeventperson = this.lifeventperson.filter(lifeventperson => lifeventperson.lep_ID!=lifeventperson.lep_ID);
         })
         .catch(error => {
-            this.message = error.response.data.message;
+            this.message = (error.response && error.response.data.message) || error.message;
         });
     },
      getLifeEvents() {
@@ -104,27 +104,30 @@ export default {
             console.log(this.lifeevents);
         })
         .catch(error => {
-            this.message = error.response.data.message;
+            this.message = (error.response && error.response.data.message) || error.message;
         });
     },
      cancel() {
-      this.$router.push({ name: "lifeeventperson" });
+      this.$router.push({ name: "lifeeventperson", params: { id: this.$route.params.id } });
     },
+    // Create the life event from the form, then link it to the person in the URL
     addLifeEventForPerson() {
-        this.dialog = false
-        let lifeventperson = {};
-        lifeventperson.per_ID = this.currentLifeEvent.per_ID;
-        lifeventperson.lep_ID = this.lifeventperson.lep_ID;
-        console.log(lifeventperson)
-        LifeEventPersonService.create(lifeventperson)
+        const per_ID = this.$route.params.id;
+        LifeEventService.create({
+          event_date: this.lifeventperson.event_date,
+          event_note: this.lifeventperson.event_note,
+        })
+          .then(response => {
+            if (per_ID) {
+              return LifeEventPersonService.create({ event_ID: response.data.event_ID, per_ID: per_ID });
+            }
+          })
           .then(() => {
-                this.getLifeEventsForPerson(this.$route.params.id);
-                console.log(this.lifeventpersons);
+            this.$router.push({ name: "lifeeventperson", params: { id: per_ID } });
           })
           .catch(error => {
-              this.message = error.response.data.message;
+              this.message = (error.response && error.response.data.message) || error.message;
           });
-           
     },
    
     close () {
@@ -132,8 +135,8 @@ export default {
       },
 
     customFilter (item, queryText) {
-      const textOne = item.frst_name.toLowerCase()
-      const textTwo = item.last_name.toLowerCase()
+      const textOne = (item.frst_name || '').toLowerCase()
+      const textTwo = (item.last_name || '').toLowerCase()
       const searchText = queryText.toLowerCase()
 
       return textOne.indexOf(searchText) > -1 ||

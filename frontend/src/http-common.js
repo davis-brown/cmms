@@ -23,4 +23,17 @@ http.interceptors.request.use(config => {
   return config;
 });
 
+// A 401 means the saved login is no longer valid (it expires after 24 hours).
+// Clear it and start over at the login page, which also resets the store.
+http.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem("user");
+      window.location.assign("/login");
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default http;

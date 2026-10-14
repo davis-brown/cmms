@@ -35,23 +35,62 @@ export default ({
 			FamilyPersonService.getFamilyPersons(fam_ID)
 			.then(response => {
 				let familyPersons = response.data;
-                this.familyMembers[index] = "";
-                familyPersons.forEach( familyPerson => {
-                    this.familyMembers[index] += familyPerson.person.frst_name + ", ";
-                });
-                this.familyMembers[index] = this.familyMembers[index].slice(0, -2);
+                this.familyMembers[index] = familyPersons
+                    .filter(familyPerson => familyPerson.person)
+                    .map(familyPerson => familyPerson.person.frst_name)
+                    .join(", ");
 			})
 			.catch(error => {
-				this.message = error.response.data.message;
+				this.message = (error.response && error.response.data.message) || error.message;
 			});
 		},
-        pdfGeneration()  {
-            console.log(this.familyMembers)
-            for (let j = 0; j < this.families.length; j++)
-            {
-                let name = "image-" + j
-                this.images[name] = this.path + this.families[j].fam_pic;
+        // pdfmake can only embed images given as data URLs, so download each
+        // family photo and convert it. Families without a photo get no entry.
+        loadImages() {
+            const loads = this.families.map((family, j) => {
+                if (!family.fam_pic) {
+                    return Promise.resolve();
+                }
+                return fetch(this.path + family.fam_pic)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Photo not found: " + family.fam_pic);
+                        }
+                        return response.blob();
+                    })
+                    .then(blob => new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(blob);
+                    }))
+                    .then(dataUrl => {
+                        this.images["image-" + j] = dataUrl;
+                    })
+                    .catch(err => {
+                        // Leave this family's photo blank rather than failing the whole directory
+                        console.log(err);
+                    });
+            });
+            return Promise.all(loads);
+        },
+        // The photo cell for family i, or an empty cell of the same size
+        imageCell(i) {
+            if (!this.images["image-" + i]) {
+                return { width: 160, height: 120, text: "", margin: [0, 20, 0, 0] };
             }
+            return {
+                image: "image-" + i,
+                width: 160,
+                height: 120,
+                margin: [0, 20, 0, 0]
+            };
+        },
+        pdfGeneration()  {
+            this.images = {};
+            this.loadImages().then(() => this.buildPdf());
+        },
+        buildPdf()  {
             for (let i = 0; i < this.families.length; i++)
             {
                 let imageRow = [];
@@ -60,16 +99,11 @@ export default ({
                 let phoneRow = {};
 
                 if(this.families[i])  {
-                    imageRow[0] = {
-                            image: "image-" + i,
-                            width: 160,
-                            height: 120,
-                            margin: [0, 20, 0, 0]
-                    }
+                    imageRow[0] = this.imageCell(i)
                     imageRow[1] = {};
                     nameRow[0] = this.families[i].fam_name
-                    emailRow[0] = "Email: " + this.families[i].fam_email
-                    phoneRow[0] = "Phone: " + this.families[i].fam_phone
+                    emailRow[0] = "Email: " + (this.families[i].fam_email || "")
+                    phoneRow[0] = "Phone: " + (this.families[i].fam_phone || "")
                 }
                 else {
                     nameRow[0] = "";
@@ -79,16 +113,11 @@ export default ({
                 }
                 if(this.families[i + 1])  {
                     let temp = i + 1;
-                    imageRow[2] = {
-                            image: "image-" + temp,
-                            width: 160,
-                            height: 120,
-                            margin: [0, 20, 0, 0]
-                        },
+                    imageRow[2] = this.imageCell(temp);
                     imageRow[3] = {};
                     nameRow[1] = this.families[i + 1].fam_name
-                    emailRow[1] = "Email: " + this.families[i + 1].fam_email
-                    phoneRow[1] = "Phone: " + this.families[i + 1].fam_phone
+                    emailRow[1] = "Email: " + (this.families[i + 1].fam_email || "")
+                    phoneRow[1] = "Phone: " + (this.families[i + 1].fam_phone || "")
                 }
                 else {
                     imageRow[2] = {width: 160, text:""};
@@ -99,15 +128,10 @@ export default ({
                 }
                 if(this.families[i + 2])  {
                     let temp = i + 2;
-                    imageRow[4] = {
-                            image: "image-" + temp,
-                            width: 160,
-                            height: 120,
-                            margin: [0, 20, 0, 0]
-                        },
+                    imageRow[4] = this.imageCell(temp);
                     nameRow[2] = this.families[i + 2].fam_name
-                    emailRow[2] = "Email: " + this.families[i + 2].fam_email
-                    phoneRow[2] = "Phone: " + this.families[i + 2].fam_phone
+                    emailRow[2] = "Email: " + (this.families[i + 2].fam_email || "")
+                    phoneRow[2] = "Phone: " + (this.families[i + 2].fam_phone || "")
                 } else {
                     imageRow[4] = {width: 160, text:""};
                     nameRow[2] = "";

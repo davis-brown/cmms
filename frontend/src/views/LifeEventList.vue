@@ -83,7 +83,7 @@ export default {
         console.log(this.lifeevents);
       })
       .catch((error) => {
-        this.message = error.response.data.message;
+        this.message = (error.response && error.response.data.message) || error.message;
       });
   },
   methods: {

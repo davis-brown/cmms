@@ -37,8 +37,8 @@ import AttendeeService from "../services/AttendeeService";
 export default {
     data: () => ({
     currentEvent: null,
-    attendees: {},
-    uniqueAttendees: {},
+    attendees: [],
+    uniqueAttendees: [],
     attendee: {
       atd_ID: null,
       evt_ID: null,
@@ -85,7 +85,7 @@ export default {
                 })
                 .catch(error => {
                 console.log(error);
-                    this.message = error.response.data.message;
+                    this.message = (error.response && error.response.data.message) || error.message;
                 })
         },
         getNumberofAttendees(attendees) {

@@ -70,6 +70,9 @@ export default {
         });
     },
     deleteLifeEvent() {
+      if (!window.confirm('Delete this life event?')) {
+        return;
+      }
       LifeEventService.delete(this.currentLifeEvent.event_ID)
         .then(response => {
           console.log(response.data);

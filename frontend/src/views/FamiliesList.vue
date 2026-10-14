@@ -33,7 +33,9 @@
 			<v-col
 				v-for="family in searchFamilies"
 				:key="family.fam_ID"
-				cols="4"
+				cols="12"
+				sm="6"
+				lg="4"
 			>
 				<FamilyCard 
 					v-bind:key="family.fam_ID"
@@ -88,12 +90,12 @@ export default {
 				this.searchFamilies = response.data;
             })
             .catch(error => {
-                this.message = error.response.data.message;
+                this.message = (error.response && error.response.data.message) || error.message;
             });
 		},
 		filterFamilies() {
 			this.searchFamilies = this.families.filter((family) => {
-				return family.fam_name.toLowerCase().includes(this.search.toLowerCase());
+				return (family.fam_name || '').toLowerCase().includes(this.search.toLowerCase());
 			});
 		}
     },

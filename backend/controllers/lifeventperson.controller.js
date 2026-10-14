@@ -72,6 +72,7 @@ exports.update = (req, res) => {
     const id = req.params.id;
 
     LifeEventPerson.update(req.body, {
+        fields: db.updatableFields(LifeEventPerson),
         where: {
             lep_ID: id
         }

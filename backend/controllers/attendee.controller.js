@@ -77,6 +77,7 @@ exports.update = (req, res) => {
     const id = req.params.id;
 
     Attendee.update(req.body, {
+        fields: db.updatableFields(Attendee),
         where: {
             atd_ID: id
         }

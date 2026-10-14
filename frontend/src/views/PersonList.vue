@@ -43,11 +43,13 @@
     <v-col
       v-for="person in searchMembers" 
       :key="person.per_ID"
-      cols="3"
+      cols="12"
+      sm="6"
+      md="4"
+      lg="3"
       align="center"
     >
    <v-menu
-      v-model="menu"
       :close-on-content-click="false"
       :nudge-width="150"
       offset-x
@@ -224,7 +226,7 @@ import PersonDataService from "../services/PersonDataService";
                 console.log(this.persons);
             })
             .catch(error => {
-                this.message = error.response.data.message;
+                this.message = (error.response && error.response.data.message) || error.message;
             });
     },
       
@@ -236,27 +238,50 @@ import PersonDataService from "../services/PersonDataService";
         },
     
       filterMembers() {
+			const search = (this.search || "").toLowerCase();
 			this.searchMembers = this.persons.filter((person) => {
-				return person.frst_name.toLowerCase().includes(this.search.toLowerCase());
+				const name = `${person.frst_name || ""} ${person.last_name || ""}`;
+				return name.toLowerCase().includes(search);
 			});
 		},
         download() {
-          let text = JSON.stringify(this.persons);
-          let filename = 'members.csv';
-         
-   
-     
-          var element = document.createElement('a');
-           element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(text));
-            element.setAttribute('download', filename);
+          const columns = [
+            ['First Name', 'frst_name'],
+            ['Middle Name', 'midl_name'],
+            ['Last Name', 'last_name'],
+            ['Email', 'email'],
+            ['Phone', 'phone'],
+            ['Address', 'address'],
+            ['Birthday', 'bday'],
+            ['Status', 'pub_permission'],
+            ['Church Position', 'church_pos'],
+            ['Baptised', 'baptised'],
+            ['Baptism Date', 'bapt_date'],
+            ['Employer', 'employer'],
+          ];
+          // Quote every cell and double any quotes inside it. A leading ' stops
+          // spreadsheets running values like "=..." as formulas.
+          const cell = value => {
+            let text = String(value == null ? '' : value);
+            if (/^[=+\-@]/.test(text)) {
+              text = "'" + text;
+            }
+            return '"' + text.replace(/"/g, '""') + '"';
+          };
+          const rows = [columns.map(([label]) => cell(label))];
+          this.persons.forEach(person => {
+            rows.push(columns.map(([, field]) => cell(person[field])));
+          });
+          const text = rows.map(row => row.join(',')).join('\r\n');
 
-            element.style.display = 'none';
-            document.body.appendChild(element);
-
-            element.click();
-            document.body.removeChild(element); 
-     
-   }
+          const element = document.createElement('a');
+          element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(text));
+          element.setAttribute('download', 'members.csv');
+          element.style.display = 'none';
+          document.body.appendChild(element);
+          element.click();
+          document.body.removeChild(element);
+        }
      
         },
     
@@ -463,7 +488,7 @@ import PersonDataService from "../services/PersonDataService";
                 console.log(this.person);
             })
             .catch(error => {
-                this.message = error.response.data.message;
+                this.message = (error.response && error.response.data.message) || error.message;
             });
     },
 

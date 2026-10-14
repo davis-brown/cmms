@@ -68,6 +68,7 @@ exports.update = (req, res) => {
     const id = req.params.id;
 
     Familyperson.update(req.body, {
+        fields: db.updatableFields(Familyperson),
         where: {
             fp_ID: id
         }
