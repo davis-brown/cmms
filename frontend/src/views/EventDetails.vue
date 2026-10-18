@@ -91,26 +91,6 @@ export default {
         });
     },
 
-    updateEvent(evt_ID) {
-         EventService.get(evt_ID)
-        .then(response => {
-          this.currentEvent = response.data;
-          console.log(response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
-        console.log('Hi' + this.uniqueAttendees.length);
-        this.currentEvent.attendance = this.uniqueAttendees.length + 1;
-        EventService.update(evt_ID, this.currentEvent)
-        .then(response => {
-          console.log(response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    },
-
     getAttendeeForEvent(evt_ID) {
       
       AttendeeService.getAttendee(evt_ID)
@@ -141,16 +121,14 @@ export default {
 
     addAttendance() {
       this.attendee.evt_ID = this.currentEvent.evt_ID;
-      this.attendee.username = this.currentUser.username;
+      // The server records the RSVP under the logged-in user and updates the event's attendance
       AttendeeService.create(this.attendee)
           .then(() => {
+            this.$router.push({name: 'calendar'});
           })
           .catch((e) => {
             console.log(e);
           });
-      this.updateEvent(this.currentEvent.evt_ID);
-      this.getAttendeeForEvent(this.currentEvent.evt_ID);
-      this.$router.push({name: 'calendar'});
     },
 
     getNumberofAttendees(attendees) {

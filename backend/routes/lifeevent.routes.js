@@ -9,7 +9,7 @@ module.exports = app => {
     router.use(authJwt.verifyToken);
   
     // Create a new Life Event
-    router.post("/", LifeEvent.create);
+    router.post("/", authJwt.isModeratorOrAdmin, LifeEvent.create);
   
     // Retrieve all Life Event
     router.get("/", LifeEvent.findAll);
@@ -18,7 +18,7 @@ module.exports = app => {
     router.get("/:id", LifeEvent.findOne);
   
     // Update a Life Event with id
-    router.put("/:id", LifeEvent.update);
+    router.put("/:id", authJwt.isModeratorOrAdmin, LifeEvent.update);
   
     app.use('/api/lifeevent', router);
 };

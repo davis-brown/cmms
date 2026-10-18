@@ -6,7 +6,7 @@
       
       <v-file-input
       v-model="selectedFile"
-      accept="image/png, image/jpeg, image/bmp"
+      accept="image/png, image/jpeg, image/gif, image/webp"
       prepend-icon="mdi-camera"
       label="Family Photo"
     ></v-file-input>
@@ -180,7 +180,7 @@ import FamilyPersonService from "../services/FamilyPersonService";
 export default {
   data() {
     return {
-      selectedFile: [],
+      selectedFile: null,
       dialog: false,
       family: {},
       familyPersons: [],
@@ -236,27 +236,28 @@ export default {
   },
   methods: {
     saveFamily() {
-      const formData = new FormData();
-      formData.append("file", this.selectedFile);
-      FamilyService.upload(formData)
-      .then(res => {
-        this.family.fam_pic = res.data.path;
-        FamilyService.create(this.family)
-          .then(response => {
-            console.log(response.data.fam_ID)
-            this.familyPersons.forEach(familyPerson => {
-              familyPerson.fam_ID = response.data.fam_ID;
-              this.addPersonForFamily(familyPerson)
-            })
-            this.$router.push({ name: "familieslist" });
+      // The photo is optional; only upload when one was picked
+      let upload = Promise.resolve();
+      if (this.selectedFile) {
+        const formData = new FormData();
+        formData.append("file", this.selectedFile);
+        upload = FamilyService.upload(formData).then(res => {
+          this.family.fam_pic = res.data.path;
+        });
+      }
+
+      upload
+        .then(() => FamilyService.create(this.family))
+        .then(response => {
+          this.familyPersons.forEach(familyPerson => {
+            familyPerson.fam_ID = response.data.fam_ID;
+            this.addPersonForFamily(familyPerson)
           })
-          .catch((e) => {
-            console.log(e);
-          });
-      })
-      .catch(err => {
-        console.log(err);
-      });
+          this.$router.push({ name: "familieslist" });
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
 
 

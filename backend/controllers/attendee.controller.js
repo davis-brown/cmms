@@ -1,26 +1,36 @@
 const db = require("../models");
 const Attendee = db.attendee;
+const Event = db.event;
+const User = db.user;
+
+// An event's attendance is the number of different users who RSVP'd to it
+const refreshAttendance = (evt_ID) => {
+    return Attendee.count({ where: { evt_ID: evt_ID }, distinct: true, col: "username" })
+        .then(count => Event.update({ attendance: count }, { where: { evt_ID: evt_ID } }));
+};
 
 // Create and Save a new Attendee
 exports.create = (req, res) => {
-    if (!req.body) {
+    if (!req.body || !req.body.evt_ID) {
         res.status(400).send({
             message: "Content can NOT be empty!"
         });
         return;
-    } 
+    }
 
-    // Create an attendee
-    const attendee = {
-        atd_ID: req.body.atd_ID,
-        evt_ID: req.body.evt_ID,
-        per_ID: req.body.per_ID,
-        username: req.body.username,
-        contribution: req.body.contribution
-    };
+    // The RSVP is always made as the logged-in user
+    User.findByPk(req.userId)
+    .then(user => {
+        const attendee = {
+            evt_ID: req.body.evt_ID,
+            per_ID: req.body.per_ID,
+            username: user.username,
+            contribution: req.body.contribution
+        };
 
-    // Save Attendee in the database
-    Attendee.create(attendee)
+        return Attendee.create(attendee)
+        .then(data => refreshAttendance(data.evt_ID).then(() => data));
+    })
     .then(data => {
         res.send(data);
     })

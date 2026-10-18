@@ -95,10 +95,10 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    Group.destroy({
-        where: {
-            grp_ID: id
-        }
+    // Remove the group's members along with the group itself
+    db.sequelize.transaction(transaction => {
+        return db.groupmember.destroy({ where: { grp_ID: id }, transaction })
+        .then(() => Group.destroy({ where: { grp_ID: id }, transaction }));
     })
     .then(num => {
         if (num == 1) {

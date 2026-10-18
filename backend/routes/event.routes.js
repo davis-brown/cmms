@@ -9,7 +9,7 @@ module.exports = app => {
     router.use(authJwt.verifyToken);
   
     // Create a new Event
-    router.post("/", Event.create);
+    router.post("/", authJwt.isModeratorOrAdmin, Event.create);
   
     // Retrieve all Events
     router.get("/", Event.findAll);
@@ -18,10 +18,10 @@ module.exports = app => {
     router.get("/:id", Event.findOne);
   
     // Update a Event with id
-    router.put("/:id", Event.update);
+    router.put("/:id", authJwt.isModeratorOrAdmin, Event.update);
   
     // Delete a Event with id
-    router.delete("/:id", Event.delete);
+    router.delete("/:id", authJwt.isModeratorOrAdmin, Event.delete);
   
     app.use('/api/events', router);
 };
