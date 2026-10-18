@@ -102,8 +102,8 @@ export default ({
                     imageRow[0] = this.imageCell(i)
                     imageRow[1] = {};
                     nameRow[0] = this.families[i].fam_name
-                    emailRow[0] = "Email: " + (this.families[i].fam_email || "")
-                    phoneRow[0] = "Phone: " + (this.families[i].fam_phone || "")
+                    emailRow[0] = (this.families[i].fam_email ? "Email: " + this.families[i].fam_email : "")
+                    phoneRow[0] = (this.families[i].fam_phone ? "Phone: " + this.families[i].fam_phone : "")
                 }
                 else {
                     nameRow[0] = "";
@@ -116,8 +116,8 @@ export default ({
                     imageRow[2] = this.imageCell(temp);
                     imageRow[3] = {};
                     nameRow[1] = this.families[i + 1].fam_name
-                    emailRow[1] = "Email: " + (this.families[i + 1].fam_email || "")
-                    phoneRow[1] = "Phone: " + (this.families[i + 1].fam_phone || "")
+                    emailRow[1] = (this.families[i + 1].fam_email ? "Email: " + this.families[i + 1].fam_email : "")
+                    phoneRow[1] = (this.families[i + 1].fam_phone ? "Phone: " + this.families[i + 1].fam_phone : "")
                 }
                 else {
                     imageRow[2] = {width: 160, text:""};
@@ -130,8 +130,8 @@ export default ({
                     let temp = i + 2;
                     imageRow[4] = this.imageCell(temp);
                     nameRow[2] = this.families[i + 2].fam_name
-                    emailRow[2] = "Email: " + (this.families[i + 2].fam_email || "")
-                    phoneRow[2] = "Phone: " + (this.families[i + 2].fam_phone || "")
+                    emailRow[2] = (this.families[i + 2].fam_email ? "Email: " + this.families[i + 2].fam_email : "")
+                    phoneRow[2] = (this.families[i + 2].fam_phone ? "Phone: " + this.families[i + 2].fam_phone : "")
                 } else {
                     imageRow[4] = {width: 160, text:""};
                     nameRow[2] = "";

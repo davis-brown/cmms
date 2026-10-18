@@ -15,15 +15,15 @@
         {{ familyNames }}
         </v-card-subtitle>
 
-        <v-card-subtitle >
+        <v-card-subtitle v-if="family.fam_email">
         Email: {{ family.fam_email }}
         </v-card-subtitle>
 
-        <v-card-subtitle >
+        <v-card-subtitle v-if="family.fam_phone">
         Phone: {{ family.fam_phone }}
         </v-card-subtitle>
 
-        <v-card-subtitle >
+        <v-card-subtitle v-if="family.fam_address">
         Address: {{ family.fam_address }}
         </v-card-subtitle>
 

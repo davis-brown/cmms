@@ -76,12 +76,12 @@
             </div>
             <div class="text-center"><h6>Employer: {{ person.employer }}</h6>  
             </div>
-                    <h5 class="text-center">Contact Information: </h5>
-                <v-divider> </v-divider>
+                    <h5 class="text-center" v-if="person.phone || person.email || person.address">Contact Information: </h5>
+                <v-divider v-if="person.phone || person.email || person.address"> </v-divider>
                 <v-row>
               <v-col>
               
-               <v-list-item-icon>
+               <v-list-item-icon v-if="person.phone">
           <v-icon color="indigo">
             mdi-phone
              <v-spacer> </v-spacer> 
@@ -92,7 +92,7 @@
      
                      </v-list-item>
                                  </v-list-item-icon>
-                 <v-list-item-icon>
+                 <v-list-item-icon v-if="person.email">
           <v-icon color="indigo">
             mdi-email
               <v-spacer> </v-spacer> 
@@ -105,7 +105,7 @@
       
     </v-list-item>
     </v-list-item-icon>
-    <v-list-item-icon>
+    <v-list-item-icon v-if="person.address">
           <v-icon color="indigo">
             mdi-home
              <v-spacer> </v-spacer> 
