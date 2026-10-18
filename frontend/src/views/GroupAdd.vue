@@ -2,10 +2,11 @@
   <div class="submit-form mt-3 mx-auto" data-app="true">
     <h1>Add a Group</h1>
 
-    <form @submit.prevent="saveGroup">
+    <v-form ref="form" @submit.prevent="saveGroup">
 
       <v-text-field
         v-model="group.grp_name"
+        :rules="[(v) => !!v || 'Group name is required']"
         label="Group Name"
         required
       ></v-text-field>
@@ -113,7 +114,7 @@
         </v-data-table>
 
       </v-card>
-    </form>
+    </v-form>
 
   <v-divider class="my-5"></v-divider>
     <v-row justify="center">
@@ -181,14 +182,18 @@ export default {
   },
   methods: {
     saveGroup() {
-      console.log(this.group)
+      if (!this.$refs.form.validate()) {
+        return;
+      }
       GroupDataServices.create(this.group)
         .then(response => {
-          console.log(response.data.grp_ID)
-          this.groupMembers.forEach(groupMember => {
+          // Wait for the members to be saved so the list page shows them
+          return Promise.all(this.groupMembers.map(groupMember => {
             groupMember.grp_ID = response.data.grp_ID;
-            this.addMemberForGroup(groupMember)
-          })
+            return this.addMemberForGroup(groupMember);
+          }));
+        })
+        .then(() => {
           this.$router.push({ name: "groupdisplay" });
         })
         .catch((e) => {
@@ -207,7 +212,7 @@ export default {
             console.log(this.people);
         })
         .catch(error => {
-            this.message = error.response.data.message;
+            this.message = (error.response && error.response.data.message) || error.message;
         });
     },
 
@@ -216,16 +221,19 @@ export default {
     },
 
     addMemberForGroup(groupMember) {
-        GroupMemberService.create(groupMember)
+        return GroupMemberService.create(groupMember)
           .then(() => {
           })
           .catch(error => {
-              this.message = error.response.data.message;
+              this.message = (error.response && error.response.data.message) || error.message;
           });
     },
 
     addMemberForTable() {
       this.dialog = false;
+      if (!this.groupMember.per_ID) {
+        return;
+      }
       let groupMember = {};
       groupMember.per_ID = this.groupMember.per_ID;
       groupMember.grp_role = this.groupMember.grp_role;
@@ -235,7 +243,7 @@ export default {
           groupMember.person = response.data;
           console.log(groupMember)
           this.groupMembers.push(groupMember)
-         //this.groupMember = {};
+          this.groupMember = {};
         })
         .catch(e => {
           console.log(e);
@@ -246,8 +254,8 @@ export default {
         this.dialog = false
     },
     customFilter (item, queryText) {
-      const textOne = item.frst_name.toLowerCase()
-      const textTwo = item.last_name.toLowerCase()
+      const textOne = (item.frst_name || '').toLowerCase()
+      const textTwo = (item.last_name || '').toLowerCase()
       const searchText = queryText.toLowerCase()
 
       return textOne.indexOf(searchText) > -1 ||

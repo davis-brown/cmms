@@ -70,6 +70,7 @@ exports.update = (req, res) => {
     const id = req.params.id;
 
     Group.update(req.body, {
+        fields: db.updatableFields(Group),
         where: {
             grp_ID: id
         }

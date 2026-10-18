@@ -61,6 +61,9 @@ export default {
         });
     },
     deleteCongregation() {
+      if (!window.confirm(`Delete ${this.currentCongregation.con_name || 'this congregation'}?`)) {
+        return;
+      }
       CongregationServices.delete(this.currentCongregation.con_ID)
         .then(response => {
           console.log(response.data);

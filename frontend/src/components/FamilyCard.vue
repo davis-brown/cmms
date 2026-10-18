@@ -93,11 +93,13 @@ export default {
 			FamilyPersonService.getFamilyPersons(fam_ID)
 			.then(response => {
 				this.familyPersons = response.data;
-                this.familyPersons.forEach( familyPerson => {this.familyNames += familyPerson.person.frst_name + ", "});
-                this.familyNames = this.familyNames.slice(0, -2);
+                this.familyNames = this.familyPersons
+                    .filter(familyPerson => familyPerson.person)
+                    .map(familyPerson => familyPerson.person.frst_name)
+                    .join(", ");
 			})
 			.catch(error => {
-				this.message = error.response.data.message;
+				this.message = (error.response && error.response.data.message) || error.message;
 			});
 		},
     },

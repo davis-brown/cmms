@@ -147,6 +147,9 @@ export default {
         });
     },
     deletePerson() {
+      if (!window.confirm(`Delete ${this.currentPerson.frst_name || ''} ${this.currentPerson.last_name || ''}? They are also removed from their families, groups and events.`)) {
+        return;
+      }
       PersonDataService.delete(this.currentPerson.per_ID)
         .then(response => {
           console.log(response.data);

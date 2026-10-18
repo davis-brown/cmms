@@ -22,7 +22,7 @@
 
         <v-expand-transition>
           <v-overlay
-            v-if="hover"
+            v-if="hover && (showAdminBoard || showModeratorBoard)"
             class="d-flex transition-fast-in-fast-out grey darken-1 v-card--reveal display-3 white--text"
             absolute
             style="height: 65%;"
@@ -94,13 +94,20 @@ export default {
             this.groupMembers = response.data;
   
                   
-           this.groupMembers.forEach( groupMember => {this.groupNames += groupMember.person.frst_name + " " + groupMember.person.last_name +" ("+ groupMember.person.phone+") , "});
-          this.groupNames = this.groupNames.slice(0, -2);
+          // "First Last (phone)", leaving out whatever a member doesn't have
+          this.groupNames = this.groupMembers
+            .filter(groupMember => groupMember.person)
+            .map(groupMember => {
+              const person = groupMember.person;
+              const name = [person.frst_name, person.last_name].filter(Boolean).join(" ");
+              return person.phone ? `${name} (${person.phone})` : name;
+            })
+            .join(", ");
           
              console.log(this.groupNames);
         })
         .catch(error => {
-            this.message = error.response.data.message;
+            this.message = (error.response && error.response.data.message) || error.message;
         });
     },
 

@@ -11,9 +11,9 @@
         >
           <div class="display-3" style="background-color: rgba(0, 0, 0, 0.33); width:100%; height:100%;">
                <div class="heading">
-                <h3 style="font-size: 3.2rem; text-align: center; font-weight:600">Riverside Community Church</h3>
+                <h3 class="heading-title">Riverside Community Church</h3>
                 
-                <p style="font-size:1.2rem; text-align: center; margin-top:-1rem">100 Main St, Springfield</p>
+                <p class="heading-address">100 Main St, Springfield</p>
                </div>
                 
               
@@ -23,7 +23,7 @@
         </v-carousel-item>
     </v-carousel>
 
-    <div class="member row" style="background-color: orange; height: 400px; width:100%; margin:0;">
+    <div class="member row section" style="background-color: orange; width:100%; margin:0;">
         <div class="textcontainer">
              <h2 style="font-weight: 900">Members</h2>
             <p>Find out more about the members of the riverside church</p>
@@ -35,7 +35,7 @@
         
     </div>
        
-     <div class="group row" style="background-color: turquoise; height: 400px; width:100%; margin:0;">
+     <div class="group row section" style="background-color: turquoise; width:100%; margin:0;">
         <div class="imagecontainer">
             <img src="../assets/group.jpg">
         </div>
@@ -48,7 +48,7 @@
         </div>
     </div>
 
-    <div class="families row" style="background-color:#F4A460; height: 400px; width:100%; margin:0;">
+    <div class="families row section" style="background-color:#F4A460; width:100%; margin:0;">
         <div class="textcontainer">
              <h2 style="font-weight: 900">Families</h2>
             <p>View and edit your family information and view the families in Riverside Community Church</p>
@@ -60,7 +60,7 @@
         
     </div>
        
-     <div class="event row" style="background-color:#87CEFA; height: 400px; width:100%; margin:0;">
+     <div class="event row section" style="background-color:#87CEFA; width:100%; margin:0;">
         <div class="imagecontainer">
             <img src="../assets/calendarpicture.jpg">
         </div>
@@ -77,7 +77,7 @@
       <h3>Riverside Community Church</h3>
       <h6>100 Main St, Springfield</h6>
       <p>555-555-0100</p>
-      <p>Copyright &copy;2021</p>
+      <p>Copyright &copy;{{ year }}</p>
 
     </footer>
 
@@ -85,12 +85,10 @@
 </template>
 
 <script>
-import CongregationServices from "../services/CongregationServices";
 export default {
     name: 'Home',
   data() {
     return {
-      congregations: {},
       items: [
         {
           src: require("../assets/riversidewindow.jpg")
@@ -105,20 +103,11 @@ export default {
            src: 'https://christianchronicle.org/wp-content/uploads/2019/03/p21_ATFbeller_0419-1024x768.jpg'
         }
       ],
-      content: ''
+      content: '',
+      year: new Date().getFullYear()
     };
   },
 
-  created() {
-            CongregationServices.getAll()
-               .then(response => {
-                    this.congregations = response.data;
-                    console.log(this.congregations);
-                })
-                .catch(error => {
-                    this.message = error.response.data.message;
-                });
-            },
   }
 </script>
 
@@ -162,6 +151,53 @@ export default {
 
  .heading {
    padding-top:18%;
+ }
+
+ .heading-title {
+   font-size: 3.2rem;
+   text-align: center;
+   font-weight: 600;
+ }
+
+ .heading-address {
+   font-size: 1.2rem;
+   text-align: center;
+   margin-top: -1rem;
+ }
+
+ .section {
+   min-height: 400px;
+ }
+
+ /* Phones: stack text above the picture instead of squeezing them side by side */
+ @media (max-width: 767px) {
+   .section {
+     flex-direction: column;
+   }
+   .textcontainer,
+   .imagecontainer {
+     width: 100%;
+   }
+   .textcontainer {
+     padding: 2rem;
+   }
+   .textcontainer h2 {
+     font-size: 40px;
+   }
+   /* Text before its picture in every section, so pictures don't pair up */
+   .textcontainer {
+     order: -1;
+   }
+   .heading {
+     padding: 30% 1rem 0;
+   }
+   .heading-title {
+     font-size: 2rem;
+   }
+   .heading-address {
+     font-size: 1rem;
+     margin-top: 0;
+   }
  }
 
  .footer {

@@ -19,6 +19,9 @@ module.exports = app => {
   
     // Update a Life Event with id
     router.put("/:id", authJwt.isModeratorOrAdmin, LifeEvent.update);
+
+    // Delete a Life Event with id
+    router.delete("/:id", authJwt.isModeratorOrAdmin, LifeEvent.delete);
   
     app.use('/api/lifeevent', router);
 };

@@ -3,65 +3,34 @@
 <v-container>
 <h1>List of Life Events </h1>
 	<v-btn
-			to="/lifeeventpersonadd"
+			:to="{ name: 'lifeeventpersonadd', params: { id: $route.params.id } }"
 			class="mr-4"
 			dark
 			color="primary"
 		>
     Add Life Event
 		</v-btn>
-      <v-spacer></v-spacer> 
-      <v-col
+    <v-timeline dense>
+      <v-timeline-item
         v-for="lifeventperson in lifeventpersons"
         :key="lifeventperson.lep_ID"
-        >
-
- 
-    <v-timeline>
-
-    <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          color="dark"
-          dark
-          v-bind="attrs"
-          v-on="on"
-        >
-          {{lifeevent.event_date}}
-        </v-btn>
-        </template>
-        <v-timeline-item>
-        <v-card >
+      >
+        <v-card v-if="lifeventperson.lifeevent">
           <v-list>
-          <v-list-item>
-            <v-list-item-content>
-                
-              <v-list-item-title><h2>{{lifeeventperson.event_note}}</h2></v-list-item-title>
-              <v-list-item-subtitle>{{lifeeventperson.event_date}}
-              </v-list-item-subtitle>
-            </v-list-item-content>
-
-            <v-list-item-action>
-          <v-btn
-          @click="editLifeEvent(lifeeventperson)"
-          small
-          right
-        >
-        Edit
-   
-        </v-btn>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title><h2>{{ lifeventperson.lifeevent.event_note }}</h2></v-list-item-title>
+                <v-list-item-subtitle>{{ (lifeventperson.lifeevent.event_date || '').substr(0, 10) }}</v-list-item-subtitle>
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-btn small @click="editLifeEvent(lifeventperson.lifeevent)">Edit</v-btn>
+                <v-btn small @click="deleteLifeEventForPerson(lifeventperson)">Remove</v-btn>
               </v-list-item-action>
-
-          </v-list-item>
-              </v-list>
-    
-
-          </v-card>
-  
-        </v-timeline-item>
-
-          </v-timeline>
-
- </v-col>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-timeline-item>
+    </v-timeline>
 </v-container>
 </v-main>
 </template>
@@ -126,17 +95,21 @@ export default {
             console.log(this.lifeventpersons);
         })
         .catch(error => {
-            this.message = error.response.data.message;
+            this.message = (error.response && error.response.data.message) || error.message;
         });
     },
 
+    editLifeEvent(lifeevent) {
+      this.$router.push({ name: 'lifeeventedit', params: { id: lifeevent.event_ID } });
+    },
+
     deleteLifeEventForPerson(lifeventperson) {
-      LifeEventPersonService.delete(lifeventperson.per_ID)
+      LifeEventPersonService.delete(lifeventperson.lep_ID)
         .then(() => {  
-          this.lifeventperson = this.lifeventperson.filter(lifeventperson => lifeventperson.lep_ID!=lifeventperson.lep_ID);
+          this.lifeventpersons = this.lifeventpersons.filter(row => row.lep_ID != lifeventperson.lep_ID);
         })
         .catch(error => {
-            this.message = error.response.data.message;
+            this.message = (error.response && error.response.data.message) || error.message;
         });
     },
      getLifeEvents() {
@@ -146,33 +119,17 @@ export default {
             console.log(this.lifeevents);
         })
         .catch(error => {
-            this.message = error.response.data.message;
+            this.message = (error.response && error.response.data.message) || error.message;
         });
     },
 
-    addLifeEventForPerson() {
-        this.dialog = false
-        let lifeventperson = {};
-        lifeventperson.per_ID = this.currentLifeEvent.per_ID;
-        lifeventperson.lep_ID = this.lifeventperson.lep_ID;
-        console.log(lifeventperson)
-        LifeEventPersonService.create(lifeventperson)
-          .then(() => {
-                this.getLifeEventsForPerson(this.$route.params.id);
-                console.log(this.lifeventpersons);
-          })
-          .catch(error => {
-              this.message = error.response.data.message;
-          });
-           
-    },
     close () {
         this.dialog = false
       },
 
     customFilter (item, queryText) {
-      const textOne = item.frst_name.toLowerCase()
-      const textTwo = item.last_name.toLowerCase()
+      const textOne = (item.frst_name || '').toLowerCase()
+      const textTwo = (item.last_name || '').toLowerCase()
       const searchText = queryText.toLowerCase()
 
       return textOne.indexOf(searchText) > -1 ||

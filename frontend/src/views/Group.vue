@@ -25,7 +25,8 @@
         <v-col
           v-for="group in groups"
           :key="group.grp_ID"
-          cols="6"
+          cols="12"
+          md="6"
           align="center"
         >
           <GroupCard 
@@ -79,7 +80,7 @@ export default {
                     console.log(this.groups);
                 })
                 .catch(error => {
-                    this.message = error.response.data.message;
+                    this.message = (error.response && error.response.data.message) || error.message;
                 });
             },
         exportToPDF () {

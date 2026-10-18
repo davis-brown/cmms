@@ -30,7 +30,6 @@ exports.create = (req, res) => {
         last_name: req.body.last_name,
         user_name: normalizeUserName(req.body.user_name),
         role_value: req.body.role_value,
-        password: req.body.password,
         bday: req.body.bday,
         baptised: req.body.baptised,
         bapt_date: req.body.bapt_date,
@@ -99,6 +98,7 @@ exports.update = (req, res) => {
     }
 
     Person.update(changes, {
+        fields: db.updatableFields(Person).filter(name => name !== 'password'),
         where: {
             per_ID: id
         }

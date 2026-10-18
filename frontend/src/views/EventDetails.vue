@@ -54,8 +54,8 @@ export default {
     currentEvent: null,
     num: 0,
     openText: false,
-    attendees: {},
-    uniqueAttendees: {},
+    attendees: [],
+    uniqueAttendees: [],
     attendee: {
       atd_ID: null,
       evt_ID: null,
@@ -115,7 +115,7 @@ export default {
             })
             .catch(error => {
               console.log(error);
-                this.message = error.response.data.message;
+                this.message = (error.response && error.response.data.message) || error.message;
             })
     },
 

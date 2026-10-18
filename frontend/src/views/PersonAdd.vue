@@ -1,11 +1,12 @@
 <template>
   <div class="submit-form mx-5 mx-auto">
     <h1>Add a member</h1>
-    <form @submit.prevent="savePerson">
+    <v-form ref="form" @submit.prevent="savePerson">
       
 
       <v-text-field
         v-model="person.frst_name"
+        :rules="[(v) => !!v || 'First name is required']"
         label="First Name"
         required
       ></v-text-field>
@@ -16,6 +17,7 @@
       ></v-text-field>
       <v-text-field
         v-model="person.last_name"
+        :rules="[(v) => !!v || 'Last name is required']"
         label="Last Name"
         required
       ></v-text-field>
@@ -56,7 +58,7 @@
          label="Church Position"
         required
         ></v-select>
-       </form>
+       </v-form>
        <PersonContact
         v-bind:personContacts="personContacts"
         v-bind:person="person"
@@ -102,31 +104,37 @@ export default {
   },
   methods: {
     savePerson() {
-      console.log(this.$route.params)
+      if (!this.$refs.form.validate()) {
+        return;
+      }
       PersonDataService.create(this.person)
         .then((response) => {
-          this.personContacts.forEach(personContact => {
+          // Save the contacts before leaving the page
+          return Promise.all(this.personContacts.map(personContact => {
             personContact.per_ID = response.data.per_ID;
-            this.savePersonContact(personContact)
-          })
-          this.$router.push({ name: this.prevRoute.name, params: { per_ID: response.data.per_ID, id: this.$route.params.fam_ID } });
+            return this.savePersonContact(personContact);
+          })).then(() => response);
+        })
+        .then((response) => {
+          // Opened from a family's edit page: go back there and offer to add the new member
+          const fam_ID = this.$route.params.fam_ID;
+          if (fam_ID) {
+            this.$router.push({ name: 'familyedit', params: { id: fam_ID, per_ID: response.data.per_ID } });
+          } else if (this.prevRoute && this.prevRoute.name) {
+            this.$router.push({ name: this.prevRoute.name });
+          } else {
+            this.$router.push({ name: 'personlist' });
+          }
         })
         .catch((e) => {
           console.log(e);
         });
     },
     savePersonContact(contact) {
-      CommunicationService.create(contact)
+      return CommunicationService.create(contact)
       .then(response => {
           let personContact = {com_ID : response.data.com_ID, per_ID : contact.per_ID};
-          PersonContactService.create(personContact)
-          .then(response => {
-              console.log(response.data);
-          })
-          .catch(e => {
-              console.log(e);
-          });
-          console.log(response.data);
+          return PersonContactService.create(personContact);
       })
       .catch(e => {
           console.log(e);

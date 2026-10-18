@@ -20,15 +20,16 @@
           </li>
         </div>
     </nav>
-    <header class="header header-absolute bg-gradient" style="height: 200px; background-color: #31609d;">
+    <header class="header header-absolute bg-gradient" style="min-height: 200px; background-color: #31609d;">
       <div class="container-fluid">
           <img style="display:block; height:150px; margin:auto" src="./assets/logoriverside.png">
           
       </div>
       <h3 class="nav-title font-weight-light text-center" style="color:#f1f1f1">Riverside Church Membership System</h3>
     </header>
-      <nav class="navbar navbar-expand navbar-dark" style="background-color:#31609d;">
-        <div class="navbar-nav mx-auto font-weight-normal" style="font-size:20px">
+      <!-- flex-wrap lets the links wrap onto more lines on narrow screens -->
+      <nav class="navbar navbar-expand navbar-dark flex-wrap justify-content-center" style="background-color:#31609d;">
+        <div class="navbar-nav flex-wrap justify-content-center mx-auto font-weight-normal" style="font-size:20px">
           <li v-if="currentUser" class="nav-item">
             <router-link to="/homepage" class="nav-link">
               Home
@@ -70,9 +71,9 @@
             </router-link>
           </li>
         </div>
-      <div v-if="currentUser" class="navbar-nav">
+      <div v-if="currentUser" class="navbar-nav flex-wrap justify-content-center">
         
-        <li v-if="showModeratorBoard" class="nav-item">
+        <li v-if="showAdminBoard" class="nav-item">
             <router-link to="/admin" class="nav-link">Admin Board</router-link>
           </li>
           <li v-if="showModeratorBoard" class="nav-item">
@@ -125,5 +126,8 @@ export default {
   @import url('https://fonts.googleapis.com/css?family=Lato');
   *{
     font-family: 'Lato', sans-serif;
+  }
+  .navbar .nav-link {
+    white-space: nowrap;
   }
 </style>

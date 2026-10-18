@@ -11,7 +11,7 @@
 
       <v-text-field
         v-model="currentFamily.fam_name"
-        :rules="[(v) => !!v || 'First name is required']"
+        :rules="[(v) => !!v || 'Family name is required']"
         label="Family Name"
         required
       ></v-text-field>
@@ -200,10 +200,10 @@ export default {
           v => !!v || 'E-mail is required',
           v => /^\S{1,}@\S{2,}\.\S{2,}$/.test(v) || 'E-mail must be valid',
       ],
+      // Any usual format (555-0101, (405) 555-0101, +1 405.555.0101) with 7 to 15 digits
       phoneRules: [
           v => !!v || 'Phone number is required.',
-          v => (v || '').length == 12 || 'Phone number must be 10 digits',
-          v => /(\d{3})-?(\d{3})-?(\d{4})/.test(v) || 'Phone number must be format ###-###-####'
+          v => (/^[0-9+().\s-]+$/.test(v || '') && /^\d{7,15}$/.test((v || '').replace(/\D/g, ''))) || 'Enter a valid phone number',
       ],
       addressRules: [
                 v => !!v || 'Address is required.'
@@ -265,6 +265,9 @@ export default {
     },
 
     updateFamily() {
+      if (!this.$refs.form.validate()) {
+        return;
+      }
       // A new photo is saved straight onto the family, replacing the old one
       let upload = Promise.resolve();
       if (this.selectedFile)  {
@@ -285,6 +288,9 @@ export default {
     },
 
     deleteFamily() {
+      if (!window.confirm(`Delete the ${this.currentFamily.fam_name || ''} family? Its members stay in the directory.`)) {
+        return;
+      }
       // The server also removes the family's member links
       FamilyService.delete(this.currentFamily.fam_ID)
         .then(() => {
@@ -302,7 +308,7 @@ export default {
             console.log(this.familyPersons);
         })
         .catch(error => {
-            this.message = error.response.data.message;
+            this.message = (error.response && error.response.data.message) || error.message;
         });
     },
 
@@ -313,7 +319,7 @@ export default {
             console.log(this.people);
         })
         .catch(error => {
-            this.message = error.response.data.message;
+            this.message = (error.response && error.response.data.message) || error.message;
         });
     },
 
@@ -323,7 +329,7 @@ export default {
           this.familyPersons = this.familyPersons.filter(familyPerson => familyPerson.fp_ID!=familyperson.fp_ID);
         })
         .catch(error => {
-            this.message = error.response.data.message;
+            this.message = (error.response && error.response.data.message) || error.message;
         });
     },
 
@@ -333,6 +339,9 @@ export default {
 
     addPersonForFamily() {
         this.dialog = false
+        if (!this.familyPerson.per_ID) {
+          return;
+        }
         let familyPerson = {};
         familyPerson.fam_ID = this.currentFamily.fam_ID;
         familyPerson.per_ID = this.familyPerson.per_ID;
@@ -345,7 +354,7 @@ export default {
                 this.familyPerson = {};
           })
           .catch(error => {
-              this.message = error.response.data.message;
+              this.message = (error.response && error.response.data.message) || error.message;
           });
         
            
@@ -355,8 +364,8 @@ export default {
       },
 
     customFilter (item, queryText) {
-      const textOne = item.frst_name.toLowerCase()
-      const textTwo = item.last_name.toLowerCase()
+      const textOne = (item.frst_name || '').toLowerCase()
+      const textTwo = (item.last_name || '').toLowerCase()
       const searchText = queryText.toLowerCase()
 
       return textOne.indexOf(searchText) > -1 ||

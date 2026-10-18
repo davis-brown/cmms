@@ -67,6 +67,7 @@ exports.update = (req, res) => {
     const id = req.params.id;
 
     Congregation.update(req.body, {
+        fields: db.updatableFields(Congregation),
         where: {
             con_ID: id
         }

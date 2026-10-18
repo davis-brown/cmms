@@ -100,7 +100,7 @@
                     </template>
                     <template v-slot:item.actions="{ item }">
                         <v-icon
-                            @click="deletePhone(item)"
+                            @click="deleteAddress(item)"
                         >
                             mdi-delete
                         </v-icon>
@@ -129,7 +129,14 @@
 </template>
 
 <script>
-
+// Remove an item from an array in place. personContacts belongs to the parent
+// form, so it has to be changed rather than replaced for the parent to see it.
+const removeItem = (list, item) => {
+    const index = list.indexOf(item);
+    if (index != -1) {
+        list.splice(index, 1);
+    }
+};
 
 export default {
 	name: 'ContactInfo',
@@ -149,10 +156,10 @@ export default {
                 v => !!v || 'E-mail is required',
                 v => /^\S{1,}@\S{2,}\.\S{2,}$/.test(v) || 'E-mail must be valid',
             ],
+            // Any usual format (555-0101, (405) 555-0101, +1 405.555.0101) with 7 to 15 digits
             phoneRules: [
                 v => !!v || 'Phone number is required.',
-                v => (v || '').length == 10 || 'Phone number must be format ###-###-####',
-                v => /(\d{3})-?(\d{3})-?(\d{4})/.test(v) || 'Phone number must be format ###-###-####'
+                v => (/^[0-9+().\s-]+$/.test(v || '') && /^\d{7,15}$/.test((v || '').replace(/\D/g, ''))) || 'Enter a valid phone number',
             ],
             addressRules: [
                 v => !!v || 'Address is required.'
@@ -233,8 +240,8 @@ export default {
             this.currentEmail = {}
         },
         deleteEmail(personcontact) {
-            this.personContacts = this.personContacts.filter(personContact => personContact.address!=personcontact.address);
-            this.emails = this.emails.filter(email => email.address!=personcontact.address);
+            removeItem(this.personContacts, personcontact);
+            removeItem(this.emails, personcontact);
             this.currentEmail = {}
         },
         addPhone() {
@@ -248,8 +255,8 @@ export default {
             this.currentPhone = {}
         },
         deletePhone(personcontact) {
-            this.personContacts = this.personContacts.filter(personContact => personContact.number!=personcontact.number);
-            this.phones = this.phones.filter(phone => phone.number!=personcontact.number);
+            removeItem(this.personContacts, personcontact);
+            removeItem(this.phones, personcontact);
             this.currentPhone = {}
         },
         addAddress() {
@@ -263,8 +270,8 @@ export default {
             this.currentAddress = {}
         },
         deleteAddress(personcontact) {
-            this.personContacts = this.personContacts.filter(personContact => personContact.address!=personcontact.address);
-            this.addresses = this.addresses.filter(address => address.address!=personcontact.address);
+            removeItem(this.personContacts, personcontact);
+            removeItem(this.addresses, personcontact);
             this.currentAddress = {}
         },
     }

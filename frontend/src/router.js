@@ -20,6 +20,10 @@ export const router = new Router({
   mode: "history",
   routes: [
     {
+      path: "/",
+      redirect: "/homepage"
+    },
+    {
       path: "/lifeevent",
       name: "lifeevent",
       component: LifeEventList
@@ -28,29 +32,26 @@ export const router = new Router({
       path: "/lifeeventadd",
       name: "lifeeventadd",
       component: LifeEventAdd
-
     },
     {
-      path: "/lifeeventedit",
+      path: "/lifeeventedit/:id",
       name: "lifeeventedit",
       component: LifeEventEdit
     },
     {
-      path:"/lifeeventperson",
-      name:"lifeeventperson",
+      path: "/lifeeventperson/:id?",
+      name: "lifeeventperson",
       component: LifeEventPerson
     },
     {
-      path:"/lifeeventpersonadd",
-      name:"lifeeventpersonadd",
+      path: "/lifeeventpersonadd/:id?",
+      name: "lifeeventpersonadd",
       component: LifeEventPersonAdd
-
     },
     {
       path: '/homepage',
       name: 'HomePage',
-      // lazy-loaded
-      component: () => import('./views/HomePage.vue')
+      component: HomePage
     },
     {
       path: '/congregation',
@@ -100,7 +101,7 @@ export const router = new Router({
       component: FamilyAdd
     },
     {
-      path: "/familyedit",
+      path: "/familyedit/:id",
       name: "familyedit",
       component: FamilyEdit
     },
@@ -110,24 +111,22 @@ export const router = new Router({
       component: Calendar
     },
     {
-      path: "/eventdetails",
+      path: "/eventdetails/:id",
       name: "eventdetails",
       component: () => import("./views/EventDetails")
     },
-
     {
-      path: "/viewattendees",
+      path: "/viewattendees/:id",
       name: "viewattendees",
       component: () => import("./views/ViewAttendees")
     },
-
     {
       path: "/person",
       name: "personlist",
       component: () => import("./views/PersonList")
     },
     {
-      path: "/personedit",
+      path: "/personedit/:id",
       name: "person-edit",
       component: () => import("./views/PersonEdit")
     },
@@ -137,52 +136,40 @@ export const router = new Router({
       component: () => import("./views/PersonAdd")
     },
     {
-        path: "/congregationedit",
-        name: "congregationedit",
-        component: CongregationEdit
+      path: "/congregationedit/:id",
+      name: "congregationedit",
+      component: CongregationEdit
     },
     {
       path: "/congregationadd",
       name: "congregationadd",
       component: () => import("./views/CongregationAdd")
-
-  },
-  {
-    path: "/group",
-    name: "groupdisplay",
-    component: () => import("./views/Group")
-
-  },
-  {
-    path: "/congregationadd",
-    name: "congregationadd",
-    component: () => import("./views/CongregationAdd")
-  },
-  {
-    path:"/home",
-    name:"home",
-    component: HomePage
-  },
-  {
-
-    path: "/groupadd",
-    name: "groupadd",
-    component: () => import("./views/GroupAdd")
-
-  },
-  {
-    path: "/groupedit",
-    name: "groupedit",
-    component: () => import("./views/GroupEdit")
-
-  }
-
-  
+    },
+    {
+      path: "/group",
+      name: "groupdisplay",
+      component: () => import("./views/Group")
+    },
+    {
+      // Older links to /home go to the same page as /homepage
+      path: "/home",
+      redirect: "/homepage"
+    },
+    {
+      path: "/groupadd",
+      name: "groupadd",
+      component: () => import("./views/GroupAdd")
+    },
+    {
+      path: "/groupedit/:id",
+      name: "groupedit",
+      component: () => import("./views/GroupEdit")
+    }
   ]
 });
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/login', '/register', '/homepage','/'];
+  const publicPages = ['/login', '/register', '/homepage'];
   const authRequired = !publicPages.includes(to.path);
   const loggedIn = localStorage.getItem('user');
 
@@ -192,25 +179,5 @@ router.beforeEach((to, from, next) => {
     next('/login');
   } else {
     next();
-  }
-
-  if ((from.path=='/' || from.path=='/homepage')&& !loggedIn) {
-    next('/login');
-    if (loggedIn) {
-      if (to.path=='/person'){
-        router.push('/person');
-      }
-      if (to.path=='/group'){
-        router.push('/group');
-      }
-      if (to.path=='/families'){
-        router.push('/families');
-      }
-      if (to.path=='/calendar'){
-        router.push('/calendar');
-      }
-    }
-    
-
   }
 });

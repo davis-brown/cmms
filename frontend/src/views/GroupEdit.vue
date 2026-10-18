@@ -191,6 +191,9 @@ export default {
     },
 
     updateGroup() {
+      if (!this.$refs.form.validate()) {
+        return;
+      }
       GroupDataServices.update(this.currentGroup.grp_ID, this.currentGroup)
         .then(response => {
           console.log(response.data);
@@ -203,6 +206,9 @@ export default {
    },
 
     deleteGroup() {
+      if (!window.confirm(`Delete the ${this.currentGroup.grp_name || ''} group? Its members stay in the directory.`)) {
+        return;
+      }
       GroupDataServices.delete(this.currentGroup.grp_ID)
         .then(response => {
           //GroupMemberService.delete(this.currentGroup.gm_ID)
@@ -221,7 +227,7 @@ export default {
             console.log(this.groupMembers);
         })
         .catch(error => {
-            this.message = error.response.data.message;
+            this.message = (error.response && error.response.data.message) || error.message;
         });
     },
 
@@ -232,7 +238,7 @@ export default {
             console.log(this.people);
         })
         .catch(error => {
-            this.message = error.response.data.message;
+            this.message = (error.response && error.response.data.message) || error.message;
         });
     },
 
@@ -242,12 +248,15 @@ export default {
           this.groupMembers = this.groupMembers.filter(groupMember => groupMember.gm_ID!=groupmember.gm_ID);
         })
         .catch(error => {
-            this.message = error.response.data.message;
+            this.message = (error.response && error.response.data.message) || error.message;
         });
     },
 
     addMemberForGroup() {
         this.dialog = false
+        if (!this.groupMember.per_ID) {
+          return;
+        }
         let groupMember = {};
         groupMember.grp_ID = this.currentGroup.grp_ID;
         groupMember.per_ID = this.groupMember.per_ID;
@@ -259,7 +268,7 @@ export default {
                 console.log(this.groupMembers);
           })
           .catch(error => {
-              this.message = error.response.data.message;
+              this.message = (error.response && error.response.data.message) || error.message;
           });
            
     },
@@ -268,8 +277,8 @@ export default {
       },
 
     customFilter (item, queryText) {
-      const textOne = item.frst_name.toLowerCase()
-      const textTwo = item.last_name.toLowerCase()
+      const textOne = (item.frst_name || '').toLowerCase()
+      const textTwo = (item.last_name || '').toLowerCase()
       const searchText = queryText.toLowerCase()
 
       return textOne.indexOf(searchText) > -1 ||

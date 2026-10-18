@@ -2,7 +2,7 @@
   <div class="submit-form mt-3 mx-auto" data-app=“true>
     <h1>Add a family</h1>
 
-    <form @submit.prevent="saveFamily">
+    <v-form ref="form" @submit.prevent="saveFamily">
       
       <v-file-input
       v-model="selectedFile"
@@ -13,6 +13,7 @@
 
       <v-text-field
         v-model="family.fam_name"
+        :rules="[(v) => !!v || 'Family name is required']"
         label="Family Name"
         required
       ></v-text-field>
@@ -154,7 +155,7 @@
         </v-data-table>
       </v-card>
 
-    </form>
+    </v-form>
 
   <v-divider class="my-5"></v-divider>
     <v-row justify="center">
@@ -192,10 +193,10 @@ export default {
           v => !!v || 'E-mail is required',
           v => /^\S{1,}@\S{2,}\.\S{2,}$/.test(v) || 'E-mail must be valid',
       ],
+      // Any usual format (555-0101, (405) 555-0101, +1 405.555.0101) with 7 to 15 digits
       phoneRules: [
           v => !!v || 'Phone number is required.',
-          v => (v || '').length == 12 || 'Phone number must be 10 digits',
-          v => /(\d{3})-?(\d{3})-?(\d{4})/.test(v) || 'Phone number must be format ###-###-####'
+          v => (/^[0-9+().\s-]+$/.test(v || '') && /^\d{7,15}$/.test((v || '').replace(/\D/g, ''))) || 'Enter a valid phone number',
       ],
       addressRules: [
                 v => !!v || 'Address is required.'
@@ -236,6 +237,9 @@ export default {
   },
   methods: {
     saveFamily() {
+      if (!this.$refs.form.validate()) {
+        return;
+      }
       // The photo is optional; only upload when one was picked
       let upload = Promise.resolve();
       if (this.selectedFile) {
@@ -249,10 +253,13 @@ export default {
       upload
         .then(() => FamilyService.create(this.family))
         .then(response => {
-          this.familyPersons.forEach(familyPerson => {
+          // Wait for the members to be saved so the list page shows them
+          return Promise.all(this.familyPersons.map(familyPerson => {
             familyPerson.fam_ID = response.data.fam_ID;
-            this.addPersonForFamily(familyPerson)
-          })
+            return this.addPersonForFamily(familyPerson);
+          }));
+        })
+        .then(() => {
           this.$router.push({ name: "familieslist" });
         })
         .catch(err => {
@@ -272,12 +279,13 @@ export default {
             console.log(this.people);
         })
         .catch(error => {
-            this.message = error.response.data.message;
+            this.message = (error.response && error.response.data.message) || error.message;
         });
     },
 
     deletePersonForFamily(familyperson) {
-      this.familyPersons = this.familyPersons.filter(familyPerson => familyPerson.fp_ID!=familyperson.fp_ID);
+      // Rows here aren't saved yet, so they have no fp_ID to compare
+      this.familyPersons = this.familyPersons.filter(familyPerson => familyPerson !== familyperson);
     },
 
     addNewMember() {
@@ -285,16 +293,19 @@ export default {
     },
 
     addPersonForFamily(familyPerson) {
-        FamilyPersonService.create(familyPerson)
+        return FamilyPersonService.create(familyPerson)
           .then(() => {
           })
           .catch(error => {
-              this.message = error.response.data.message;
+              this.message = (error.response && error.response.data.message) || error.message;
           });
     },
 
     addPersonForTable() {
       this.dialog = false;
+      if (!this.familyPerson.per_ID) {
+        return;
+      }
       let familyPerson = {};
       familyPerson.per_ID = this.familyPerson.per_ID;
       familyPerson.fam_role = this.familyPerson.fam_role;
@@ -315,8 +326,8 @@ export default {
         this.dialog = false
     },
     customFilter (item, queryText) {
-      const textOne = item.frst_name.toLowerCase()
-      const textTwo = item.last_name.toLowerCase()
+      const textOne = (item.frst_name || '').toLowerCase()
+      const textTwo = (item.last_name || '').toLowerCase()
       const searchText = queryText.toLowerCase()
 
       return textOne.indexOf(searchText) > -1 ||

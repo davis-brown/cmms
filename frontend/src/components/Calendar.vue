@@ -19,7 +19,7 @@
             color="primary"
             @click="dialog = true"
             dark
-            v-if="showModeratorBoard || showAdminBoard"
+            v-if="canManageEvents"
           >
             New Event
           </v-btn> 
@@ -97,13 +97,13 @@
       <v-dialog v-model="dialog" max-width="500">
           <v-card>
               <v-container>
-                <v-form @submit.prevent="addEvent">
-                    <v-text-field v-model="event.event_name" type="text" label="event name (required)" required></v-text-field>
+                <v-form ref="eventForm" @submit.prevent="addEvent">
+                    <v-text-field v-model="event.event_name" type="text" label="event name (required)" :rules="requiredRule"></v-text-field>
                     <v-text-field v-model="event.event_desc" type="text" label="detail" required></v-text-field>
                     <v-text-field v-model="event.loc_ID" type="text" label="event location" required></v-text-field>
-                    <v-text-field v-model="event.event_date" type="date" label="start (required)" required></v-text-field>
-                    <v-text-field v-model="event.event_start" type="time" label="start time (required)" required></v-text-field>
-                    <v-text-field v-model="event.event_end" type="time" label="end time (required)" required></v-text-field>
+                    <v-text-field v-model="event.event_date" type="date" label="start (required)" :rules="requiredRule"></v-text-field>
+                    <v-text-field v-model="event.event_start" type="time" label="start time (required)" :rules="requiredRule"></v-text-field>
+                    <v-text-field v-model="event.event_end" type="time" label="end time (required)" :rules="requiredRule"></v-text-field>
                     <v-label><p style="font-size: 14px">Color (pick a color)</p></v-label>
                     <div class="container v-row" style="margin-top:-20px; margin-bottom: 15px">
                       <v-btn fab x-small color="blue" @click="event.color='#1e90ff'" style=" margin-left: -15px; margin-right:4px"></v-btn>
@@ -114,7 +114,7 @@
                       <v-btn fab x-small color="orange" @click="event.color='#ffa500'"></v-btn>
                     </div>
                     <hr>
-                    <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialog=false">Create Event</v-btn>
+                    <v-btn type="submit" color="primary" class="mr-4">Create Event</v-btn>
                 </v-form>
               </v-container>
           </v-card>
@@ -147,7 +147,7 @@
               :color="selectedEvent.color"
               dark
             >
-              <v-btn v-if="showAdminBoard" @click="deleteEvent(selectedEvent.id)" icon>
+              <v-btn v-if="canManageEvents" @click="deleteEvent()" icon>
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
               <v-toolbar-title>{{ selectedEvent.name }}</v-toolbar-title>
@@ -184,14 +184,14 @@
 
               <v-btn
                 text
-                v-if="(currentlyEditing != selectedEvent.id) && showAdminBoard"
+                v-if="(currentlyEditing != selectedEvent.id) && canManageEvents"
                 @click.prevent="editEvent(selectedEvent)"
               >
                 Edit 
               </v-btn>
               <v-btn
                 text
-                v-else-if="showAdminBoard"
+                v-else-if="canManageEvents"
                 @click.prevent="updateEvent(selectedEvent)"
               >
                 Save
@@ -212,6 +212,23 @@
 
 <script>
 import EventService from "../services/EventService";
+
+// Today's date as YYYY-MM-DD in the viewer's time zone
+const todayString = () => {
+  const d = new Date();
+  const pad = n => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+};
+
+const newEvent = () => ({
+  event_name: null,
+  event_desc: null,
+  event_date: todayString(),
+  event_start: "12:00",
+  event_end: "13:00",
+  color: "#1976D2",
+  loc_ID: null,
+});
 export default {
 
   computed: {
@@ -229,6 +246,9 @@ export default {
         return this.currentUser.roles.includes('ROLE_MODERATOR');
       }
       return false;
+    },
+    canManageEvents() {
+      return this.showModeratorBoard || this.showAdminBoard;
     }
   },
     
@@ -236,17 +256,8 @@ export default {
 
         today: new Date().toISOString(),
         focus: new Date().toISOString(),
-          event: {
-            evt_ID: null,
-            event_name: null,
-            event_desc: null,
-            event_date: "2021-05-02 00:00:00",
-            event_end: "12:00:00",
-            event_start: "12:00:00",
-            color: "#1976D2",
-            loc_id: null,
-            attendance: null,
-          },
+          event: newEvent(),
+          requiredRule: [v => !!v || 'Required'],
       
       
         
@@ -304,77 +315,73 @@ export default {
             })
             .catch(error => {
               console.log(error);
-                this.message = error.response.data.message;
+                this.message = (error.response && error.response.data.message) || error.message;
             });
       },
 
       addEvent() {
-        console.log(this.event)
+        if (!this.$refs.eventForm.validate()) {
+          return;
+        }
         EventService.create(this.event)
           .then(() => {
-            console.log(this.data)
+            this.dialog = false;
+            this.event = newEvent();
+            this.$refs.eventForm.resetValidation();
+            this.getEvents();
           })
           .catch((e) => {
             console.log(e);
           });
-        this.selectedOpen = false;
-        this.getEvents();
-        this.reloadPage();
-        console.log("done");
       },
 
       updateEvent(calendarevent) {
-        this.event = {};
-        event.event_name = calendarevent.name;
-        event.event_desc = calendarevent.details;
-        event.event_date = calendarevent.start.substr(0,10);
-        event.event_start = calendarevent.start.substr(10,14);
-        event.event_end = calendarevent.end.substr(10,14);
-        event.loc_ID = calendarevent.location;
-        event.attendance = calendarevent.attendance;
+        // calendarevent.start/end look like "YYYY-MM-DD HH:MM:SS"
+        const [date, start] = calendarevent.start.split(' ');
+        const end = calendarevent.end.split(' ')[1];
+        const changes = {
+          event_name: calendarevent.name,
+          event_desc: calendarevent.details,
+          event_date: date,
+          event_start: start,
+          event_end: end,
+          loc_ID: calendarevent.location,
+          color: calendarevent.color,
+        };
 
-        console.log(event.event_start);
-
-      EventService.update(this.currentlyEditing, event)
-        .then(response => {
-          console.log(response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
+        EventService.update(this.currentlyEditing, changes)
+          .then(() => {
+            this.getEvents();
+          })
+          .catch(e => {
+            console.log(e);
+          });
         this.selectedOpen = false;
         this.currentlyEditing = null;
-        
       },
 
-      //MySQL 
       deleteEvent() {
+        if (!window.confirm(`Delete "${this.selectedEvent.name}"? Its RSVPs are deleted too.`)) {
+          return;
+        }
         EventService.delete(this.selectedEvent.id)
-        
-        .then(response => {
-          console.log(response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
-
+          .then(() => {
+            this.getEvents();
+          })
+          .catch(e => {
+            console.log(e);
+          });
         this.selectedOpen = false;
-        this.getEvents();
       },
 
       attendeeDetails(currentevent) {
-        this.event = {};
-        event.evt_ID = currentevent.id;
-        this.$router.push({ name: 'viewattendees', params: { id: event.evt_ID } });
+        this.$router.push({ name: 'viewattendees', params: { id: currentevent.id } });
       },
 
       moreEvent(currentevent) {
-        this.event = {};
-        event.evt_ID = currentevent.id;
-        this.$router.push({ name: 'eventdetails', params: { id: event.evt_ID } });
-      
-        },
-       
+        this.$router.push({ name: 'eventdetails', params: { id: currentevent.id } });
+      },
+
       viewDay ({ date }) {
         this.focus = date
         this.type = 'day'
@@ -428,10 +435,6 @@ export default {
           return d > 3 && d < 21
           ? 'th'
           : ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th','th', 'th'][d % 10]
-      }, 
-
-      reloadPage() {
-        window.location.reload()
       }
 
     }

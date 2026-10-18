@@ -136,4 +136,9 @@ db.personcontact.belongsTo(db.communication, {
 });
 db.ROLES = ["user", "moderator", "admin", "leader"];
 
+// Columns an update request may change: everything except the primary key,
+// so an update can't move a record to a different id
+db.updatableFields = model =>
+  Object.keys(model.rawAttributes).filter(name => !model.rawAttributes[name].primaryKey);
+
 module.exports = db;
