@@ -25,12 +25,16 @@ app.use('/api/images', express.static(path.join(__dirname , '/public/images')));
 const db = require("./models");
 const seed = require("./seed");
 const ensureUniqueIndexes = require("./unique-indexes");
+const contactPrivacy = require("./middleware/contactPrivacy");
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Hide other members' phone, email and address from regular users
+app.use("/api", contactPrivacy);
 
 require("./routes/communication.routes")(app);
 require("./routes/person.routes")(app);
