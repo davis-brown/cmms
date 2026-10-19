@@ -4,6 +4,8 @@ const db = require("../models");
 // Leaders also see them for members of the groups they lead (group.per_ID).
 // Moderators and admins see everything.
 const PERSON_FIELDS = ["email", "phone", "address"];
+// Fields only moderators and admins may see, on anyone's record
+const STAFF_ONLY_PERSON_FIELDS = ["notes"];
 const FAMILY_FIELDS = ["fam_email", "fam_phone", "fam_address"];
 const COMMUNICATION_FIELDS = ["address", "number"];
 
@@ -70,8 +72,11 @@ const scrub = (value, access) => {
     return;
   }
 
-  if ("per_ID" in value && has(value, ["frst_name", "last_name"]) && !access.people.has(value.per_ID)) {
-    strip(value, PERSON_FIELDS);
+  if ("per_ID" in value && has(value, ["frst_name", "last_name"])) {
+    strip(value, STAFF_ONLY_PERSON_FIELDS);
+    if (!access.people.has(value.per_ID)) {
+      strip(value, PERSON_FIELDS);
+    }
   }
   if ("fam_ID" in value && "fam_name" in value && !access.families.has(value.fam_ID)) {
     strip(value, FAMILY_FIELDS);
