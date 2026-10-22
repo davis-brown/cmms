@@ -152,6 +152,9 @@ export default {
 
  .heading {
    padding-top:18%;
+   /* White with a shadow so it reads on any photo */
+   color: #fff;
+   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
  }
 
  .heading-title {
