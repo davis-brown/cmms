@@ -1,0 +1,49 @@
+name: Deploy backend to staging
+
+# Runs only when started by hand: Actions → "Deploy backend to staging" → Run workflow
+on:
+    workflow_dispatch:
+
+# Never run two deploys to the same server at once
+concurrency: deploy-backend-staging
+
+jobs:
+    aws-deploy:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: backend
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  ref: main
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+            - run: npm ci
+            - run: npm run bundle
+            # Third-party actions get the server's SSH key, so they're pinned to exact commits
+            - name: Deploy to Server
+              uses: easingthemes/ssh-deploy@54f2361d27c4ab86ea0a2560836444d123e63cd8 # v2.1.1
+              env:
+                  SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+                  ARGS: '-rltgoDzvO --delete'
+                  SOURCE: 'backend/deploy/'
+                  REMOTE_HOST: ${{ secrets.SERVER_HOST }}
+                  REMOTE_USER: ubuntu
+                  TARGET: 'nodeapps/congregation-backend'
+            - name: Execute SSH commmands on remote server
+              uses: JimCronqvist/action-ssh@d95a7435b565a2fedb9bf4100cdeb3342aa3cf16 # 1.0.0
+              env:
+                  NAME: 'Root'
+              with:
+                  hosts: ubuntu@${{ secrets.SERVER_HOST }}
+                  privateKey: ${{ secrets.SERVER_SSH_KEY }}
+                  debug: false
+                  command: |
+                      cd nodeapps/congregation-backend
+                      npm install
+                      sudo systemctl stop congregation-backend
+                      sudo cp congregation-backend.service /lib/systemd/system/congregation-backend.service
+                      sudo systemctl daemon-reload
+                      sudo systemctl start congregation-backend

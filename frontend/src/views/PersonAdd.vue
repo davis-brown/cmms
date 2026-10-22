@@ -118,8 +118,12 @@ export default {
         .then((response) => {
           // Opened from a family's edit page: go back there and offer to add the new member
           const fam_ID = this.$route.params.fam_ID;
+          const returnTo = this.$route.params.returnTo;
           if (fam_ID) {
             this.$router.push({ name: 'familyedit', params: { id: fam_ID, per_ID: response.data.per_ID } });
+          } else if (returnTo) {
+            // Opened from a page that's still being filled in, e.g. Add Family
+            this.$router.push({ name: returnTo, params: { per_ID: response.data.per_ID } });
           } else if (this.prevRoute && this.prevRoute.name) {
             this.$router.push({ name: this.prevRoute.name });
           } else {

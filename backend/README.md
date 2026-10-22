@@ -39,7 +39,7 @@ mysql -u root congregations -e "INSERT INTO user_roles (userId, roleId) SELECT i
 New sign-ups can't log in until an admin approves them on the Users page (Admin Board),
 where admins can also change roles and delete accounts. Accounts that existed before
 approval was added are approved automatically on upgrade. Failed logins are limited to
-10 per username and 20 in total from one address every 15 minutes.
+10 per username and 20 per address every 15 minutes.
 
 ## Configuration
 
@@ -59,6 +59,11 @@ All settings are environment variables; see [`.env.example`](.env.example).
 
 On the server, put these in `/home/ubuntu/nodeapps/congregation-backend.env`, which
 `congregation-backend.service` loads.
+
+Deploys run from GitHub Actions only when started by hand: on GitHub, open **Actions →
+Deploy backend to staging → Run workflow**. It deploys `main`. It needs two
+repository secrets: `SERVER_HOST` (the server's hostname or IP) and `SERVER_SSH_KEY`
+(a private key whose public key is in the server's `~/.ssh/authorized_keys`).
 
 ## Project layout
 
