@@ -1,34 +1,39 @@
-name: DEPLOY TO STAGING
+name: Deploy backend to staging
 
+# Runs only when started by hand: Actions → "Deploy backend to staging" → Run workflow
 on:
-    pull_request:
-        types: [closed]
-        branches:
-            - dev-branch
+    workflow_dispatch:
+
+# Never run two deploys to the same server at once
+concurrency: deploy-backend-staging
 
 jobs:
     aws-deploy:
-        # "closed" also fires for PRs closed without merging; only deploy merges
-        if: github.event.pull_request.merged == true
         runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: backend
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v4
               with:
-                  ref: dev-branch
-            - uses: actions/setup-node@v1
-            - run: npm install
+                  ref: main
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+            - run: npm ci
             - run: npm run bundle
+            # Third-party actions get the server's SSH key, so they're pinned to exact commits
             - name: Deploy to Server
-              uses: easingthemes/ssh-deploy@v2.1.1
+              uses: easingthemes/ssh-deploy@54f2361d27c4ab86ea0a2560836444d123e63cd8 # v2.1.1
               env:
                   SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
                   ARGS: '-rltgoDzvO --delete'
-                  SOURCE: 'deploy/'
+                  SOURCE: 'backend/deploy/'
                   REMOTE_HOST: ${{ secrets.SERVER_HOST }}
                   REMOTE_USER: ubuntu
                   TARGET: 'nodeapps/congregation-backend'
             - name: Execute SSH commmands on remote server
-              uses: JimCronqvist/action-ssh@master
+              uses: JimCronqvist/action-ssh@d95a7435b565a2fedb9bf4100cdeb3342aa3cf16 # 1.0.0
               env:
                   NAME: 'Root'
               with:

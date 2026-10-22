@@ -44,3 +44,10 @@ src/store/        Vuex auth state
 src/router.js     Routes
 nginx.conf        Serves the production build and proxies /api to the backend
 ```
+
+## Home page photos
+
+The home page slideshow starts with the church window photo, then three plain
+placeholders in `src/assets/carousel/`. To use real photos, add them to that folder
+(landscape, at least 1600×900) and point the `items` list in `src/views/HomePage.vue`
+and `src/views/Home.vue` at them. Only use photos the church has the rights to.

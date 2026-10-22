@@ -178,6 +178,10 @@ import FamilyService from "../services/FamilyService";
 import PersonDataService from "../services/PersonDataService";
 import FamilyPersonService from "../services/FamilyPersonService";
 
+// What was typed before going to Add Member, restored on the way back.
+// Kept in memory rather than storage so the chosen photo survives too.
+let draft = null;
+
 export default {
   data() {
     return {
@@ -289,7 +293,7 @@ export default {
     },
 
     addNewMember() {
-        this.$router.push({ name: 'personadd' });
+        this.$router.push({ name: 'personadd', params: { returnTo: 'familyadd' } });
     },
 
     addPersonForFamily(familyPerson) {
@@ -338,6 +342,24 @@ export default {
   mounted() {
     this.message = '';
     this.getPeople();
+
+    if (draft) {
+      this.family = draft.family;
+      this.familyPersons = draft.familyPersons;
+      this.selectedFile = draft.selectedFile;
+      draft = null;
+    }
+    // Back from Add Member with the new person: offer to add them
+    if (this.$route.params.per_ID) {
+      this.familyPerson = { per_ID: this.$route.params.per_ID };
+      this.dialog = true;
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    draft = to.name === 'personadd'
+      ? { family: this.family, familyPersons: this.familyPersons, selectedFile: this.selectedFile }
+      : null;
+    next();
   }
 };
 </script>

@@ -93,14 +93,15 @@ export default {
         {
           src: require("../assets/riversidewindow.jpg")
         },
+        // Placeholders until the church adds its own photos
         {
-           src: 'https://christianchronicle.org/wp-content/uploads/2017/09/mrcc_01.jpg'
+          src: require("../assets/carousel/placeholder-1.svg")
         },
         {
-          src: 'https://c4s6k6b6.rocketcdn.me/wp-content/uploads/2020/06/cross-at-sunset-50x30-1-667x400.jpg.webp'
+          src: require("../assets/carousel/placeholder-2.svg")
         },
         {
-           src: 'https://christianchronicle.org/wp-content/uploads/2019/03/p21_ATFbeller_0419-1024x768.jpg'
+          src: require("../assets/carousel/placeholder-3.svg")
         }
       ],
       content: '',
