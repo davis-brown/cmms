@@ -26,6 +26,7 @@ async function seedDemoUser() {
       username,
       email: `${username}@example.com`,
       password: bcrypt.hashSync(password, 10),
+      approved: true,
     },
   });
   if (created) {

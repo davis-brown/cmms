@@ -1,5 +1,6 @@
 import axios from 'axios';
 import authHeader from './auth-header';
+import http from '../http-common';
 
 var API_URL;
 if (process.env.NODE_ENV === "development") {
@@ -24,6 +25,19 @@ class UserService {
 
   getAdminBoard() {
     return axios.get(API_URL + 'admin', { headers: authHeader() });
+  }
+
+  // Account management (admins only)
+  getUsers() {
+    return http.get('/users');
+  }
+
+  updateUser(id, changes) {
+    return http.put(`/users/${id}`, changes);
+  }
+
+  deleteUser(id) {
+    return http.delete(`/users/${id}`);
   }
 }
 

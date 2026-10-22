@@ -34,18 +34,26 @@ New sign-ups get the `user` role; to make an account an admin:
 mysql -u root congregations -e "INSERT INTO user_roles (userId, roleId) SELECT id, 3 FROM users WHERE username = 'you';"
 ```
 
+## Accounts
+
+New sign-ups can't log in until an admin approves them on the Users page (Admin Board),
+where admins can also change roles and delete accounts. Accounts that existed before
+approval was added are approved automatically on upgrade. Failed logins are limited to
+10 per username and 20 per address every 15 minutes.
+
 ## Configuration
 
 All settings are environment variables; see [`.env.example`](.env.example).
 
 | Variable | Required | Description |
 | --- | --- | --- |
-| `JWT_SECRET` | Yes | Secret used to sign login tokens. Use a long random value, e.g. `openssl rand -hex 32`. |
+| `JWT_SECRET` | Yes | Secret used to sign login tokens. Use a long random value, e.g. `openssl rand -hex 32`. With `NODE_ENV=production`, the server won't start if it's shorter than 32 characters. |
 | `DB_HOST`, `DB_USER`, `DB_PASSWORD` | Production | MySQL connection. Locally they default to `localhost`, `root` and an empty password. |
 | `DB_PORT`, `DB_NAME` | No | Default to `3306` and `congregations`. |
 | `DB_LOGGING` | No | `true` prints every SQL query. |
 | `PORT` | No | API port. Defaults to `8080`. |
 | `CORS_ORIGIN` | Production | Comma-separated frontend URLs allowed to call the API. Defaults to `http://localhost:8081`. |
+| `TRUST_PROXY` | Behind a proxy | Number of reverse proxies (e.g. nginx) in front of the API, usually `1`. Without it, login rate limits treat every visitor as the proxy's address. |
 | `SEED_DEMO_DATA` | No | `true` creates the demo user and sample data on an empty database. Never set it on a real server. |
 | `DEMO_USERNAME`, `DEMO_PASSWORD` | No | Demo login. Default to `demo` and `demo1234`. |
 
