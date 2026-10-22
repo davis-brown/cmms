@@ -7,7 +7,7 @@
         member with the Login username field on that member's edit page.
       </p>
 
-      <v-alert v-if="message" :type="messageType" dismissible @input="message = ''">
+      <v-alert v-if="message" :type="messageType" closable @click:close="message = ''">
         {{ message }}
       </v-alert>
 
@@ -15,8 +15,8 @@
         :headers="headers"
         :items="users"
         :loading="loading"
-        item-key="id"
-        sort-by="approved"
+        item-value="id"
+        :sort-by="[{ key: 'approved', order: 'asc' }]"
         class="elevation-1"
       >
         <template v-slot:[`item.member`]="{ item }">
@@ -24,22 +24,21 @@
         </template>
 
         <template v-slot:[`item.approved`]="{ item }">
-          <v-chip small :color="item.approved ? 'green' : 'orange'" dark>
+          <v-chip size="small" :color="item.approved ? 'green' : 'orange'">
             {{ item.approved ? "Approved" : "Waiting" }}
           </v-chip>
         </template>
 
         <template v-slot:[`item.roles`]="{ item }">
           <v-select
-            :value="item.roles"
+            :model-value="item.roles"
             :items="roleNames"
             multiple
             chips
-            small-chips
-            dense
+            density="compact"
             hide-details
             :aria-label="`Roles for ${item.username}`"
-            @change="roles => setRoles(item, roles)"
+            @update:model-value="roles => setRoles(item, roles)"
           ></v-select>
         </template>
 
@@ -47,22 +46,22 @@
           <div class="d-flex justify-end">
             <v-btn
               v-if="!item.approved"
-              small
+              size="small"
               color="primary"
               class="mr-2"
               @click="setApproved(item, true)"
             >Approve</v-btn>
             <v-btn
               v-else-if="!isSelf(item)"
-              small
-              outlined
+              size="small"
+              variant="outlined"
               class="mr-2"
               @click="setApproved(item, false)"
             >Revoke</v-btn>
             <v-btn
               v-if="!isSelf(item)"
-              small
-              outlined
+              size="small"
+              variant="outlined"
               color="red"
               @click="deleteUser(item)"
             >Delete</v-btn>
@@ -86,12 +85,12 @@ export default {
       messageType: "success",
       roleNames: ["user", "leader", "moderator", "admin"],
       headers: [
-        { text: "Username", value: "username" },
-        { text: "Email", value: "email" },
-        { text: "Member", value: "member", sortable: false },
-        { text: "Status", value: "approved" },
-        { text: "Roles", value: "roles", sortable: false, width: "280px" },
-        { text: "", value: "actions", sortable: false, align: "end" },
+        { title: "Username", value: "username" },
+        { title: "Email", value: "email" },
+        { title: "Member", value: "member", sortable: false },
+        { title: "Status", value: "approved" },
+        { title: "Roles", value: "roles", sortable: false, width: "280px" },
+        { title: "", value: "actions", sortable: false, align: "end" },
       ],
     };
   },

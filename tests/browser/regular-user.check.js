@@ -24,7 +24,7 @@ const { chromium, APP, check, expect, report, api, signin, loggedInPage } = requ
     await page.goto(APP + '/person');
     await page.locator(`button:has-text("${name}")`).click();
     await page.waitForTimeout(500);
-    return page.locator('.menuable__content__active').innerText();
+    return page.locator('.v-menu.v-overlay--active .v-overlay__content').innerText();
   };
 
   await check("Regular user: another family's contact details are hidden", async () => {
@@ -40,7 +40,7 @@ const { chromium, APP, check, expect, report, api, signin, loggedInPage } = requ
 
   await check('Regular user: other family cards have no contact details', async () => {
     await page.goto(APP + '/families');
-    const card = title => page.locator('.v-card', { has: page.locator('.v-card__title', { hasText: title }) });
+    const card = title => page.locator('.v-card', { has: page.locator('.v-card-title', { hasText: title }) });
     await card('Nguyen').waitFor();
     const other = await card('Nguyen').innerText();
     const own = await card('Carter').innerText();

@@ -1,13 +1,11 @@
-
-import Vue from 'vue'
-import App from './App.vue'
-import vuetify from './plugins/vuetify';
-import { router } from './router';
-import VueTextAreaAutosize from 'vue-textarea-autosize';
-import store from './store';
+import { createApp } from 'vue'
+// Before Vuetify, so Vuetify's spacing classes (my-5, px-5, ...) win over Bootstrap's like they did in Vuetify 2
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import VeeValidate from 'vee-validate';
+import vuetify from './plugins/vuetify';
+import { router } from './router';
+import store from './store';
+import App from './App.vue'
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
@@ -20,17 +18,9 @@ import {
 
 library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt);
 
-Vue.use(VueTextAreaAutosize);
-Vue.use(VeeValidate);
-Vue.component('font-awesome-icon', FontAwesomeIcon);
-
-
-
-Vue.config.productionTip = false;
-new Vue({
-  router,
-  vuetify,
-  store,
-  render: h => h(App),
-}).$mount('#app')
-
+createApp(App)
+  .use(router)
+  .use(store)
+  .use(vuetify)
+  .component('font-awesome-icon', FontAwesomeIcon)
+  .mount('#app')

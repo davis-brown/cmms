@@ -1,7 +1,7 @@
 <template>
   <v-btn
   color="primary"
-  @click.native="pdfGeneration">
+  @click="pdfGeneration">
     Print <br/> Directory
   </v-btn>
 </template>

@@ -11,13 +11,12 @@
           <label for="username">Username</label>
           <input
             v-model="user.username"
-            v-validate="'required'"
             type="text"
             class="form-control"
             name="username"
           />
           <div
-            v-if="errors.has('username')"
+            v-if="submitted && !user.username"
             class="alert alert-danger"
             role="alert"
           >Username is required!</div>
@@ -26,13 +25,12 @@
           <label for="password">Password</label>
           <input
             v-model="user.password"
-            v-validate="'required'"
             type="password"
             class="form-control"
             name="password"
           />
           <div
-            v-if="errors.has('password')"
+            v-if="submitted && !user.password"
             class="alert alert-danger"
             role="alert"
           >Password is required!</div>
@@ -59,6 +57,7 @@ export default {
   data() {
     return {
       user: new User('', ''),
+      submitted: false,
       loading: false,
       message: ''
     };
@@ -75,28 +74,23 @@ export default {
   },
   methods: {
     handleLogin() {
+      this.submitted = true;
+      if (!this.user.username || !this.user.password) {
+        return;
+      }
       this.loading = true;
-      this.$validator.validateAll().then(isValid => {
-        if (!isValid) {
+      this.$store.dispatch('auth/login', this.user).then(
+        () => {
+          this.$router.push('/profile');
+        },
+        error => {
           this.loading = false;
-          return;
+          this.message =
+            (error.response && error.response.data && error.response.data.message) ||
+            error.message ||
+            error.toString();
         }
-
-        if (this.user.username && this.user.password) {
-          this.$store.dispatch('auth/login', this.user).then(
-            () => {
-              this.$router.push('/profile');
-            },
-            error => {
-              this.loading = false;
-              this.message =
-                (error.response && error.response.data && error.response.data.message) ||
-                error.message ||
-                error.toString();
-            }
-          );
-        }
-      });
+      );
     }
   }
 };

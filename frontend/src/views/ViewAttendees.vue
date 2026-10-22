@@ -5,7 +5,7 @@
     <v-card style="margin-top:3rem; margin-bottom:2rem;" max-width="700px" class="mx-auto">
         <v-toolbar :color = "currentEvent.color">
                 <v-card-title style="color: white; font-size:x-large"> 
-                    <v-btn dark icon @click="cancel()" class="mr-auto">
+                    <v-btn icon @click="cancel()" class="mr-auto">
                         <v-icon>mdi-chevron-left</v-icon>
                     </v-btn>
                     <v-spacer></v-spacer>

@@ -1,5 +1,4 @@
-import Vue from "vue";
-import Router from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import FamiliesList from "./views/FamiliesList"
 import FamilyAdd from "./views/FamilyAdd"
 import FamilyEdit from "./views/FamilyEdit"
@@ -14,10 +13,8 @@ import Login from './views/Login.vue';
 import Register from './views/Register.vue';
 import LifeEventPerson from "./views/LifeEventPerson"
 import LifeEventPersonAdd from "./views/LifeEventPersonAdd"
-Vue.use(Router);
-
-export const router = new Router({
-  mode: "history",
+export const router = createRouter({
+  history: createWebHistory(),
   routes: [
     {
       path: "/",

@@ -8,7 +8,6 @@
       
 			to="/personadd"
 			class="mr-4"
-			dark
 			color="primary"
       v-if="showAdminBoard || showModeratorBoard"
 		>
@@ -19,16 +18,14 @@
      <v-text-field
 					v-model="search"
 					label="Search Members"
-					@input="filterMembers"
+					@update:model-value="filterMembers"
 				></v-text-field>
         </v-col>
   <v-col lg="2" align="center">
       <v-btn
   
         color="primary"
-        class="white--text"
-        raised
-        medium
+        class="text-white"
         @click="download()" 
         v-if="showAdminBoard || showModeratorBoard"
         >
@@ -51,25 +48,21 @@
     >
    <v-menu
       :close-on-content-click="false"
-      :nudge-width="150"
-      offset-x
+      location="end"
     >
-    <template v-slot:activator="{ on, attrs }">
+    <template v-slot:activator="{ props }">
         <v-btn
-          color="dark"
-          dark
-          v-bind="attrs"
-          v-on="on"
+          color="grey-darken-4"
+          v-bind="props"
           
         >
           {{person.frst_name}} {{person.last_name}}
         </v-btn>
         </template>
 
-        <v-card height="50vh" width="80vh">
+        <v-card max-height="50vh" width="80vh" class="overflow-y-auto">
           <v-list>
           <v-list-item>
-            <v-list-item-content>
                 
               <v-list-item-title class="text-center"><h2>{{person.frst_name}} {{person.last_name}} </h2></v-list-item-title>
               <div class="text-center"><h6>Birthdate: {{ person.bday }}</h6>  
@@ -81,7 +74,7 @@
                 <v-row>
               <v-col>
               
-               <v-list-item-icon v-if="person.phone">
+               <div v-if="person.phone">
           <v-icon color="indigo">
             mdi-phone
              <v-spacer> </v-spacer> 
@@ -91,8 +84,8 @@
               <v-list-item-title class="text-center" style="border: 2px transparent">{{person.phone}}  <v-spacer> </v-spacer>  Mobile </v-list-item-title>
      
                      </v-list-item>
-                                 </v-list-item-icon>
-                 <v-list-item-icon v-if="person.email">
+                                 </div>
+                 <div v-if="person.email">
           <v-icon color="indigo">
             mdi-email
               <v-spacer> </v-spacer> 
@@ -104,8 +97,8 @@
                 Email</v-list-item-title>
       
     </v-list-item>
-    </v-list-item-icon>
-    <v-list-item-icon v-if="person.address">
+    </div>
+    <div v-if="person.address">
           <v-icon color="indigo">
             mdi-home
              <v-spacer> </v-spacer> 
@@ -117,7 +110,7 @@
                 Home </v-list-item-title>
      
                      </v-list-item>
-                                 </v-list-item-icon>
+                                 </div>
 
 
 
@@ -134,19 +127,17 @@
            
               </v-col>
               </v-row>
-            </v-list-item-content>
             <v-list-item-action>
                   <div v-if="showAdminBoard">
           <v-btn
        
-          absolute
+          position="absolute"
+          location="end"
           color="white"
-          class="black--text"
-          fab
+          class="text-black"
+          icon
           @click="editPerson(person)"
-          small
-          right
-          ripple
+          size="small"
         >
         Edit
    
@@ -162,12 +153,10 @@
              <!-- <v-list>
                <v-list-item-action>
           <v-btn
-          absolute
+          position="absolute"
+          location="end"
           color="white"
-          class="black--text"
-          raised
-          medium
-          ripple
+          class="text-black"
           to="/lifeevent"
         >
         Life Events

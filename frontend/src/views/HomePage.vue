@@ -5,11 +5,12 @@
             v-for="(item,i) in items"
             :key="i"
             :src="item.src"
+            cover
             reverse-transition="fade"
             transition="fade"
             
         >
-          <div class="display-3" style="background-color: rgba(0, 0, 0, 0.33); width:100%; height:100%;">
+          <div style="background-color: rgba(0, 0, 0, 0.33); width:100%; height:100%;">
                <div class="heading">
                 <h3 class="heading-title">Riverside Community Church</h3>
                 
@@ -27,7 +28,7 @@
         <div class="textcontainer">
              <h2 style="font-weight: 900">Members</h2>
             <p>Find out more about the members of the riverside church</p>
-            <v-btn large outlined dark @click="$router.push('person')">Members</v-btn>
+            <v-btn size="large" variant="outlined" color="white" class="px-5" @click="$router.push('person')">Members</v-btn>
         </div>
         <div class="imagecontainer">
             <img src="../assets/members.jpg">
@@ -44,7 +45,7 @@
              <h2 style="font-weight: 900">Groups</h2>
              <br>
             <p>Register and discover the different groups at riverside church</p>
-            <v-btn large outlined dark @click="$router.push('group')">Groups</v-btn>
+            <v-btn size="large" variant="outlined" color="white" class="px-5" @click="$router.push('group')">Groups</v-btn>
         </div>
     </div>
 
@@ -52,7 +53,7 @@
         <div class="textcontainer">
              <h2 style="font-weight: 900">Families</h2>
             <p>View and edit your family information and view the families in Riverside Community Church</p>
-            <v-btn large outlined dark @click="$router.push('families')">Families</v-btn>
+            <v-btn size="large" variant="outlined" color="white" class="px-5" @click="$router.push('families')">Families</v-btn>
         </div>
         <div class="imagecontainer">
             <img src="../assets/big-family.jpg">
@@ -69,7 +70,7 @@
              <h2 style="font-weight: 900">Event Calendar</h2>
              <br>
             <p>Find out and keep up to date with the upcoming events at Riverside Community Church</p>
-            <v-btn large outlined dark @click="$router.push('calendar')">Events</v-btn>
+            <v-btn size="large" variant="outlined" color="white" class="px-5" @click="$router.push('calendar')">Events</v-btn>
         </div>
     </div>
 
@@ -152,6 +153,8 @@ export default {
 
  .heading {
    padding-top:18%;
+   line-height: 3.75rem;
+   font-weight: 300;
    /* White with a shadow so it reads on any photo */
    color: #fff;
    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);

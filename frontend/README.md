@@ -4,7 +4,7 @@ The church membership management application is a web application made for a loc
 
 This folder is the Vue single-page app. The REST API is in [`../backend`](../backend).
 
-**Stack:** Vue 2, Vuetify, Vue Router, Vuex, Axios
+**Stack:** Vue 3, Vuetify 3, Vue Router 4, Vuex 4, Axios
 
 **Features:** member directory with CSV export, families and family photos, groups, an events calendar with attendance, life events, a printable PDF church directory, and role-based access (user / moderator / admin).
 

@@ -5,12 +5,11 @@
 	<v-btn
 			:to="{ name: 'lifeeventpersonadd', params: { id: $route.params.id } }"
 			class="mr-4"
-			dark
 			color="primary"
 		>
     Add Life Event
 		</v-btn>
-    <v-timeline dense>
+    <v-timeline density="compact" side="end">
       <v-timeline-item
         v-for="lifeventperson in lifeventpersons"
         :key="lifeventperson.lep_ID"
@@ -18,13 +17,11 @@
         <v-card v-if="lifeventperson.lifeevent">
           <v-list>
             <v-list-item>
-              <v-list-item-content>
                 <v-list-item-title><h2>{{ lifeventperson.lifeevent.event_note }}</h2></v-list-item-title>
                 <v-list-item-subtitle>{{ (lifeventperson.lifeevent.event_date || '').substr(0, 10) }}</v-list-item-subtitle>
-              </v-list-item-content>
               <v-list-item-action>
-                <v-btn small @click="editLifeEvent(lifeventperson.lifeevent)">Edit</v-btn>
-                <v-btn small @click="deleteLifeEventForPerson(lifeventperson)">Remove</v-btn>
+                <v-btn size="small" @click="editLifeEvent(lifeventperson.lifeevent)">Edit</v-btn>
+                <v-btn size="small" @click="deleteLifeEventForPerson(lifeventperson)">Remove</v-btn>
               </v-list-item-action>
             </v-list-item>
           </v-list>

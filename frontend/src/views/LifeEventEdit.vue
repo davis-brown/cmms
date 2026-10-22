@@ -1,6 +1,6 @@
 <template>
       <div v-if="currentLifeEvent" class="edit-form py-3">
-      <v-form ref="form" lazy-validation>
+      <v-form ref="form">
      
         <v-text-field
         v-model="currentLifeEvent.event_date"
@@ -19,15 +19,15 @@
         ></v-text-field>
 
 
-    <v-btn color="success" small @click="updateLifeEvent">
+    <v-btn color="success" size="small" @click="updateLifeEvent">
         Submit
       </v-btn>
 
-    <v-btn color="primary" small @click="cancel">
+    <v-btn color="primary" size="small" @click="cancel">
         Cancel
       </v-btn>
 
-    <v-btn color="red" small @click="deleteLifeEvent">
+    <v-btn color="red" size="small" @click="deleteLifeEvent">
         Delete Event
     </v-btn>
     

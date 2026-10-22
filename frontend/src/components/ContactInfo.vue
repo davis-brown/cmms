@@ -1,4 +1,6 @@
 <template>
+    <!-- Edits the parent form's person (and contact list) in place -->
+    <!-- eslint-disable vue/no-mutating-props -->
     <div>
         <v-card>
             <v-form v-model="validEmail">
@@ -7,21 +9,20 @@
                 :items="emails"
                 hide-default-footer
                 >
-                <template v-slot:item.primary="{ item }">
+                <template v-slot:[`item.primary`]="{ item }">
                         <v-radio-group
-                        v-model="person.email"
-                        name="rowSelector">
+                        v-model="person.email">
                         <div class="d-flex justify-center"><v-radio :value="item.communication.address"/></div>
                         </v-radio-group>
                 </template>
-                <template v-slot:item.actions="{ item }">
+                <template v-slot:[`item.actions`]="{ item }">
                     <v-icon
                         @click="deleteEmail(item)"
                     >
                         mdi-delete
                     </v-icon>
                 </template>
-                <template v-slot:body.append>
+                <template v-slot:[`body.append`]>
                     <tr>
                         <td>
                             <v-text-field
@@ -32,7 +33,7 @@
                             ></v-text-field>
                         </td>
                         <td center>
-                            <v-btn :disabled="!validEmail" small @click="addEmail()" >
+                            <v-btn :disabled="!validEmail" size="small" @click="addEmail()" >
                             Add
                             </v-btn>
                         </td>
@@ -49,21 +50,20 @@
                 :items="phones"
                 hide-default-footer
                 >
-                    <template v-slot:item.primary="{ item }">
+                    <template v-slot:[`item.primary`]="{ item }">
                         <v-radio-group
-                        v-model="person.phone"
-                        name="rowSelector">
+                        v-model="person.phone">
                         <div class="d-flex justify-center"><v-radio :value="item.communication.number"/></div>
                         </v-radio-group>
                     </template>
-                    <template v-slot:item.actions="{ item }">
+                    <template v-slot:[`item.actions`]="{ item }">
                         <v-icon
                             @click="deletePhone(item)"
                         >
                             mdi-delete
                         </v-icon>
                     </template>
-                    <template v-slot:body.append>
+                    <template v-slot:[`body.append`]>
                         <tr>
                             <td>
                                 <v-text-field
@@ -74,7 +74,7 @@
                                 ></v-text-field>
                             </td>
                             <td center>
-                                <v-btn :disabled="!validPhone" small @click="addPhone()" >
+                                <v-btn :disabled="!validPhone" size="small" @click="addPhone()" >
                                 Add
                                 </v-btn>
                             </td>
@@ -91,21 +91,20 @@
                 :items="addresses"
                 hide-default-footer
                 >
-                    <template v-slot:item.primary="{ item }">
+                    <template v-slot:[`item.primary`]="{ item }">
                         <v-radio-group
-                        v-model="person.address"
-                        name="rowSelector">
+                        v-model="person.address">
                         <div class="d-flex justify-center"><v-radio :value="item.communication.address"/></div>
                         </v-radio-group>
                     </template>
-                    <template v-slot:item.actions="{ item }">
+                    <template v-slot:[`item.actions`]="{ item }">
                         <v-icon
                             @click="deleteAddress(item)"
                         >
                             mdi-delete
                         </v-icon>
                     </template>
-                    <template v-slot:body.append>
+                    <template v-slot:[`body.append`]>
                         <tr>
                             <td>
                                 <v-text-field
@@ -116,7 +115,7 @@
                                 ></v-text-field>
                             </td>
                             <td center>
-                                <v-btn :disabled="!validAddress" small @click="addAddress()" >
+                                <v-btn :disabled="!validAddress" size="small" @click="addAddress()" >
                                 Add
                                 </v-btn>
                             </td>
@@ -162,19 +161,19 @@ export default {
 
             emailheaders: [
                         {
-                            text: 'Email Address',
+                            title: 'Email Address',
                             align: 'left',
                             value: 'communication.address',
                             sortable: false,
                         },
                         {
-                            text: 'Primary',
+                            title: 'Primary',
                             align: 'center',
                             value: 'primary',
                             sortable: false,
                         },
                         {
-                            text: 'Action',
+                            title: 'Action',
                             align: 'center',
                             value: 'actions',
                             sortable: false,
@@ -182,19 +181,19 @@ export default {
                     ],
             phoneheaders: [
                         {
-                            text: 'Phone Number',
+                            title: 'Phone Number',
                             align: 'left',
                             value: 'communication.number',
                             sortable: false,
                         },
                         {
-                            text: 'Primary',
+                            title: 'Primary',
                             align: 'center',
                             value: 'primary',
                             sortable: false,
                         },
                         {
-                            text: 'Action',
+                            title: 'Action',
                             align: 'center',
                             value: 'actions',
                             sortable: false,
@@ -202,19 +201,19 @@ export default {
                     ],
             addressheaders: [
                         {
-                            text: 'Street Address',
+                            title: 'Street Address',
                             align: 'left',
                             value: 'communication.address',
                             sortable: false,
                         },
                         {
-                            text: 'Primary',
+                            title: 'Primary',
                             align: 'center',
                             value: 'primary',
                             sortable: false,
                         },
                         {
-                            text: 'Action',
+                            title: 'Action',
                             align: 'center',
                             value: 'actions',
                             sortable: false,

@@ -4,7 +4,7 @@
         <br>
         <v-card max-width="700px" class="mx-auto">
             <v-toolbar :color = "currentEvent.color">
-                <v-btn dark icon @click="cancel()">
+                <v-btn icon @click="cancel()">
                         <v-icon>mdi-chevron-left</v-icon>
                 </v-btn>
                 <v-card-title style="color: white; font-size:x-large">{{currentEvent.event_name}}</v-card-title>

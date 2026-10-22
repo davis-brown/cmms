@@ -5,7 +5,6 @@
 	<v-btn
 			to="/lifeeventadd"
 			class="mr-4"
-			dark
 			color="primary"
 		>
     Add Life Event
@@ -19,12 +18,10 @@
  
     <v-timeline>
 
-    <template v-slot:activator="{ on, attrs }">
+    <template v-slot:activator="{ props }">
         <v-btn
-          color="dark"
-          dark
-          v-bind="attrs"
-          v-on="on"
+         
+          v-bind="props"
         >
           {{lifeevent.event_date}}
         </v-btn>
@@ -33,17 +30,15 @@
         <v-card >
           <v-list>
           <v-list-item>
-            <v-list-item-content>
                 
               <v-list-item-title><h2>{{lifeevent.event_note}}</h2></v-list-item-title>
               <v-list-item-subtitle>{{lifeevent.event_date}}
               </v-list-item-subtitle>
-            </v-list-item-content>
 
             <v-list-item-action>
           <v-btn
           @click="editLifeEvent(lifeevent)"
-          small
+          size="small"
           right
         >
         Edit

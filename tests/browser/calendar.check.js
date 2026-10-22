@@ -35,7 +35,7 @@ const { chromium, APP, check, expect, report, api, signin, loggedInPage } = requ
     await page.locator('button:has-text("Create Event")').click();
     await page.waitForTimeout(800);
     const after = (await api('GET', '/events', null, admin.accessToken)).length;
-    const msg = await page.locator('.v-dialog--active .error--text').first().innerText().catch(() => '');
+    const msg = await page.locator('.v-dialog.v-overlay--active .v-input--error').first().innerText().catch(() => '');
     expect(after === before, 'an event was created');
     await page.keyboard.press('Escape');
     return `shows "${msg.trim()}"`;
@@ -44,9 +44,9 @@ const { chromium, APP, check, expect, report, api, signin, loggedInPage } = requ
   await check('Editing an event saves the change and keeps its colour', async () => {
     await page.goto(APP + '/calendar');
     await page.locator('.v-event', { hasText: name }).first().click();
-    await page.locator('.menuable__content__active button:has-text("Edit")').click();
-    await page.locator('.menuable__content__active textarea').fill('Edited in the browser');
-    await page.locator('.menuable__content__active button:has-text("Save")').click();
+    await page.locator('.v-menu.v-overlay--active .v-overlay__content button:has-text("Edit")').click();
+    await page.locator('.v-menu.v-overlay--active .v-overlay__content textarea:not(.v-textarea__sizer)').fill('Edited in the browser');
+    await page.locator('.v-menu.v-overlay--active .v-overlay__content button:has-text("Save")').click();
     await page.waitForTimeout(1000);
     const e = await findEvent();
     expect(e.event_desc === 'Edited in the browser', `description is "${e.event_desc}"`);
@@ -58,7 +58,7 @@ const { chromium, APP, check, expect, report, api, signin, loggedInPage } = requ
   await check('Event details page survives a refresh', async () => {
     await page.goto(APP + '/calendar');
     await page.locator('.v-event', { hasText: name }).first().click();
-    await page.locator('.menuable__content__active button:has-text("View More")').click();
+    await page.locator('.v-menu.v-overlay--active .v-overlay__content button:has-text("View More")').click();
     await page.waitForURL(/\/eventdetails\/\d+$/);
     await page.reload();
     await page.locator('h1:has-text("Event Details")').waitFor();
@@ -81,7 +81,7 @@ const { chromium, APP, check, expect, report, api, signin, loggedInPage } = requ
   await check('Deleting an event asks first, then removes it', async () => {
     await page.goto(APP + '/calendar');
     await page.locator('.v-event', { hasText: name }).first().click();
-    await page.locator('.menuable__content__active button:has(.mdi-delete)').click();
+    await page.locator('.v-menu.v-overlay--active .v-overlay__content button:has(.mdi-delete)').click();
     await page.locator('.v-event', { hasText: name }).first().waitFor({ state: 'detached', timeout: 10000 });
     expect(page.lastDialog && page.lastDialog.includes(name), `confirm said: ${page.lastDialog}`);
     expect(!(await findEvent()), 'still in the database');

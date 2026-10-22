@@ -1,6 +1,6 @@
 <template>
-  <div v-if="currentFamily" class="submit-form mt-3 mx-auto" data-app=“true”>
-      <v-form ref="form" lazy-validation>
+  <div v-if="currentFamily" class="submit-form mt-3 mx-auto">
+      <v-form ref="form">
 
       <v-file-input
         v-model="selectedFile"
@@ -46,6 +46,7 @@
           <template v-slot:top>
             <v-toolbar
               flat
+              color="white"
             >
               <v-toolbar-title>Family Members</v-toolbar-title>
               <v-divider
@@ -56,7 +57,7 @@
               <v-spacer></v-spacer>
               <v-btn
                     color="primary"
-                    dark
+                    variant="elevated"
                     class="mb-2"
                     @click="addNewMember"
                     v-if="isModeratorOrAdmin"
@@ -69,13 +70,12 @@
                 max-width="500px"
                 v-if="isModeratorOrAdmin"
               >
-                <template v-slot:activator="{ on, attrs }">
+                <template v-slot:activator="{ props }">
                   <v-btn
                     color="primary"
-                    dark
+                    variant="elevated"
                     class="mb-2"
-                    v-bind="attrs"
-                    v-on="on"
+                    v-bind="props"
                   >
                     Add Member
                   </v-btn>
@@ -94,15 +94,8 @@
                                 :items="people"
                                 label="Family Member"
                                 item-value="per_ID"
-                                :filter="customFilter"
-                              >
-                                <template slot="selection" slot-scope="data" >
-                                  {{data.item.frst_name}} {{data.item.last_name}}
-                                </template>
-                                <template slot="item" slot-scope="data" >
-                                  {{data.item.frst_name}} {{data.item.last_name}}
-                                </template>
-                              </v-autocomplete>
+                                :item-title="personName"
+                              ></v-autocomplete>
                         </v-col>
                         <v-col justify="left" col="2"> 
                             <v-select
@@ -119,15 +112,15 @@
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
-                      color="blue darken-1"
-                      text
+                      color="blue-darken-1"
+                      variant="text"
                       @click="close"
                     >
                       Cancel
                     </v-btn>
                     <v-btn
-                      color="blue darken-1"
-                      text
+                      color="blue-darken-1"
+                      variant="text"
                       @click="addPersonForFamily()"
                     >
                       Save
@@ -137,14 +130,13 @@
               </v-dialog>
             </v-toolbar>
           </template>
-          <template v-slot:item.head="{ item }">
+          <template v-slot:[`item.head`]="{ item }">
             <v-radio-group
-              v-model="currentFamily.per_ID"
-              name="rowSelector">
+              v-model="currentFamily.per_ID">
               <div class="d-flex justify-center"><v-radio :value="item.person.per_ID"/></div>
             </v-radio-group>
           </template>
-          <template v-slot:item.actions="{ item }">
+          <template v-slot:[`item.actions`]="{ item }">
               <v-icon
                 @click="deletePersonForFamily(item)"
               >
@@ -160,12 +152,12 @@
 
       <v-row justify="center">
         <v-col justify="left" col="1"> 
-          <v-btn color="dark" @click="deleteFamily" v-if="isModeratorOrAdmin">
+          <v-btn @click="deleteFamily" v-if="isModeratorOrAdmin">
             Delete
           </v-btn>
         </v-col>
         <v-col justify="right" col="2"> 
-          <v-btn class= "float-right" color="dark" @click="updateFamily">
+          <v-btn class= "float-right" @click="updateFamily">
             Update
           </v-btn>
         </v-col>
@@ -211,31 +203,31 @@ export default {
       ],
       headers: [
                 {
-                    text: 'Name',
+                    title: 'Name',
                     align: 'left',
                     value: 'person.frst_name',
                     sortable: false,
                 },
                 {
-                    text: '',
+                    title: '',
                     align: 'left',
                     value: 'person.last_name',
                     sortable: false,
                 },
                 {
-                    text: 'Role',
+                    title: 'Role',
                     align: 'left',
                     value: 'fam_role',
                     sortable: false,
                 },
                 {
-                    text: 'Family Head',
+                    title: 'Family Head',
                     align: 'center',
                     value: 'head',
                     sortable: false,
                 },
                 {
-                    text: 'Action',
+                    title: 'Action',
                     align: 'center',
                     value: 'actions',
                     sortable: false,
@@ -265,8 +257,9 @@ export default {
         });
     },
 
-    updateFamily() {
-      if (!this.$refs.form.validate()) {
+    async updateFamily() {
+      const { valid } = await this.$refs.form.validate();
+      if (!valid) {
         return;
       }
       // A new photo is saved straight onto the family, replacing the old one
@@ -335,7 +328,7 @@ export default {
     },
 
     addNewMember() {
-        this.$router.push({ name: 'personadd', params: { fam_ID: this.currentFamily.fam_ID } });
+        this.$router.push({ name: 'personadd', query: { fam_ID: this.currentFamily.fam_ID } });
     },
 
     addPersonForFamily() {
@@ -363,24 +356,18 @@ export default {
     close () {
         this.dialog = false
       },
-
-    customFilter (item, queryText) {
-      const textOne = (item.frst_name || '').toLowerCase()
-      const textTwo = (item.last_name || '').toLowerCase()
-      const searchText = queryText.toLowerCase()
-
-      return textOne.indexOf(searchText) > -1 ||
-        textTwo.indexOf(searchText) > -1
-    }
+    personName(person) {
+      return [person.frst_name, person.last_name].filter(Boolean).join(" ");
+    },
   },
   mounted() {
     this.message = '';
     this.getFamily(this.$route.params.id);
     this.getPeopleForFamily(this.$route.params.id);
     this.getPeople();
-    if(this.$route.params.per_ID)  {
+    if(this.$route.query.per_ID)  {
       this.dialog = true;
-      this.familyPerson.per_ID = this.$route.params.per_ID;
+      this.familyPerson.per_ID = Number(this.$route.query.per_ID);
     }
   }
 };

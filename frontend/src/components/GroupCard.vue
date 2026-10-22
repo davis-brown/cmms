@@ -1,13 +1,14 @@
 <template>
 <v-hover>
     <template 
-    v-slot:default="{ hover }"
+    v-slot:default="{ isHovering, props }"
     >
       <v-card
+        v-bind="props"
         class="mx-auto"
         max-width="544"
       >
-         <v-card-title class="justify-center">
+         <v-card-title class="text-center">
           <h2>
        {{group.grp_name }}
    
@@ -18,13 +19,11 @@
         <v-divider> </v-divider>
          {{ groupNames }} 
 				</v-card-subtitle>
-
-
-        <v-expand-transition>
           <v-overlay
-            v-if="hover && (showAdminBoard || showModeratorBoard)"
-            class="d-flex transition-fast-in-fast-out grey darken-1 v-card--reveal display-3 white--text"
-            absolute
+            v-if="showAdminBoard || showModeratorBoard"
+            :model-value="isHovering"
+            class="d-flex transition-fast-in-fast-out bg-grey-darken-1 v-card--reveal text-h2 text-white"
+            contained
             style="height: 65%;"
         
           >
@@ -34,10 +33,10 @@
     
 				@click="editGroup(group)"
 				class="ma-2"
-				outlined
-				large
-				fab
-				color="white dark"
+				variant="outlined"
+				size="large"
+				icon
+				color="white"
 				>
         Edit
 				</v-btn>
@@ -45,7 +44,6 @@
           <v-spacer></v-spacer>
           </v-card-actions>
           </v-overlay>
-        </v-expand-transition>
     </v-card>
      </template>
        </v-hover>
