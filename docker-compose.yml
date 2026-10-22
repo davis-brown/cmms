@@ -26,6 +26,8 @@ services:
       DB_NAME: congregations
       JWT_SECRET: docker-local-secret
       CORS_ORIGIN: http://localhost:8081
+      # nginx in the frontend container sits in front of the API
+      TRUST_PROXY: "1"
       SEED_DEMO_DATA: "true"
     ports:
       - "8080:8080"

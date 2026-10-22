@@ -18,8 +18,29 @@ const verifyToken = (req, res, next) => {
         message: "Unauthorized!"
       });
     }
-    req.userId = decoded.id;
-    next();
+    // Check the account still exists and is approved, so deleting or
+    // unapproving it takes effect at once rather than when the token expires
+    User.findByPk(decoded.id)
+      .then(user => {
+        if (!user) {
+          return res.status(401).send({
+            message: "Unauthorized!"
+          });
+        }
+        // 401 so the frontend logs them out; signing in again explains why
+        if (!user.approved) {
+          return res.status(401).send({
+            message: "Your account is waiting for an admin to approve it."
+          });
+        }
+        req.userId = decoded.id;
+        next();
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Unable to validate user!"
+        });
+      });
   });
 };
 

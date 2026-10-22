@@ -20,7 +20,7 @@ exports.signup = (req, res) => {
       });
     })
     .then(() => {
-      res.send({ message: "User was registered successfully!" });
+      res.send({ message: "Registered! An admin needs to approve your account before you can log in." });
     })
     .catch(err => {
       // Two sign-ups racing for the same name get past the duplicate check;
@@ -45,6 +45,13 @@ exports.signin = (req, res) => {
         return res.status(401).send({
           accessToken: null,
           message: "Invalid username or password."
+        });
+      }
+
+      if (!user.approved) {
+        return res.status(403).send({
+          accessToken: null,
+          message: "Your account is waiting for an admin to approve it."
         });
       }
 

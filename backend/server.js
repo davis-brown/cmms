@@ -2,10 +2,23 @@ const express = require("express");
 const fileUpload = require('express-fileupload');
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const helmet = require("helmet");
 const path = require("path");
 const fs = require("fs");
 
 const app = express();
+
+// Behind a reverse proxy (nginx in docker compose), trust its X-Forwarded-For
+// so rate limits see each visitor's address instead of the proxy's. Set to the
+// number of proxies in front of the app, e.g. TRUST_PROXY=1.
+if (process.env.TRUST_PROXY) {
+  const hops = Number(process.env.TRUST_PROXY);
+  app.set("trust proxy", Number.isNaN(hops) ? process.env.TRUST_PROXY : hops);
+}
+
+// Standard security headers. Images are served to the frontend, which in
+// development runs on another port of the same host, so allow same-site.
+app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
 
 // Comma-separated list of frontend URLs allowed to call the API
 var corsOptions = {
@@ -25,6 +38,7 @@ app.use('/api/images', express.static(path.join(__dirname , '/public/images')));
 const db = require("./models");
 const seed = require("./seed");
 const ensureUniqueIndexes = require("./unique-indexes");
+const ensureApprovedColumn = require("./approved-column");
 const contactPrivacy = require("./middleware/contactPrivacy");
 
 // parse requests of content-type - application/json
@@ -62,6 +76,7 @@ const PORT = process.env.PORT || 8080;
 db.sequelize
   .sync()
   .then(ensureUniqueIndexes)
+  .then(ensureApprovedColumn)
   .then(seed)
   .then(() => {
     app.listen(PORT, () => {

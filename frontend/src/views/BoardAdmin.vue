@@ -1,33 +1,155 @@
 <template>
-  <div class="container">
-    <header class="jumbotron">
-      <h3>{{content}}</h3>
-    </header>
-  </div>
+  <v-main>
+    <v-container fluid>
+      <h1>Users</h1>
+      <p class="text-center">
+        New sign-ups can't log in until they're approved. Link an account to a
+        member with the Login username field on that member's edit page.
+      </p>
+
+      <v-alert v-if="message" :type="messageType" dismissible @input="message = ''">
+        {{ message }}
+      </v-alert>
+
+      <v-data-table
+        :headers="headers"
+        :items="users"
+        :loading="loading"
+        item-key="id"
+        sort-by="approved"
+        class="elevation-1"
+      >
+        <template v-slot:[`item.member`]="{ item }">
+          {{ item.member ? item.member.name : "Not linked" }}
+        </template>
+
+        <template v-slot:[`item.approved`]="{ item }">
+          <v-chip small :color="item.approved ? 'green' : 'orange'" dark>
+            {{ item.approved ? "Approved" : "Waiting" }}
+          </v-chip>
+        </template>
+
+        <template v-slot:[`item.roles`]="{ item }">
+          <v-select
+            :value="item.roles"
+            :items="roleNames"
+            multiple
+            chips
+            small-chips
+            dense
+            hide-details
+            :aria-label="`Roles for ${item.username}`"
+            @change="roles => setRoles(item, roles)"
+          ></v-select>
+        </template>
+
+        <template v-slot:[`item.actions`]="{ item }">
+          <div class="d-flex justify-end">
+            <v-btn
+              v-if="!item.approved"
+              small
+              color="primary"
+              class="mr-2"
+              @click="setApproved(item, true)"
+            >Approve</v-btn>
+            <v-btn
+              v-else-if="!isSelf(item)"
+              small
+              outlined
+              class="mr-2"
+              @click="setApproved(item, false)"
+            >Revoke</v-btn>
+            <v-btn
+              v-if="!isSelf(item)"
+              small
+              outlined
+              color="red"
+              @click="deleteUser(item)"
+            >Delete</v-btn>
+          </div>
+        </template>
+      </v-data-table>
+    </v-container>
+  </v-main>
 </template>
 
 <script>
-import UserService from '../services/user.service';
+import UserService from "../services/user.service";
 
 export default {
-  name: 'Admin',
+  name: "Admin",
   data() {
     return {
-      content: ''
+      users: [],
+      loading: false,
+      message: "",
+      messageType: "success",
+      roleNames: ["user", "leader", "moderator", "admin"],
+      headers: [
+        { text: "Username", value: "username" },
+        { text: "Email", value: "email" },
+        { text: "Member", value: "member", sortable: false },
+        { text: "Status", value: "approved" },
+        { text: "Roles", value: "roles", sortable: false, width: "280px" },
+        { text: "", value: "actions", sortable: false, align: "end" },
+      ],
     };
   },
-  mounted() {
-    UserService.getAdminBoard().then(
-      response => {
-        this.content = response.data;
-      },
-      error => {
-        this.content =
-          (error.response && error.response.data) ||
-          error.message ||
-          error.toString();
+  computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
+  },
+  methods: {
+    isSelf(user) {
+      return this.currentUser && user.id === this.currentUser.id;
+    },
+    show(message, type = "success") {
+      this.message = message;
+      this.messageType = type;
+    },
+    showError(error) {
+      this.show((error.response && error.response.data.message) || error.message, "error");
+    },
+    getUsers() {
+      this.loading = true;
+      return UserService.getUsers()
+        .then(response => {
+          this.users = response.data;
+        })
+        .catch(this.showError)
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    update(user, changes, done) {
+      return UserService.updateUser(user.id, changes)
+        .then(() => this.show(done))
+        .catch(this.showError)
+        // Reload either way so the table matches what was saved
+        .finally(this.getUsers);
+    },
+    setApproved(user, approved) {
+      if (!approved && !window.confirm(`Revoke ${user.username}'s access? They'll be logged out.`)) {
+        return;
       }
-    );
-  }
+      this.update(user, { approved }, `${user.username} ${approved ? "can now log in" : "can no longer log in"}.`);
+    },
+    setRoles(user, roles) {
+      this.update(user, { roles }, `Updated ${user.username}'s roles.`);
+    },
+    deleteUser(user) {
+      if (!window.confirm(`Delete the account ${user.username}? Their member record is kept.`)) {
+        return;
+      }
+      UserService.deleteUser(user.id)
+        .then(() => this.show(`Deleted ${user.username}.`))
+        .catch(this.showError)
+        .finally(this.getUsers);
+    },
+  },
+  mounted() {
+    this.getUsers();
+  },
 };
 </script>

@@ -40,17 +40,22 @@ All settings are environment variables; see [`.env.example`](.env.example).
 
 | Variable | Required | Description |
 | --- | --- | --- |
-| `JWT_SECRET` | Yes | Secret used to sign login tokens. Use a long random value, e.g. `openssl rand -hex 32`. |
+| `JWT_SECRET` | Yes | Secret used to sign login tokens. Use a long random value, e.g. `openssl rand -hex 32`. With `NODE_ENV=production`, the server won't start if it's shorter than 32 characters. |
 | `DB_HOST`, `DB_USER`, `DB_PASSWORD` | Production | MySQL connection. Locally they default to `localhost`, `root` and an empty password. |
 | `DB_PORT`, `DB_NAME` | No | Default to `3306` and `congregations`. |
 | `DB_LOGGING` | No | `true` prints every SQL query. |
 | `PORT` | No | API port. Defaults to `8080`. |
 | `CORS_ORIGIN` | Production | Comma-separated frontend URLs allowed to call the API. Defaults to `http://localhost:8081`. |
+| `TRUST_PROXY` | Behind a proxy | Number of reverse proxies (e.g. nginx) in front of the API, usually `1`. Without it, login rate limits treat every visitor as the proxy's address. |
 | `SEED_DEMO_DATA` | No | `true` creates the demo user and sample data on an empty database. Never set it on a real server. |
 | `DEMO_USERNAME`, `DEMO_PASSWORD` | No | Demo login. Default to `demo` and `demo1234`. |
 
 On the server, put these in `/home/ubuntu/nodeapps/congregation-backend.env`, which
 `congregation-backend.service` loads.
+
+New sign-ups can't log in until an admin approves them on the Users page (Admin Board).
+Accounts that existed before approval was added are approved automatically on upgrade.
+Failed logins are limited to 10 per username and 20 per address every 15 minutes.
 
 Deploys run from GitHub Actions when a PR into `dev-branch` is merged. They need two
 repository secrets: `SERVER_HOST` (the server's hostname or IP) and `SERVER_SSH_KEY`
