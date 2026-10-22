@@ -24,7 +24,6 @@ exports.create = (req, res) => {
     };
 
     // Save Event in the database  
-    console.log(event);
     Event.create(event)
     .then(data => {
         res.send(data);
@@ -39,7 +38,6 @@ exports.create = (req, res) => {
 // Retrieve all Events from the database.
 exports.findAll = (req, res) => {
 
-    console.log("Working");
     Event.findAll()
     
     .then(data => {

@@ -22,7 +22,6 @@ exports.create = (req, res) => {
     };
 
     // Save Group in the database
-    console.log(group);
     Group.create(group)
     .then(data => {
         res.send(data);

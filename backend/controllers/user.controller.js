@@ -1,6 +1,7 @@
 // --- Account management for admins ---
 
 const db = require("../models");
+const { refreshAttendance } = require("./attendee.controller");
 const User = db.user;
 
 const describe = (user, people) => {
@@ -64,7 +65,7 @@ exports.updateUser = (req, res) => {
     .catch(err => res.status(500).send({ message: err.message || "Could not update user." }));
 };
 
-// Delete an account. Its member record is kept but no longer linked to a login.
+// Delete an account and its RSVPs. Its member record is kept but no longer linked to a login.
 exports.deleteUser = (req, res) => {
   const id = Number(req.params.id);
   if (id === Number(req.userId)) {
@@ -79,6 +80,9 @@ exports.deleteUser = (req, res) => {
       return db.sequelize.transaction(transaction =>
         db.person.update({ user_name: null }, { where: { user_name: user.username }, transaction })
           .then(() => user.setRoles([], { transaction }))
+          .then(() => db.attendee.findAll({ where: { username: user.username }, transaction }))
+          .then(rsvps => db.attendee.destroy({ where: { username: user.username }, transaction })
+            .then(() => Promise.all([...new Set(rsvps.map(rsvp => rsvp.evt_ID))].map(evt_ID => refreshAttendance(evt_ID, transaction)))))
           .then(() => user.destroy({ transaction }))
       ).then(() => res.send({ message: "User was deleted." }));
     })
