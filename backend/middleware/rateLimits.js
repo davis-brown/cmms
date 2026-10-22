@@ -1,4 +1,4 @@
-const { rateLimit } = require("express-rate-limit");
+const { rateLimit, ipKeyGenerator } = require("express-rate-limit");
 
 const FIFTEEN_MINUTES = 15 * 60 * 1000;
 const ONE_HOUR = 60 * 60 * 1000;
@@ -15,15 +15,15 @@ const signinPerIp = rateLimit({
   message: tooMany("Too many failed logins. Try again in 15 minutes.")
 });
 
-// Failed logins for one username, whatever address they come from, so
-// guessing one account's password can't be spread across many addresses
+// Failed logins for one username from one address. Keyed on both so a
+// stranger can't lock someone out by failing logins for their username
 const signinPerUsername = rateLimit({
   windowMs: FIFTEEN_MINUTES,
   limit: 10,
   skipSuccessfulRequests: true,
   standardHeaders: "draft-8",
   legacyHeaders: false,
-  keyGenerator: req => "user:" + String((req.body && req.body.username) || "").toLowerCase(),
+  keyGenerator: req => "user:" + ipKeyGenerator(req.ip) + ":" + String((req.body && req.body.username) || "").toLowerCase(),
   message: tooMany("Too many failed logins for this account. Try again in 15 minutes.")
 });
 

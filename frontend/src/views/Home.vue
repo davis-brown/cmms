@@ -75,7 +75,6 @@
 </template>
 
 <script>
-import UserService from '../services/user.service';
 import CongregationServices from "../services/CongregationServices";
 
 export default {
@@ -104,8 +103,7 @@ export default {
         {
           src: require("../assets/carousel/placeholder-3.svg")
         }
-      ],
-      content: ''
+      ]
     };
   },
   created() {
@@ -124,21 +122,7 @@ export default {
 
 
             }
-        },
-
-  mounted() {
-    UserService.getPublicContent().then(
-      response => {
-        this.content = response.data;
-      },
-      error => {
-        this.content =
-          (error.response && error.response.data) ||
-          error.message ||
-          error.toString();
-      }
-    );
-  }
+        }
 };
 </script>
 

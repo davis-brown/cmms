@@ -13,8 +13,9 @@ module.exports = app => {
     // All routes below require a logged-in user
     router.use(authJwt.verifyToken);
   
-    // Create a new Course
-    router.post("/", authJwt.isFamilyMemberOrModerator(req => req.body.fam_ID), Familyperson.create);
+    // Only staff may add people to a family: being in someone's family reveals
+    // their contact details, so members can't add people to their own
+    router.post("/", authJwt.isModeratorOrAdmin, Familyperson.create);
   
     // Retrieve all Majors
     router.get("/", Familyperson.findPeopleForFamily);

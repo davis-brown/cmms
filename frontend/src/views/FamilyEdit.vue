@@ -67,6 +67,7 @@
               <v-dialog
                 v-model="dialog"
                 max-width="500px"
+                v-if="isModeratorOrAdmin"
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
@@ -245,7 +246,7 @@ export default {
   
   computed: {
     // Family members can edit their family; only moderators and admins can
-    // delete it or create new member records
+    // delete it, add people to it or create new member records
     isModeratorOrAdmin() {
       const user = this.$store.state.auth.user;
       return !!(user && user.roles) &&

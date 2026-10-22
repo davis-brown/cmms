@@ -1,6 +1,6 @@
 const db = require("../models");
 const Family = db.family;
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 const fs = require('fs')
 const path = require('path')
 
@@ -68,7 +68,7 @@ exports.upload = (req, res) => {
         return res.status(400).send({ msg: "Only image files are allowed" })
     }
 
-    myFile.name = uuidv4() + extension;
+    myFile.name = randomUUID() + extension;
 
     myFile.mv(path.join(IMAGES_DIR, myFile.name), function (err) {
         if (err) {

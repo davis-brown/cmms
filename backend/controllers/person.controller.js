@@ -98,7 +98,7 @@ exports.update = (req, res) => {
     }
 
     Person.update(changes, {
-        fields: db.updatableFields(Person).filter(name => name !== 'password'),
+        fields: db.updatableFields(Person),
         where: {
             per_ID: id
         }
