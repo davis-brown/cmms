@@ -39,7 +39,7 @@ mysql -u root congregations -e "INSERT INTO user_roles (userId, roleId) SELECT i
 New sign-ups can't log in until an admin approves them on the Users page (Admin Board),
 where admins can also change roles and delete accounts. Accounts that existed before
 approval was added are approved automatically on upgrade. Failed logins are limited to
-10 per username and 20 per address every 15 minutes.
+10 per username and 20 in total from one address every 15 minutes.
 
 ## Configuration
 

@@ -75,7 +75,6 @@
 </template>
 
 <script>
-import UserService from '../services/user.service';
 import CongregationServices from "../services/CongregationServices";
 
 export default {
@@ -103,8 +102,7 @@ export default {
         {
            src: 'https://christianchronicle.org/wp-content/uploads/2019/03/p21_ATFbeller_0419-1024x768.jpg'
         }
-      ],
-      content: ''
+      ]
     };
   },
   created() {
@@ -123,21 +121,7 @@ export default {
 
 
             }
-        },
-
-  mounted() {
-    UserService.getPublicContent().then(
-      response => {
-        this.content = response.data;
-      },
-      error => {
-        this.content =
-          (error.response && error.response.data) ||
-          error.message ||
-          error.toString();
-      }
-    );
-  }
+        }
 };
 </script>
 

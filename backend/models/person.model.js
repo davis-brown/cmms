@@ -27,9 +27,6 @@ module.exports = (sequelize, Sequelize) => {
       role_value: {
         type: Sequelize.INTEGER,
       },
-      password: {
-        type: Sequelize.STRING,
-      },
       bday: {
         type: Sequelize.DATE,
       },
@@ -64,11 +61,7 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING
       }
     }, {
-      tableName: 'person',
-      // The password column is unused (logins live in users); never send it out
-      defaultScope: {
-        attributes: { exclude: ['password'] }
-      }
+      tableName: 'person'
     });
     return Person;
   };

@@ -119,3 +119,4 @@ const contactPrivacy = (req, res, next) => {
 };
 
 module.exports = contactPrivacy;
+module.exports.scrub = scrub;
