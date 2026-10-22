@@ -1,0 +1,11 @@
+{
+  "name": "cmms-browser-checks",
+  "private": true,
+  "description": "Headless browser checks for the docker compose stack",
+  "scripts": {
+    "test": "./run.sh"
+  },
+  "dependencies": {
+    "playwright": "1.48.2"
+  }
+}
