@@ -4,10 +4,11 @@ const Event = db.event;
 const User = db.user;
 
 // An event's attendance is the number of different users who RSVP'd to it
-const refreshAttendance = (evt_ID) => {
-    return Attendee.count({ where: { evt_ID: evt_ID }, distinct: true, col: "username" })
-        .then(count => Event.update({ attendance: count }, { where: { evt_ID: evt_ID } }));
+const refreshAttendance = (evt_ID, transaction) => {
+    return Attendee.count({ where: { evt_ID: evt_ID }, distinct: true, col: "username", transaction })
+        .then(count => Event.update({ attendance: count }, { where: { evt_ID: evt_ID }, transaction }));
 };
+exports.refreshAttendance = refreshAttendance;
 
 // Create and Save a new Attendee
 exports.create = (req, res) => {

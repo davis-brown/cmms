@@ -4,7 +4,6 @@ module.exports = {
   },
   // Packages whose published code uses syntax webpack 4 can't parse
   "transpileDependencies": [
-    "vuetify",
-    "html2pdf.js"
+    "vuetify"
   ]
 }

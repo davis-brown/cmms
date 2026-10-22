@@ -7,6 +7,12 @@ const checkDuplicateUsernameOrEmail = (req, res, next) => {
       message: "Username, email and password are required!"
     });
   }
+  // Same rule as the sign-up form
+  if (typeof req.body.password !== "string" || req.body.password.length < 6) {
+    return res.status(400).send({
+      message: "Password must be at least 6 characters!"
+    });
+  }
 
   // Username
   User.findOne({

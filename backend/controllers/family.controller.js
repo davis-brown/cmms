@@ -40,12 +40,17 @@ exports.create = (req, res) => {
     };
 
     // Save Family in the database
-    console.log(family);
     Family.create(family)
     .then(data => {
         res.send(data);
     })
     .catch(err => {
+        // The photo was uploaded just before; drop it unless another family uses it
+        if (family.fam_pic) {
+            Family.count({ where: { fam_pic: family.fam_pic } })
+            .then(count => count || removePicture(family.fam_pic))
+            .catch(console.error);
+        }
         res.status(500).send({
             message: err.message || "Some error occurred while creating the Family."
         });
