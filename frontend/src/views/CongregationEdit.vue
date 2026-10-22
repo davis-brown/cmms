@@ -1,6 +1,6 @@
 <template>
       <div v-if="currentCongregation" class="edit-form py-3">
-      <v-form ref="form" lazy-validation>
+      <v-form ref="form">
      
         <v-text-field
         v-model="currentCongregation.con_name"
@@ -17,11 +17,11 @@
         ></v-text-field>
 
 
-    <v-btn color="dark" small @click="updateCongregation">
+    <v-btn size="small" @click="updateCongregation">
         Submit
       </v-btn>
 
-    <v-btn color="dark" small @click="deleteCongregation">
+    <v-btn size="small" @click="deleteCongregation">
         Delete
       </v-btn>
     

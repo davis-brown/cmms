@@ -1,7 +1,7 @@
 <template>
 
   <div class="submit-form mt-3 mx-auto">
-    <H1>Add Life Event </H1>
+    <h1>Add Life Event </h1>
     <form @submit.prevent="saveLifeEvent">
 
     <v-text-field

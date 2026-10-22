@@ -7,7 +7,6 @@
       
 			to="/groupadd"
 			class="mr-4"
-			dark
 			color="primary"
       
 		>
@@ -15,7 +14,7 @@
 		</v-btn>
     <v-btn
       color="primary"
-      @click.native="exportToPDF">
+      @click="exportToPDF">
         Print <br/> Groups
     </v-btn>
     </div>

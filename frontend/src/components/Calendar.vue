@@ -11,65 +11,64 @@
         
         <v-toolbar
           flat
+          color="white"
           
         >
         <v-btn
             
             class="mr-4"
             color="primary"
+            variant="elevated"
             @click="dialog = true"
-            dark
             v-if="canManageEvents"
           >
             New Event
           </v-btn> 
           <v-btn
-            outlined
+            variant="outlined"
             class="mr-4"
-            color="grey darken-2"
+            color="grey-darken-2"
             @click="setToday"
           >
             Today
           </v-btn> 
           <v-btn
-            fab
-            text
-            small
-            color="grey darken-2"
+            icon
+            variant="text"
+            size="small"
+            color="grey-darken-2"
             @click="prev"
           >
-            <v-icon small>
+            <v-icon size="small">
               mdi-chevron-left
             </v-icon>
           </v-btn>
           <v-btn
-            fab
-            text
-            small
-            color="grey darken-2"
+            icon
+            variant="text"
+            size="small"
+            color="grey-darken-2"
             @click="next"
           >
-            <v-icon small>
+            <v-icon size="small">
               mdi-chevron-right
             </v-icon>
           </v-btn>
-          <v-toolbar-title v-if="$refs.calendar">
-            {{ $refs.calendar.title }}
+          <v-toolbar-title>
+            {{ title }}
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-menu
-            bottom
-            right
+            location="bottom end"
           >
-            <template v-slot:activator="{ on, attrs }">
+            <template v-slot:activator="{ props }">
               <v-btn
-                outlined
-                color="grey darken-2"
-                v-bind="attrs"
-                v-on="on"
+                variant="outlined"
+                color="grey-darken-2"
+                v-bind="props"
               >
                 <span>{{ typeToLabel[type] }}</span>
-                <v-icon right>
+                <v-icon end>
                   mdi-menu-down
                 </v-icon>
               </v-btn>
@@ -105,13 +104,13 @@
                     <v-text-field v-model="event.event_start" type="time" label="start time (required)" :rules="requiredRule"></v-text-field>
                     <v-text-field v-model="event.event_end" type="time" label="end time (required)" :rules="requiredRule"></v-text-field>
                     <v-label><p style="font-size: 14px">Color (pick a color)</p></v-label>
-                    <div class="container v-row" style="margin-top:-20px; margin-bottom: 15px">
-                      <v-btn fab x-small color="blue" @click="event.color='#1e90ff'" style=" margin-left: -15px; margin-right:4px"></v-btn>
-                      <v-btn fab x-small color="red" @click="event.color='#ff0000'" style="margin-right:4px"></v-btn>
-                      <v-btn fab x-small color="green" @click="event.color='#008000'" style="margin-right:4px"></v-btn>
-                      <v-btn fab x-small color="pink" @click="event.color='#ff69b4'" style="margin-right:4px"></v-btn>
-                      <v-btn fab x-small color="purple" @click="event.color='#800080'" style="margin-right:4px"></v-btn>
-                      <v-btn fab x-small color="orange" @click="event.color='#ffa500'"></v-btn>
+                    <div class="container" style="margin-top:-20px; margin-bottom: 15px">
+                      <v-btn icon size="x-small" color="blue" @click="event.color='#1e90ff'" style=" margin-left: -15px; margin-right:4px"></v-btn>
+                      <v-btn icon size="x-small" color="red" @click="event.color='#ff0000'" style="margin-right:4px"></v-btn>
+                      <v-btn icon size="x-small" color="green" @click="event.color='#008000'" style="margin-right:4px"></v-btn>
+                      <v-btn icon size="x-small" color="pink" @click="event.color='#ff69b4'" style="margin-right:4px"></v-btn>
+                      <v-btn icon size="x-small" color="purple" @click="event.color='#800080'" style="margin-right:4px"></v-btn>
+                      <v-btn icon size="x-small" color="orange" @click="event.color='#ffa500'"></v-btn>
                     </div>
                     <hr>
                     <v-btn type="submit" color="primary" class="mr-4">Create Event</v-btn>
@@ -136,16 +135,16 @@
           v-model="selectedOpen"
           :close-on-content-click="false"
           :activator="selectedElement"
-          offset-x
+          location="end"
         >
           <v-card
-            color="grey lighten-4"
+            color="grey-lighten-4"
             min-width="350px"
             flat
           >
             <v-toolbar
               :color="selectedEvent.color"
-              dark
+              theme="dark"
             >
               <v-btn v-if="canManageEvents" @click="deleteEvent()" icon>
                 <v-icon>mdi-delete</v-icon>
@@ -153,7 +152,7 @@
               <v-toolbar-title>{{ selectedEvent.name }}</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn color= "transparent" @click="attendeeDetails(selectedEvent)">
-              <v-icon primary>mdi-account-multiple-check</v-icon>
+              <v-icon>mdi-account-multiple-check</v-icon>
               <v-divider vertical></v-divider>
               {{selectedEvent.attendance}}
               </v-btn>
@@ -164,18 +163,17 @@
                   {{selectedEvent.details}}
               </form>
               <form v-else>
-                  <textarea-autosize
+                  <v-textarea
                       v-model="selectedEvent.details"
-                      type="text"
-                      style="width: 100%"
-                      :min-height="100"
+                      auto-grow
+                      rows="4"
                       placeholder="add note"
-                  ></textarea-autosize>
+                  ></v-textarea>
               </form>
             </v-card-text>
             <v-card-actions>
               <v-btn
-                text
+                variant="text"
                 color="secondary"
                 @click="selectedOpen = false"
               >
@@ -183,21 +181,21 @@
               </v-btn>
 
               <v-btn
-                text
+                variant="text"
                 v-if="(currentlyEditing != selectedEvent.id) && canManageEvents"
                 @click.prevent="editEvent(selectedEvent)"
               >
                 Edit 
               </v-btn>
               <v-btn
-                text
+                variant="text"
                 v-else-if="canManageEvents"
                 @click.prevent="updateEvent(selectedEvent)"
               >
                 Save
               </v-btn>
               <v-btn
-              text
+              variant="text"
                @click.prevent="moreEvent(selectedEvent)"
               >
                 View More...
@@ -262,6 +260,7 @@ export default {
       
         
         type: "month",
+        title: "",
         typeToLabel: {
             month: "Month",
             week: "Week",
@@ -319,8 +318,9 @@ export default {
             });
       },
 
-      addEvent() {
-        if (!this.$refs.eventForm.validate()) {
+      async addEvent() {
+        const { valid } = await this.$refs.eventForm.validate();
+        if (!valid) {
           return;
         }
         EventService.create(this.event)
@@ -382,7 +382,7 @@ export default {
         this.$router.push({ name: 'eventdetails', params: { id: currentevent.id } });
       },
 
-      viewDay ({ date }) {
+      viewDay (nativeEvent, { date }) {
         this.focus = date
         this.type = 'day'
       },
@@ -407,7 +407,7 @@ export default {
           this.currentlyEditing = event.id;
       },
 
-      showEvent ({ nativeEvent, event }) {
+      showEvent (nativeEvent, { event }) {
         const open = () => {
           this.selectedEvent = event
           this.selectedElement = nativeEvent.target
@@ -426,9 +426,9 @@ export default {
         nativeEvent.stopPropagation()
       },
 
-      updateRange ({ event_start, event_end }) {
-        this.event_start = event_start
-        this.event_end = event_end
+      // Runs whenever the calendar shows a different range, e.g. "October 2026"
+      updateRange () {
+        this.title = this.$refs.calendar.title
       },
 
       nth (d) {

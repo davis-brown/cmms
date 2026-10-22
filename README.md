@@ -5,7 +5,7 @@ A web application made for a local church to store information about church memb
 | Folder | What it is |
 | --- | --- |
 | [`backend/`](backend/) | REST API: Node.js, Express, Sequelize, MySQL |
-| [`frontend/`](frontend/) | Single-page app: Vue 2, Vuetify |
+| [`frontend/`](frontend/) | Single-page app: Vue 3, Vuetify 3 |
 
 ## Running locally with Docker
 

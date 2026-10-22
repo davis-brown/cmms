@@ -1,6 +1,6 @@
 <template>
   <div v-if="currentPerson" class="edit-form py-3">
-      <v-form ref="form" lazy-validation>
+      <v-form ref="form">
 
       <v-text-field
         v-model="currentPerson.frst_name"
@@ -29,6 +29,8 @@
       ></v-text-field>
         <v-checkbox
       v-model="currentPerson.baptised"
+      :true-value="1"
+      :false-value="0"
       label="Baptised"
  
     ></v-checkbox>
@@ -51,7 +53,7 @@
 
           <v-textarea
           v-model="currentPerson.notes"
-          solo
+          variant="solo"
           label="Notes"
         ></v-textarea>
      <v-select
@@ -76,19 +78,19 @@
 
 <v-row justify="center">
       <v-col justify="left" col="1"> 
-        <v-btn color="dark" @click="deletePerson">
+        <v-btn @click="deletePerson">
           Delete
         </v-btn>
       </v-col>
       <v-col justify="right" col="2"> 
-        <v-btn class= "float-right" color="dark" @click="updatePerson">
+        <v-btn class= "float-right" @click="updatePerson">
           Update
         </v-btn>
       </v-col>
     </v-row>
  
      </v-form>
-    <v-alert v-if="message" type="error" dense>{{ message }}</v-alert>
+    <v-alert v-if="message" type="error" density="compact">{{ message }}</v-alert>
   </div>
 
   <div v-else>

@@ -1,5 +1,5 @@
 <template>
-  <div class="submit-form mt-3 mx-auto" data-app="true">
+  <div class="submit-form mt-3 mx-auto">
     <h1>Add a Group</h1>
 
     <v-form ref="form" @submit.prevent="saveGroup">
@@ -20,6 +20,7 @@
           <template v-slot:top>
             <v-toolbar
               flat
+              color="white"
             >
               <v-toolbar-title>Add Group Members</v-toolbar-title>
               <v-divider
@@ -32,13 +33,12 @@
                 v-model="dialog"
                 max-width="700px"
               >
-                <template v-slot:activator="{ on, attrs }">
+                <template v-slot:activator="{ props }">
                   <v-btn
                     color="primary"
-                    dark
+                    variant="elevated"
                     class="mb-2"
-                    v-bind="attrs"
-                    v-on="on"
+                    v-bind="props"
                   >
                     Add Group Member
                   </v-btn>
@@ -57,16 +57,8 @@
                                 :items="people"
                                 label="Group Member"
                                 item-value="per_ID"
-                                :filter="customFilter"
-                              >
-                                <template slot="selection" slot-scope="data" >
-                                  {{data.item.frst_name}} {{data.item.last_name}}
-                                </template>
-                                <template slot="item" slot-scope="data" >
-                                  {{data.item.frst_name}} {{data.item.last_name}}
-                                </template>
-    
-                              </v-autocomplete>
+                                :item-title="personName"
+                              ></v-autocomplete>
                         </v-col>
                       </v-row>
                     </v-container>
@@ -75,15 +67,15 @@
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
-                      color="blue darken-1"
-                      text
+                      color="blue-darken-1"
+                      variant="text"
                       @click="close"
                     >
                       Cancel
                     </v-btn>
                     <v-btn
-                      color="blue darken-1"
-                      text
+                      color="blue-darken-1"
+                      variant="text"
                       @click="addMemberForTable()"
                     >
                       Save
@@ -95,8 +87,7 @@
           </template>
              <template v-slot:[`item.head`]="{ item }">
             <v-radio-group
-              v-model="group.per_ID"
-              name="rowSelector">
+              v-model="group.per_ID">
               <div class="d-flex justify-center"><v-radio :value="item.person.per_ID"  id="lead"/> 
              
    
@@ -119,12 +110,12 @@
   <v-divider class="my-5"></v-divider>
     <v-row justify="center">
       <v-col justify="left" col="1"> 
-        <v-btn color="dark" @click="cancel">
+        <v-btn @click="cancel">
           Cancel
         </v-btn>
       </v-col>
       <v-col justify="right" col="2"> 
-        <v-btn class= "float-right" color="dark" @click="saveGroup">
+        <v-btn class= "float-right" @click="saveGroup">
           Save
         </v-btn>
       </v-col>
@@ -149,29 +140,29 @@ export default {
       message: '',
       headers: [
                 {
-                    text: 'First Name',
+                    title: 'First Name',
                     align: 'left',
                     value: 'person.frst_name',
                 },
                 {
-                    text: 'Last Name',
+                    title: 'Last Name',
                     align: 'left',
                     value: 'person.last_name',
                 },
                  {
-                    text: 'Group Leader',
+                    title: 'Group Leader',
                     align: 'center',
                     value: 'head',
                     sortable: false,
                 },
                  {
-                    text: 'Contact',
+                    title: 'Contact',
                     align: 'center',
                     value: 'person.phone',
                     sortable: false,
                 },
                 {
-                    text: 'Action',
+                    title: 'Action',
                     value: 'actions',
                     align: 'center',
                     sortable: false,
@@ -181,8 +172,9 @@ export default {
     };
   },
   methods: {
-    saveGroup() {
-      if (!this.$refs.form.validate()) {
+    async saveGroup() {
+      const { valid } = await this.$refs.form.validate();
+      if (!valid) {
         return;
       }
       GroupDataServices.create(this.group)
@@ -253,13 +245,8 @@ export default {
     close () {
         this.dialog = false
     },
-    customFilter (item, queryText) {
-      const textOne = (item.frst_name || '').toLowerCase()
-      const textTwo = (item.last_name || '').toLowerCase()
-      const searchText = queryText.toLowerCase()
-
-      return textOne.indexOf(searchText) > -1 ||
-        textTwo.indexOf(searchText) > -1
+    personName(person) {
+      return [person.frst_name, person.last_name].filter(Boolean).join(" ");
     },
   },
   mounted() {

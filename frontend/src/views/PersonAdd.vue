@@ -28,6 +28,8 @@
       ></v-text-field>
        <v-checkbox
       v-model="person.baptised"
+      :true-value="1"
+      :false-value="0"
       label="Baptised"
 
     ></v-checkbox>
@@ -43,7 +45,7 @@
         required></v-text-field>
        <v-textarea
           v-model="person.notes"
-          solo
+          variant="solo"
           label="Notes"
         ></v-textarea>
         <v-select
@@ -67,12 +69,12 @@
       <v-divider class="my-5"></v-divider>
     <v-row justify="center">
       <v-col justify="left" col="1"> 
-        <v-btn color="dark" @click="cancel">
+        <v-btn @click="cancel">
           Cancel
         </v-btn>
       </v-col>
       <v-col justify="right" col="2"> 
-        <v-btn class= "float-right" color="dark" @click="savePerson">
+        <v-btn class= "float-right" @click="savePerson">
           Submit
         </v-btn>
       </v-col>
@@ -103,8 +105,9 @@ export default {
     };
   },
   methods: {
-    savePerson() {
-      if (!this.$refs.form.validate()) {
+    async savePerson() {
+      const { valid } = await this.$refs.form.validate();
+      if (!valid) {
         return;
       }
       PersonDataService.create(this.person)
@@ -117,13 +120,12 @@ export default {
         })
         .then((response) => {
           // Opened from a family's edit page: go back there and offer to add the new member
-          const fam_ID = this.$route.params.fam_ID;
-          const returnTo = this.$route.params.returnTo;
+          const { fam_ID, returnTo } = this.$route.query;
           if (fam_ID) {
-            this.$router.push({ name: 'familyedit', params: { id: fam_ID, per_ID: response.data.per_ID } });
+            this.$router.push({ name: 'familyedit', params: { id: fam_ID }, query: { per_ID: response.data.per_ID } });
           } else if (returnTo) {
             // Opened from a page that's still being filled in, e.g. Add Family
-            this.$router.push({ name: returnTo, params: { per_ID: response.data.per_ID } });
+            this.$router.push({ name: returnTo, query: { per_ID: response.data.per_ID } });
           } else if (this.prevRoute && this.prevRoute.name) {
             this.$router.push({ name: this.prevRoute.name });
           } else {

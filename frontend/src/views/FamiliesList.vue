@@ -8,7 +8,6 @@
 					class="mr-4"
 					color="primary"
 					to="/familyadd"
-					dark
 					v-if="showModeratorBoard || showAdminBoard"
 				>
 					New Family
@@ -18,7 +17,7 @@
 				<v-text-field
 					v-model="search"
 					label="Search Families"
-					@input="filterFamilies"
+					@update:model-value="filterFamilies"
 				></v-text-field>
 			</v-col>
 			<v-col lg="2" align="center">

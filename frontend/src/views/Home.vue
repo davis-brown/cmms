@@ -6,6 +6,7 @@
         v-for="(item,i) in items"
         :key="i"
         :src="item.src"
+        cover
         reverse-transition="fade"
         transition="fade"
       ></v-carousel-item>
@@ -17,7 +18,6 @@
 			to="/congregationadd"
 			v-if="isModeratorOrAdmin"
 			class="mr-4"
-			dark
 			color="primary"
 		>
     Add Congregation
@@ -38,7 +38,7 @@
     
   >
   <v-spacer></v-spacer>
-  <v-card-title primary-title class="justify-center">
+  <v-card-title class="text-center">
 
     <h2>{{congregation.con_name}}</h2>
     </v-card-title>
@@ -56,10 +56,10 @@
 				@click="editCongregation(congregation)"
 				v-if="isModeratorOrAdmin"
 				class="ma-2"
-				outlined
-				large
-				fab
-				color="blue darken-4"
+				variant="outlined"
+				size="large"
+				icon
+				color="blue-darken-4"
 				>
 				<v-icon>mdi-pencil</v-icon>
 				</v-btn>

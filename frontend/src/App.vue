@@ -121,4 +121,9 @@ export default {
   .navbar .nav-link {
     white-space: nowrap;
   }
+  /* Vuetify 3 cuts card titles and subtitles to one line; let them wrap like before */
+  .v-card-title,
+  .v-card-subtitle {
+    white-space: normal;
+  }
 </style>

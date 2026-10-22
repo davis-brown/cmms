@@ -12,43 +12,40 @@
             <label for="username">Username</label>
             <input
               v-model="user.username"
-              v-validate="'required|min:3|max:20'"
               type="text"
               class="form-control"
               name="username"
             />
             <div
-              v-if="submitted && errors.has('username')"
+              v-if="submitted && errors.username"
               class="alert-danger"
-            >{{errors.first('username')}}</div>
+            >{{errors.username}}</div>
           </div>
           <div class="form-group">
             <label for="email">Email</label>
             <input
               v-model="user.email"
-              v-validate="'required|email|max:50'"
               type="email"
               class="form-control"
               name="email"
             />
             <div
-              v-if="submitted && errors.has('email')"
+              v-if="submitted && errors.email"
               class="alert-danger"
-            >{{errors.first('email')}}</div>
+            >{{errors.email}}</div>
           </div>
           <div class="form-group">
             <label for="password">Password</label>
             <input
               v-model="user.password"
-              v-validate="'required|min:6|max:40'"
               type="password"
               class="form-control"
               name="password"
             />
             <div
-              v-if="submitted && errors.has('password')"
+              v-if="submitted && errors.password"
               class="alert-danger"
-            >{{errors.first('password')}}</div>
+            >{{errors.password}}</div>
           </div>
           <div class="form-group">
             <button class="btn btn-primary btn-block">Sign Up</button>
@@ -81,6 +78,19 @@ export default {
   computed: {
     loggedIn() {
       return this.$store.state.auth.status.loggedIn;
+    },
+    // The message for each field, or "" when it's valid
+    errors() {
+      const { username, email, password } = this.user;
+      const check = (value, field, min, max) =>
+        !value ? `The ${field} field is required.` :
+        value.length < min ? `The ${field} field must be at least ${min} characters.` :
+        value.length > max ? `The ${field} field may not be greater than ${max} characters.` : '';
+      return {
+        username: check(username, 'username', 3, 20),
+        email: check(email, 'email', 0, 50) || (/^\S+@\S+\.\S+$/.test(email) ? '' : 'The email field must be a valid email.'),
+        password: check(password, 'password', 6, 40)
+      };
     }
   },
   mounted() {
@@ -92,23 +102,22 @@ export default {
     handleRegister() {
       this.message = '';
       this.submitted = true;
-      this.$validator.validate().then(isValid => {
-        if (isValid) {
-          this.$store.dispatch('auth/register', this.user).then(
-            data => {
-              this.message = data.message; 
-              this.successful = true;
-            },
-            error => {
-              this.message =
-                (error.response && error.response.data && error.response.data.message) ||
-                error.message ||
-                error.toString();
-              this.successful = false;
-            }
-          );
+      if (Object.values(this.errors).some(Boolean)) {
+        return;
+      }
+      this.$store.dispatch('auth/register', this.user).then(
+        data => {
+          this.message = data.message; 
+          this.successful = true;
+        },
+        error => {
+          this.message =
+            (error.response && error.response.data && error.response.data.message) ||
+            error.message ||
+            error.toString();
+          this.successful = false;
         }
-      });
+      );
     }
   }
 };

@@ -31,9 +31,9 @@
         <v-btn
             @click="editFamily(family)"
             class="ma-2"
-            outlined
-            fab
-            color="blue darken-4"
+            variant="outlined"
+            icon
+            color="blue-darken-4"
             align="right"
             v-if="canEdit"
         >

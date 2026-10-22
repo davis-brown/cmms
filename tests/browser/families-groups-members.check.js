@@ -13,14 +13,14 @@ const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR
 
   // Pick a person in a Vuetify autocomplete inside the open dialog
   async function pickMember(label, name, role) {
-    await page.locator('.v-dialog--active').getByLabel(label).click();
-    await page.locator('.v-dialog--active').getByLabel(label).fill(name.split(' ')[0]);
-    await page.locator('.menuable__content__active .v-list-item', { hasText: name }).first().click();
+    await page.locator('.v-dialog.v-overlay--active').getByLabel(label).click();
+    await page.locator('.v-dialog.v-overlay--active').getByLabel(label).fill(name.split(' ')[0]);
+    await page.locator('.v-menu.v-overlay--active .v-overlay__content .v-list-item', { hasText: name }).first().click();
     if (role) {
-      await page.locator('.v-dialog--active').getByLabel('Family Role').click({ force: true });
-      await page.locator('.menuable__content__active .v-list-item', { hasText: role }).first().click();
+      await page.locator('.v-dialog.v-overlay--active').getByLabel('Family Role').click({ force: true });
+      await page.locator('.v-menu.v-overlay--active .v-overlay__content .v-list-item', { hasText: role }).first().click();
     }
-    await page.locator('.v-dialog--active button:has-text("Save")').click();
+    await page.locator('.v-dialog.v-overlay--active button:has-text("Save")').click();
     await page.waitForTimeout(800);
   }
 
@@ -52,7 +52,7 @@ const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR
     expect(members.length === 1 && members[0].person.frst_name === 'Grace', `members: ${members.map(m => m.person.frst_name)}`);
     const card = page.locator('.v-card', { hasText: 'UICheck' }).first();
     await card.waitFor();
-    const images = await card.locator('.v-image').count();
+    const images = await card.locator('.v-img').count();
     expect(images === 0, 'card shows an image');
     return `fam_ID ${fam.fam_ID}, photo ${fam.fam_pic}, members Grace`;
   });
@@ -120,7 +120,7 @@ const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR
     await page.waitForTimeout(800);
     const after = (await api('GET', '/person', null, T)).length;
     expect(after === before, 'a person was created');
-    return (await page.locator('.error--text .v-messages__message').allInnerTexts()).join(', ');
+    return (await page.locator('.v-input--error .v-messages__message').allInnerTexts()).join(', ');
   });
 
   await check('Editing a member: deleted phone and address disappear', async () => {
@@ -145,8 +145,8 @@ const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR
     const p = await api('POST', '/person', { frst_name: 'Life', last_name: 'Check' }, T);
     cleanup.push(() => api('DELETE', '/person/' + p.per_ID, null, T));
     await page.goto(APP + '/lifeeventpersonadd/' + p.per_ID);
-    await page.getByLabel('Life Event Date: YYYY-MM-DD').fill('2026-03-01');
-    await page.getByLabel('Life Event Notes').fill('Baptised');
+    await page.getByLabel('Life Event Date: YYYY-MM-DD', { exact: true }).fill('2026-03-01');
+    await page.getByLabel('Life Event Notes', { exact: true }).fill('Baptised');
     await page.locator('button:has-text("Submit")').click();
     await page.waitForURL(new RegExp('/lifeeventperson/' + p.per_ID + '$'));
     await page.locator('text=Baptised').waitFor({ timeout: 5000 });
