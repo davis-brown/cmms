@@ -60,10 +60,6 @@ All settings are environment variables; see [`.env.example`](.env.example).
 On the server, put these in `/home/ubuntu/nodeapps/congregation-backend.env`, which
 `congregation-backend.service` loads.
 
-Deploys run from GitHub Actions when a PR into `dev-branch` is merged. They need two
-repository secrets: `SERVER_HOST` (the server's hostname or IP) and `SERVER_SSH_KEY`
-(a private key whose public key is in the server's `~/.ssh/authorized_keys`).
-
 ## Project layout
 
 ```
