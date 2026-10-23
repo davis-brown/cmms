@@ -1,37 +1,35 @@
 <template>
-  <div class="container" style="font-size: 20px">
-    <header class="jumbotron" style="background-color: light-grey">
-  
-        <h2 class="text-center"><strong>Hello {{currentUser.username}}!</strong></h2>
-        <h5 class="text-center">Edit your information below</h5>
-
-    </header>
-    <!-- <p>
-      <strong>Token:</strong>
-      {{currentUser.accessToken.substring(0, 20)}} ... {{currentUser.accessToken.substr(currentUser.accessToken.length - 20)}}
-    </p> -->
-    <!-- <p>
-      <strong>Id:</strong>
-      {{currentUser.id}}
-    </p> -->
-    <p>
-      <strong>Username:</strong>
-      {{currentUser.username}}
-    </p>
-    <p>
-      <strong>Email:</strong>
-      {{currentUser.email}}
-    </p>
-    <strong>Role:</strong>
-    <ul>
-      <li v-for="(role,index) in currentUser.roles" :key="index">{{role}}</li>
-    </ul>
+  <div v-if="currentUser">
+    <PageBand :title="`Hello ${currentUser.username}!`" />
+    <div class="page-body page-body--narrow">
+      <v-card>
+        <div class="profile-head">
+          <PersonAvatar :name="currentUser.username" :size="72" />
+          <div>
+            <h2>{{ currentUser.username }}</h2>
+            <p class="profile-email">{{ currentUser.email }}</p>
+          </div>
+        </div>
+        <div class="profile-roles">
+          <h3>Roles</h3>
+          <div class="d-flex flex-wrap ga-2 mt-2">
+            <v-chip v-for="(role, index) in currentUser.roles" :key="index" color="primary" variant="tonal">
+              {{ role.replace('ROLE_', '').toLowerCase() }}
+            </v-chip>
+          </div>
+        </div>
+      </v-card>
+    </div>
   </div>
 </template>
 
 <script>
+import PageBand from "../components/PageBand.vue";
+import PersonAvatar from "../components/PersonAvatar.vue";
+
 export default {
   name: 'Profile',
+  components: { PageBand, PersonAvatar },
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
@@ -107,3 +105,26 @@ export default {
     </v-row>
     https://vuetifyjs.com/en/components/avatars/#advanced-usage
     -->
+
+<style scoped>
+.profile-head {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+  border-bottom: 1px solid var(--line);
+}
+.profile-head h2 {
+  margin: 0;
+}
+.profile-email {
+  margin: 4px 0 0;
+  color: var(--ink-muted);
+}
+.profile-roles {
+  padding: 20px 24px 24px;
+}
+.profile-roles h3 {
+  margin: 0;
+}
+</style>

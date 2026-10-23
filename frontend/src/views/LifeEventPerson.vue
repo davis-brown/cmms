@@ -1,44 +1,49 @@
 <template>
-<v-main>
-<v-container>
-<h1>List of Life Events </h1>
-	<v-btn
-			:to="{ name: 'lifeeventpersonadd', params: { id: $route.params.id } }"
-			class="mr-4"
-			color="primary"
-		>
-    Add Life Event
-		</v-btn>
-    <v-timeline density="compact" side="end">
-      <v-timeline-item
-        v-for="lifeventperson in lifeventpersons"
-        :key="lifeventperson.lep_ID"
+  <div>
+    <PageBand title="Life Events">
+      <v-btn
+        :to="{ name: 'lifeeventpersonadd', params: { id: $route.params.id } }"
+        color="primary"
+        prepend-icon="mdi-plus"
       >
-        <v-card v-if="lifeventperson.lifeevent">
-          <v-list>
-            <v-list-item>
-                <v-list-item-title><h2>{{ lifeventperson.lifeevent.event_note }}</h2></v-list-item-title>
-                <v-list-item-subtitle>{{ (lifeventperson.lifeevent.event_date || '').substr(0, 10) }}</v-list-item-subtitle>
-              <v-list-item-action>
-                <v-btn size="small" @click="editLifeEvent(lifeventperson.lifeevent)">Edit</v-btn>
-                <v-btn size="small" @click="deleteLifeEventForPerson(lifeventperson)">Remove</v-btn>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-timeline-item>
-    </v-timeline>
-</v-container>
-</v-main>
+        Add Life Event
+      </v-btn>
+    </PageBand>
+    <div class="page-body page-body--narrow">
+      <p v-if="lifeventpersons.length === 0" class="text-medium-emphasis">No life events yet.</p>
+      <v-timeline v-else density="compact" side="end" line-color="primary">
+        <v-timeline-item
+          v-for="lifeventperson in lifeventpersons"
+          :key="lifeventperson.lep_ID"
+          dot-color="primary"
+          size="small"
+        >
+          <template v-if="lifeventperson.lifeevent">
+          <v-card>
+            <v-card-title class="pt-4 px-5"><h2>{{ lifeventperson.lifeevent.event_note }}</h2></v-card-title>
+            <v-card-subtitle class="px-5">{{ formatDate(lifeventperson.lifeevent.event_date) }}</v-card-subtitle>
+            <v-card-actions class="px-4 pb-4">
+              <v-btn variant="tonal" color="primary" prepend-icon="mdi-pencil" @click="editLifeEvent(lifeventperson.lifeevent)">Edit</v-btn>
+              <v-btn @click="deleteLifeEventForPerson(lifeventperson)" color="error" variant="outlined">Remove</v-btn>
+            </v-card-actions>
+          </v-card>
+          </template>
+        </v-timeline-item>
+      </v-timeline>
+    </div>
+  </div>
 </template>
 
 
 <script>
+import PageBand from "../components/PageBand.vue";
+import { formatDate } from "../formatDate";
 import LifeEventService from "../services/LifeEventService";
 import PersonDataService from "../services/PersonDataService";
 import LifeEventPersonService from "../services/LifeEventPersonService";
 
 export default {
+  components: { PageBand },
   data() {
     return {
       dialog: false,
@@ -51,6 +56,7 @@ export default {
   },
   
   methods: {
+    formatDate,
     getPerson(per_ID) {
       PersonDataService.get(per_ID)
         .then(response => {
@@ -142,14 +148,3 @@ export default {
 };
 </script>
 
-<style>
-h4 {
-  font-size: 25px;
-  text-align: center;
-}
-.edit-form {
-  max-width: 600px;
-  max-height: 900px;
-  margin: auto;
-}
-</style>

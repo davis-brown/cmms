@@ -1,0 +1,220 @@
+/* Shared type, colour and browser-surface rules for every page.
+   Colours come from the Vuetify theme (plugins/vuetify.js) as --v-theme-* triplets. */
+:root {
+  --ink: #23252d;
+  --ink-muted: #5a5f6b;
+  --line: #e2e6ed;
+  --font-body: 'Atkinson Hyperlegible', 'Segoe UI', Arial, sans-serif;
+  --shadow-card: 0 1px 2px rgba(35, 37, 45, 0.08), 0 4px 14px rgba(35, 37, 45, 0.08);
+  --shadow-lift: 0 2px 4px rgba(35, 37, 45, 0.1), 0 10px 24px rgba(35, 37, 45, 0.12);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body,
+.v-application {
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: var(--ink);
+  background: #fff;
+}
+
+/* Vuetify and Bootstrap each set their own families; one body face everywhere */
+.v-application [class*='text-'],
+.v-btn,
+.v-field,
+.v-label,
+.v-list-item-title,
+.v-card-title,
+.v-toolbar-title,
+input,
+textarea,
+select,
+button {
+  font-family: var(--font-body);
+}
+
+h1,
+h2 {
+  font-family: var(--font-body);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  color: var(--ink);
+  text-wrap: balance;
+}
+h1 { font-size: clamp(1.75rem, 3.5vw, 2.25rem); margin: 0; }
+h2 { font-size: clamp(1.375rem, 2.5vw, 1.625rem); }
+h3, h4, h5, h6 {
+  font-family: var(--font-body);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0;
+}
+h3 { font-size: 1.375rem; }
+h4 { font-size: 1.1875rem; }
+h5, h6 { font-size: 1.0625rem; }
+
+/* Buttons say what they do in sentence case, not shouted */
+.v-btn {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 700;
+  font-size: 1rem;
+}
+.v-btn--size-default { min-height: 44px; }
+.v-btn--icon.v-btn--density-default { width: 44px; height: 44px; }
+
+.v-card {
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--line);
+}
+.v-card-title {
+  font-weight: 700;
+  font-size: 1.25rem;
+  white-space: normal;
+}
+.v-card-subtitle {
+  white-space: normal;
+  opacity: 1;
+  color: var(--ink-muted);
+  font-size: 1rem;
+}
+.v-overlay__content > .v-card,
+.v-overlay__content > .v-list {
+  box-shadow: var(--shadow-lift);
+}
+
+.v-table {
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+.v-table th {
+  font-weight: 700 !important;
+  color: var(--ink) !important;
+}
+
+/* Toolbars above the member tables: let the title and buttons wrap, not truncate */
+.v-table .v-toolbar__content {
+  height: auto !important;
+  min-height: 64px;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 16px;
+}
+.v-table .v-toolbar-title {
+  flex: 1 0 auto;
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+.v-table .v-toolbar .v-divider--vertical,
+.v-table .v-toolbar .v-spacer {
+  display: none;
+}
+.v-table .v-toolbar .v-btn {
+  margin: 0 !important;
+}
+
+/* Floating labels, hints and chips: nothing under 14px for older readers */
+.v-field-label--floating,
+.v-messages,
+.v-chip.v-chip--size-small,
+.v-chip.v-chip--size-default {
+  font-size: 0.875rem !important;
+}
+.v-messages,
+.v-messages__message {
+  font-size: 0.875rem !important;
+  letter-spacing: 0 !important;
+  line-height: 1.35;
+}
+.v-input--has-hint,
+.v-input:has(.v-messages__message) {
+  margin-bottom: 8px;
+}
+/* The add field and its Add button share the table's last row and wrap on phones */
+.v-table .add-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 16px;
+  padding: 8px 0;
+}
+.v-table .add-line .v-input {
+  flex: 1 1 220px;
+}
+
+a {
+  color: rgb(var(--v-theme-primary));
+  text-underline-offset: 0.18em;
+}
+
+::selection {
+  background: rgba(var(--v-theme-gold), 0.35);
+  color: var(--ink);
+}
+input,
+textarea {
+  caret-color: rgb(var(--v-theme-primary));
+}
+:focus-visible {
+  outline: 3px solid rgb(var(--v-theme-primary));
+  outline-offset: 2px;
+}
+* {
+  scrollbar-color: #c3c9d4 transparent;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* A page's content column under its band */
+.page-body {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 24px 64px;
+}
+@media (max-width: 599px) {
+  .page-body { padding: 20px 16px 48px; }
+}
+.page-body--narrow { max-width: 760px; }
+
+/* Log in and sign up: one card, centred */
+.auth-page {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 56px 16px;
+  background: #fff;
+}
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  padding: 32px 28px 24px;
+}
+.auth-lede {
+  color: var(--ink-muted);
+  margin: 8px 0 24px;
+}
+.auth-switch {
+  margin: 20px 0 0;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

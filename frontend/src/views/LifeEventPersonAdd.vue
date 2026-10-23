@@ -1,7 +1,9 @@
 <template>
-  <div class="submit-form mt-3 mx-auto">
-    <h1>Add Life Event </h1>
-    <form @submit.prevent="addLifeEventForPerson">
+  <div>
+  <PageBand title="Add a life event" />
+  <div class="page-body page-body--narrow">
+  <div class="form-page">
+        <form @submit.prevent="addLifeEventForPerson">
 
     <v-text-field
     v-model="lifeventperson.event_date"
@@ -18,19 +20,23 @@
     ></v-text-field>
       
        </form>
-      <v-btn color="primary" class="offset-sm4 mt-3" @click="addLifeEventForPerson">Submit</v-btn>
-      <v-btn color="primary" class="mt-3" @click="cancel">Cancel</v-btn>
+      <v-btn class="offset-sm4 mt-3" @click="addLifeEventForPerson" color="primary" variant="flat">Submit</v-btn>
+      <v-btn class="mt-3" @click="cancel" variant="text">Cancel</v-btn>
      </div>
   
+  </div>
+  </div>
 </template>
 
 
 <script>
+import PageBand from "../components/PageBand.vue";
 import LifeEventService from "../services/LifeEventService";
 import PersonDataService from "../services/PersonDataService";
 import LifeEventPersonService from "../services/LifeEventPersonService";
 
 export default {
+  components: { PageBand },
   data() {
     return {
       dialog: false,
@@ -152,14 +158,3 @@ export default {
 };
 </script>
 
-<style>
-h4 {
-  font-size: 25px;
-  text-align: center;
-}
-.edit-form {
-  max-width: 600px;
-  max-height: 900px;
-  margin: auto;
-}
-</style>

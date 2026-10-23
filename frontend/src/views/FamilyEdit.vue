@@ -1,5 +1,8 @@
 <template>
-  <div v-if="currentFamily" class="submit-form mt-3 mx-auto">
+  <div>
+  <PageBand title="Edit family" />
+  <div class="page-body page-body--narrow">
+  <div v-if="currentFamily" class="form-page">
       <v-form ref="form">
 
       <v-file-input
@@ -38,7 +41,7 @@
       ></v-text-field>
       
       <v-card>
-        <v-data-table
+        <v-data-table no-data-text="No members yet"
           :headers="headers"
           :items="familyPersons"
           hide-default-footer
@@ -72,11 +75,11 @@
               >
                 <template v-slot:activator="{ props }">
                   <v-btn
-                    color="primary"
-                    variant="elevated"
+                   
+                   
                     class="mb-2"
                     v-bind="props"
-                  >
+                   color="primary" variant="flat">
                     Add Member
                   </v-btn>
                 </template>
@@ -112,17 +115,17 @@
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
-                      color="blue-darken-1"
-                      variant="text"
+                     
+                     
                       @click="close"
-                    >
+                     variant="text">
                       Cancel
                     </v-btn>
                     <v-btn
-                      color="blue-darken-1"
-                      variant="text"
+                     
+                     
                       @click="addPersonForFamily()"
-                    >
+                     color="primary" variant="flat">
                       Save
                     </v-btn>
                   </v-card-actions>
@@ -152,12 +155,12 @@
 
       <v-row justify="center">
         <v-col justify="left" col="1"> 
-          <v-btn @click="deleteFamily" v-if="isModeratorOrAdmin">
+          <v-btn @click="deleteFamily" v-if="isModeratorOrAdmin" color="error" variant="outlined">
             Delete
           </v-btn>
         </v-col>
         <v-col justify="right" col="2"> 
-          <v-btn class= "float-right" @click="updateFamily">
+          <v-btn class= "float-right" @click="updateFamily" color="primary" variant="flat">
             Update
           </v-btn>
         </v-col>
@@ -171,14 +174,18 @@
     
   </div>
 
+  </div>
+  </div>
 </template>
 
 <script>
+import PageBand from "../components/PageBand.vue";
 import FamilyService from "../services/FamilyService";
 import PersonDataService from "../services/PersonDataService";
 import FamilyPersonService from "../services/FamilyPersonService";
 
 export default {
+  components: { PageBand },
   data() {
     return {
       selectedFile: null,
@@ -373,13 +380,3 @@ export default {
 };
 </script>
 
-<style>
-h4 {
-  font-size: 25px;
-  text-align: center;
-}
-.submit-form {
-  max-width: 500px;
-  margin: auto;
-}
-</style>

@@ -8,15 +8,10 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.35",
-    "@fortawesome/free-solid-svg-icons": "^5.15.3",
-    "@fortawesome/vue-fontawesome": "^3.3.3",
+    "@fontsource/atkinson-hyperlegible": "^5.3.0",
     "axios": "^1.20.0",
-    "bootstrap": "^4.6.0",
     "core-js": "^3.6.5",
-    "jquery": "^3.6.0",
     "pdfmake": "^0.1.71",
-    "popper.js": "^1.16.1",
     "vue": "^3.5.44",
     "vue-router": "^4.6.4",
     "vuetify": "^3.13.7",

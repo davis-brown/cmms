@@ -1,47 +1,35 @@
 <template>
-  <v-main>
-    <v-container fluid>
-     <h1>Groups</h1>
-      <div v-if="showAdminBoard || showModeratorBoard">
-     <v-btn
-      
-			to="/groupadd"
-			class="mr-4"
-			color="primary"
-      
-		>
-    Add Group
-		</v-btn>
-    <v-btn
-      color="primary"
-      @click="exportToPDF">
-        Print <br/> Groups
-    </v-btn>
-    </div>
-    <v-divider> </v-divider>
-    <div>
+  <div>
+    <PageBand title="Groups">
+      <template v-if="showAdminBoard || showModeratorBoard">
+        <v-btn to="/groupadd" color="primary" prepend-icon="mdi-plus">
+          Add Group
+        </v-btn>
+        <v-btn variant="outlined" color="primary" prepend-icon="mdi-printer" @click="exportToPDF">
+          Print Groups
+        </v-btn>
+      </template>
+    </PageBand>
+    <div class="page-body">
+      <p v-if="groups.length === 0" class="text-medium-emphasis">No groups yet.</p>
       <v-row>
         <v-col
           v-for="group in groups"
           :key="group.grp_ID"
           cols="12"
           md="6"
-          align="center"
         >
-          <GroupCard 
-            v-bind:key="group.grp_ID"
-            v-bind:group="group"
-          ></GroupCard>
+          <GroupCard v-bind:group="group"></GroupCard>
         </v-col>
       </v-row>
     </div>
- </v-container>
-</v-main>
+  </div>
 </template>
 
 <script>
 import GroupDataServices from "../services/GroupDataService";
 import GroupCard from "../components/GroupCard";
+import PageBand from "../components/PageBand.vue";
 import GroupMemberService from "../services/GroupMemberService";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts.js";
@@ -68,6 +56,7 @@ export default {
   name: 'Group-List',
   components: {
     GroupCard,
+    PageBand,
   },
     data() {
         return {

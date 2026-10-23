@@ -42,10 +42,11 @@ const { chromium, APP, check, expect, report, api, signin, loggedInPage } = requ
     await page.goto(APP + '/families');
     const card = title => page.locator('.v-card', { has: page.locator('.v-card-title', { hasText: title }) });
     await card('Nguyen').waitFor();
+    await card('Carter').locator('text=555-0101').waitFor({ timeout: 5000 }).catch(() => {});
     const other = await card('Nguyen').innerText();
     const own = await card('Carter').innerText();
-    expect(!/Email:|Phone:|Address:/.test(other), 'Nguyen: ' + other);
-    expect(/Phone: 555-0101/.test(own), 'Carter: ' + own);
+    expect(!/@|\d{3}-\d{4}|Maple/.test(other), 'Nguyen: ' + other);
+    expect(/555-0101/.test(own), 'Carter: ' + own);
   });
 
   await check('Regular user: edit button only on their own family', async () => {

@@ -1,70 +1,39 @@
 <template>
- 
-
-  <v-row class="fill-height">
-    
-    <v-col>
-      <v-sheet height="200">
-        <v-card :elevation="0" class=" d-flex justify-center mt-10 mb-10 loading tile">
-          <h1 class="font-weight-regular" style="font-weight:400;">Events Calendar</h1>
-        </v-card>
-        
-        <v-toolbar
-          flat
-          color="white"
-          
-        >
-        <v-btn
-            
-            class="mr-4"
-            color="primary"
-            variant="elevated"
-            @click="dialog = true"
-            v-if="canManageEvents"
-          >
-            New Event
-          </v-btn> 
+  <div>
+    <PageBand title="Events Calendar">
+      <v-btn
+        color="primary"
+        @click="dialog = true"
+        v-if="canManageEvents"
+        prepend-icon="mdi-plus"
+      >
+        New Event
+      </v-btn>
+    </PageBand>
+    <div class="page-body">
+        <v-toolbar flat color="white" class="calendar-toolbar">
           <v-btn
             variant="outlined"
-            class="mr-4"
-            color="grey-darken-2"
+            class="mr-2"
             @click="setToday"
           >
             Today
-          </v-btn> 
-          <v-btn
-            icon
-            variant="text"
-            size="small"
-            color="grey-darken-2"
-            @click="prev"
-          >
-            <v-icon size="small">
-              mdi-chevron-left
-            </v-icon>
           </v-btn>
-          <v-btn
-            icon
-            variant="text"
-            size="small"
-            color="grey-darken-2"
-            @click="next"
-          >
-            <v-icon size="small">
-              mdi-chevron-right
-            </v-icon>
+          <v-btn icon variant="text" @click="prev" aria-label="Previous">
+            <v-icon>mdi-chevron-left</v-icon>
           </v-btn>
-          <v-toolbar-title>
+          <v-btn icon variant="text" @click="next" aria-label="Next">
+            <v-icon>mdi-chevron-right</v-icon>
+          </v-btn>
+          <v-toolbar-title class="calendar-title">
             {{ title }}
           </v-toolbar-title>
-          <v-spacer></v-spacer>
           <v-menu
             location="bottom end"
           >
             <template v-slot:activator="{ props }">
               <v-btn
                 variant="outlined"
-                color="grey-darken-2"
                 v-bind="props"
               >
                 <span>{{ typeToLabel[type] }}</span>
@@ -89,36 +58,44 @@
             </v-list>
           </v-menu>
         </v-toolbar>
-      </v-sheet>
-
 
       <!--Add Event dialog-->
-      <v-dialog v-model="dialog" max-width="500">
+      <v-dialog v-model="dialog" max-width="520">
           <v-card>
-              <v-container>
+              <v-card-title class="pt-5 px-6"><h2>New event</h2></v-card-title>
+              <v-card-text class="px-6">
                 <v-form ref="eventForm" @submit.prevent="addEvent">
                     <v-text-field v-model="event.event_name" type="text" label="event name (required)" :rules="requiredRule"></v-text-field>
                     <v-text-field v-model="event.event_desc" type="text" label="detail" required></v-text-field>
                     <v-text-field v-model="event.loc_ID" type="text" label="event location" required></v-text-field>
                     <v-text-field v-model="event.event_date" type="date" label="start (required)" :rules="requiredRule"></v-text-field>
-                    <v-text-field v-model="event.event_start" type="time" label="start time (required)" :rules="requiredRule"></v-text-field>
-                    <v-text-field v-model="event.event_end" type="time" label="end time (required)" :rules="requiredRule"></v-text-field>
-                    <v-label><p style="font-size: 14px">Color (pick a color)</p></v-label>
-                    <div class="container" style="margin-top:-20px; margin-bottom: 15px">
-                      <v-btn icon size="x-small" color="blue" @click="event.color='#1e90ff'" style=" margin-left: -15px; margin-right:4px"></v-btn>
-                      <v-btn icon size="x-small" color="red" @click="event.color='#ff0000'" style="margin-right:4px"></v-btn>
-                      <v-btn icon size="x-small" color="green" @click="event.color='#008000'" style="margin-right:4px"></v-btn>
-                      <v-btn icon size="x-small" color="pink" @click="event.color='#ff69b4'" style="margin-right:4px"></v-btn>
-                      <v-btn icon size="x-small" color="purple" @click="event.color='#800080'" style="margin-right:4px"></v-btn>
-                      <v-btn icon size="x-small" color="orange" @click="event.color='#ffa500'"></v-btn>
-                    </div>
-                    <hr>
-                    <v-btn type="submit" color="primary" class="mr-4">Create Event</v-btn>
+                    <v-row dense>
+                      <v-col cols="6"><v-text-field v-model="event.event_start" type="time" label="start time (required)" :rules="requiredRule"></v-text-field></v-col>
+                      <v-col cols="6"><v-text-field v-model="event.event_end" type="time" label="end time (required)" :rules="requiredRule"></v-text-field></v-col>
+                    </v-row>
+                    <fieldset class="swatches">
+                      <legend>Colour</legend>
+                      <v-btn
+                        v-for="swatch in eventColors"
+                        :key="swatch.hex"
+                        icon
+                        size="small"
+                        :color="swatch.name"
+                        :aria-label="swatch.label"
+                        :aria-pressed="event.color === swatch.hex"
+                        class="swatch"
+                        :class="{ 'swatch--on': event.color === swatch.hex }"
+                        @click="event.color = swatch.hex"
+                      >
+                        <v-icon v-if="event.color === swatch.hex">mdi-check</v-icon>
+                      </v-btn>
+                    </fieldset>
+                    <v-btn type="submit" color="primary" class="mt-2">Create Event</v-btn>
                 </v-form>
-              </v-container>
+              </v-card-text>
           </v-card>
       </v-dialog>
-      <v-sheet height="600">
+      <v-sheet height="600" class="calendar-sheet">
         <v-calendar
           ref="calendar"
           v-model="focus"
@@ -138,20 +115,17 @@
           location="end"
         >
           <v-card
-            color="grey-lighten-4"
             min-width="350px"
-            flat
           >
             <v-toolbar
-              :color="selectedEvent.color"
-              theme="dark"
+              :color="eventColor(selectedEvent.color)"
             >
               <v-btn v-if="canManageEvents" @click="deleteEvent()" icon>
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
               <v-toolbar-title>{{ selectedEvent.name }}</v-toolbar-title>
               <v-spacer></v-spacer>
-              <v-btn color= "transparent" @click="attendeeDetails(selectedEvent)">
+              <v-btn variant="text" @click="attendeeDetails(selectedEvent)" aria-label="Attendance">
               <v-icon>mdi-account-multiple-check</v-icon>
               <v-divider vertical></v-divider>
               {{selectedEvent.attendance}}
@@ -174,7 +148,6 @@
             <v-card-actions>
               <v-btn
                 variant="text"
-                color="secondary"
                 @click="selectedOpen = false"
               >
                 Close
@@ -204,12 +177,30 @@
           </v-card>
         </v-menu>
       </v-sheet>
-    </v-col>
-  </v-row>
+      <!-- Month chips are too narrow to read on a phone, so list the events too -->
+      <template v-if="$vuetify.display.xs && phoneEvents.length">
+        <h2 class="mt-8">This month</h2>
+        <ul class="phone-events">
+          <li v-for="event in phoneEvents" :key="event.id">
+            <router-link :to="{ name: 'eventdetails', params: { id: event.id } }">
+              <span class="phone-events-dot" :class="`bg-${eventColor(event.color)}`"></span>
+              <span>
+                <strong>{{ event.name }}</strong>
+                <span class="phone-events-when">{{ formatDate(event.start) }} · {{ formatTime(event.start.substr(11)) }}</span>
+              </span>
+            </router-link>
+          </li>
+        </ul>
+      </template>
+    </div>
+  </div>
 </template>
 
 <script>
 import EventService from "../services/EventService";
+import PageBand from "./PageBand.vue";
+import { EVENT_COLORS, eventColor } from "../eventColors";
+import { formatDate, formatTime } from "../formatDate";
 
 // Today's date as YYYY-MM-DD in the viewer's time zone
 const todayString = () => {
@@ -224,10 +215,11 @@ const newEvent = () => ({
   event_date: todayString(),
   event_start: "12:00",
   event_end: "13:00",
-  color: "#1976D2",
+  color: EVENT_COLORS[0].hex,
   loc_ID: null,
 });
 export default {
+  components: { PageBand },
 
   computed: {
     currentUser() {
@@ -244,6 +236,17 @@ export default {
         return this.currentUser.roles.includes('ROLE_MODERATOR');
       }
       return false;
+    },
+    // Events in the month the calendar shows ("October 2026"), for the phone list
+    phoneEvents() {
+      const shown = this.title;
+      return this.events
+        .filter(e => {
+          const [y, m] = e.start.split('-').map(Number);
+          // Vuetify titles the month in English, e.g. "October 2026"
+          return new Date(y, m - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) === shown;
+        })
+        .sort((a, b) => a.start.localeCompare(b.start));
     },
     canManageEvents() {
       return this.showModeratorBoard || this.showAdminBoard;
@@ -274,6 +277,7 @@ export default {
         selectedElement: null,
         selectedOpen: false,
         events: [],
+        eventColors: EVENT_COLORS,
         dialog: false
 
     }),
@@ -387,8 +391,12 @@ export default {
         this.type = 'day'
       },
 
+      eventColor,
+      formatDate,
+      formatTime,
+
       getEventColor (event) {
-        return event.color
+        return eventColor(event.color)
       },
 
       setToday () {
@@ -442,3 +450,88 @@ export default {
 
 }
 </script>
+<style scoped>
+.calendar-toolbar :deep(.v-toolbar__content) {
+  height: auto !important;
+  flex-wrap: wrap;
+  gap: 8px 0;
+  padding: 8px 0;
+}
+/* Phones: the month name gets its own line instead of being cut to "O…" */
+@media (max-width: 599px) {
+  .calendar-title {
+    order: -1;
+    flex-basis: 100%;
+    margin-inline-start: 0;
+  }
+}
+.calendar-title {
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+/* Vuetify's calendar text is 12px; bring it up to a size older eyes can read */
+.calendar-sheet :deep(.v-calendar-weekly__head-weekday),
+.calendar-sheet :deep(.v-calendar-daily_head-weekday) {
+  font-size: 0.9375rem;
+}
+.calendar-sheet :deep(.v-calendar-weekly__day-label .v-icon-btn),
+.calendar-sheet :deep(.v-calendar-weekly__day-label .v-btn) {
+  font-size: 1rem;
+}
+/* Days outside the month stay on the white table, just quieter */
+.calendar-sheet :deep(.v-outside) {
+  background-color: #fff !important;
+  color: var(--ink-muted);
+}
+.calendar-sheet :deep(.v-calendar-weekly__day),
+.calendar-sheet :deep(.v-calendar-weekly__head-weekday) {
+  border-color: var(--line) !important;
+}
+.phone-events {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 0;
+}
+.phone-events a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  text-decoration: none;
+}
+.phone-events-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex: none;
+}
+.phone-events-when {
+  display: block;
+  color: var(--ink-muted);
+  font-size: 0.9375rem;
+}
+.calendar-sheet :deep(.v-event),
+.calendar-sheet :deep(.v-event-timed) {
+  font-size: 0.875rem;
+  height: auto !important;
+  padding: 2px 0;
+}
+.swatches {
+  border: 0;
+  margin: 4px 0 16px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.swatches legend {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.swatch--on {
+  box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--ink);
+}
+</style>

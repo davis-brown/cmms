@@ -1,8 +1,10 @@
 <template>
   <v-btn
+  variant="outlined"
   color="primary"
+  prepend-icon="mdi-printer"
   @click="pdfGeneration">
-    Print <br/> Directory
+    Print Directory
   </v-btn>
 </template>
 

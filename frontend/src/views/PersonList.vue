@@ -1,185 +1,118 @@
 <template>
-<v-main>
-<v-container fluid>
-<h1>Members of the Congregation </h1>
-<v-row align="end">
-			<v-col lg="2" align="center">
-	<v-btn
-      
-			to="/personadd"
-			class="mr-4"
-			color="primary"
-      v-if="showAdminBoard || showModeratorBoard"
-		>
-    Add Member
-		</v-btn>
-    </v-col>
-    <v-col>
-     <v-text-field
-					v-model="search"
-					label="Search Members"
-					@update:model-value="filterMembers"
-				></v-text-field>
-        </v-col>
-  <v-col lg="2" align="center">
+  <div>
+    <PageBand title="Members of the Congregation">
       <v-btn
-  
+        to="/personadd"
         color="primary"
-        class="text-white"
-        @click="download()" 
+        prepend-icon="mdi-plus"
         v-if="showAdminBoard || showModeratorBoard"
-        >
-          CSV Download
-        </v-btn>
-</v-col>
-</v-row>
-    <v-divider> </v-divider>
-      
-      
-       <v-row justify="center">
-    <v-col
-      v-for="person in searchMembers" 
-      :key="person.per_ID"
-      cols="12"
-      sm="6"
-      md="4"
-      lg="3"
-      align="center"
-    >
-   <v-menu
-      :close-on-content-click="false"
-      location="end"
-    >
-    <template v-slot:activator="{ props }">
-        <v-btn
-          color="grey-darken-4"
-          v-bind="props"
-          
-        >
-          {{person.frst_name}} {{person.last_name}}
-        </v-btn>
-        </template>
+      >
+        Add Member
+      </v-btn>
+      <v-btn
+        variant="outlined"
+        color="primary"
+        prepend-icon="mdi-download"
+        @click="download()"
+        v-if="showAdminBoard || showModeratorBoard"
+      >
+        CSV Download
+      </v-btn>
+    </PageBand>
 
-        <v-card max-height="50vh" width="80vh" class="overflow-y-auto">
-          <v-list>
-          <v-list-item>
-                
-              <v-list-item-title class="text-center"><h2>{{person.frst_name}} {{person.last_name}} </h2></v-list-item-title>
-              <div class="text-center"><h6>Birthdate: {{ person.bday }}</h6>  
-            </div>
-            <div class="text-center"><h6>Employer: {{ person.employer }}</h6>  
-            </div>
-                    <h5 class="text-center" v-if="person.phone || person.email || person.address">Contact Information: </h5>
-                <v-divider v-if="person.phone || person.email || person.address"> </v-divider>
-                <v-row>
-              <v-col>
-              
-               <div v-if="person.phone">
-          <v-icon color="indigo">
-            mdi-phone
-             <v-spacer> </v-spacer> 
-          </v-icon>
-           
-                     <v-list-item class="text-center">
-              <v-list-item-title class="text-center" style="border: 2px transparent">{{person.phone}}  <v-spacer> </v-spacer>  Mobile </v-list-item-title>
-     
-                     </v-list-item>
-                                 </div>
-                 <div v-if="person.email">
-          <v-icon color="indigo">
-            mdi-email
-              <v-spacer> </v-spacer> 
-          </v-icon>
-             
-          <v-list-item class="text-center">
-              <v-list-item-title class="text-center" style="border: 2px transparent">{{person.email}} 
-                <v-spacer> </v-spacer>        
-                Email</v-list-item-title>
-      
-    </v-list-item>
+    <div class="page-body">
+      <v-text-field
+        v-model="search"
+        label="Search Members"
+        prepend-inner-icon="mdi-magnify"
+        class="member-search"
+        @update:model-value="filterMembers"
+      ></v-text-field>
+
+      <p v-if="searchMembers.length === 0" class="member-empty">
+        {{ persons.length === 0 ? 'No members yet.' : `No one matches “${search}”.` }}
+      </p>
+
+      <ul class="member-grid">
+        <li v-for="person in searchMembers" :key="person.per_ID">
+          <v-menu :close-on-content-click="false" location="bottom start">
+            <template v-slot:activator="{ props }">
+              <button type="button" class="member" v-bind="props">
+                <PersonAvatar :name="`${person.frst_name} ${person.last_name}`" :color-key="familyKeys[person.per_ID] || person.last_name" />
+                <span class="member-text">
+                  <span class="member-name">{{ person.frst_name }} {{ person.last_name }}</span>
+                  <span v-if="person.church_pos" class="member-role">{{ person.church_pos }}</span>
+                </span>
+              </button>
+            </template>
+
+            <v-card class="member-card" max-height="70vh" width="420">
+              <div class="member-card-head">
+                <PersonAvatar :name="`${person.frst_name} ${person.last_name}`" :color-key="familyKeys[person.per_ID] || person.last_name" :size="64" />
+                <div>
+                  <h2>{{ person.frst_name }} {{ person.last_name }}</h2>
+                  <v-chip
+                    v-if="person.pub_permission"
+                    size="small"
+                    :color="person.pub_permission == 'Active' ? 'success' : 'error'"
+                    variant="flat"
+                  >{{ person.pub_permission }}</v-chip>
+                </div>
+              </div>
+
+              <dl class="member-facts">
+                <template v-if="person.phone">
+                  <dt><v-icon color="primary" size="20" icon="mdi-phone" />Mobile</dt>
+                  <dd><a :href="`tel:${person.phone}`">{{ person.phone }}</a></dd>
+                </template>
+                <template v-if="person.email">
+                  <dt><v-icon color="primary" size="20" icon="mdi-email" />Email</dt>
+                  <dd><a :href="`mailto:${person.email}`">{{ person.email }}</a></dd>
+                </template>
+                <template v-if="person.address">
+                  <dt><v-icon color="primary" size="20" icon="mdi-home" />Home</dt>
+                  <dd>{{ person.address }}</dd>
+                </template>
+                <template v-if="person.bday">
+                  <dt><v-icon color="primary" size="20" icon="mdi-cake-variant" />Birthday</dt>
+                  <dd>{{ formatDate(person.bday) }}</dd>
+                </template>
+                <template v-if="person.church_pos">
+                  <dt><v-icon color="primary" size="20" icon="mdi-account-tie" />Ministry Position</dt>
+                  <dd>{{ person.church_pos }}</dd>
+                </template>
+                <template v-if="person.employer">
+                  <dt><v-icon color="primary" size="20" icon="mdi-briefcase" />Employer</dt>
+                  <dd>{{ person.employer }}</dd>
+                </template>
+                <template v-if="person.baptised == 1">
+                  <dt><v-icon color="primary" size="20" icon="mdi-water" />Baptised</dt>
+                  <dd>{{ person.bapt_date ? formatDate(person.bapt_date) : 'Yes' }}</dd>
+                </template>
+              </dl>
+
+              <v-card-actions v-if="showAdminBoard" class="px-4 pb-4">
+                <v-btn color="primary" variant="flat" prepend-icon="mdi-pencil" @click="editPerson(person)">
+                  Edit
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-menu>
+        </li>
+      </ul>
     </div>
-    <div v-if="person.address">
-          <v-icon color="indigo">
-            mdi-home
-             <v-spacer> </v-spacer> 
-          </v-icon>
-           
-                     <v-list-item class="text-center">
-              <v-list-item-title class="text-center" style="border: 2px transparent;"> {{person.address}}  
-                <v-spacer> </v-spacer>  
-                Home </v-list-item-title>
-     
-                     </v-list-item>
-                                 </div>
-
-
-
-             <v-divider style="width: 100%; margin-right: 50%;"> </v-divider> 
-            <v-list-item-title class="text-center" style="border: 2px transparent; margin-left: 5%"> <h5> Member Information: </h5></v-list-item-title>
-             <v-divider style="width: 100%; margin-right: 50%;"> </v-divider> 
-              <div class="text-center" v-if="person.pub_permission == 'Active'" style="color: blue;"> <h6>Status: {{person.pub_permission}} </h6> </div>
-            <div class="text-center" v-if="person.pub_permission == 'Inactive'" style="color: red;"> <h6>Status: {{person.pub_permission}} </h6> </div>
-             <div class="text-center"> <h6> Ministry Position: {{person.church_pos}} </h6> </div>
-
-            
-            <div class="text-center" style="border: 2px transparent;" v-if="person.baptised == 1"> <h4><u>Baptised</u></h4> </div>
-            <div class="text-center" v-if="person.baptised == 1"> <h6>Baptism Date: {{person.bapt_date}} </h6> </div>
-           
-              </v-col>
-              </v-row>
-            <v-list-item-action>
-                  <div v-if="showAdminBoard">
-          <v-btn
-       
-          position="absolute"
-          location="end"
-          color="white"
-          class="text-black"
-          icon
-          @click="editPerson(person)"
-          size="small"
-        >
-        Edit
-   
-        </v-btn>
-        </div>
-              </v-list-item-action>
-            
-
-          </v-list-item>
-              </v-list>
-
-          <v-list-item>
-             <!-- <v-list>
-               <v-list-item-action>
-          <v-btn
-          position="absolute"
-          location="end"
-          color="white"
-          class="text-black"
-          to="/lifeevent"
-        >
-        Life Events
-   
-        </v-btn>
-              </v-list-item-action>
-              
-            </v-list> -->
-          </v-list-item>
-          </v-card>
-   </v-menu>
- </v-col>
-    </v-row>
-    <v-divider> </v-divider>
-  
-</v-container>
-</v-main>
-
+  </div>
 </template>
 
 <script>
 import PersonDataService from "../services/PersonDataService";
+import PageBand from "../components/PageBand.vue";
+import PersonAvatar from "../components/PersonAvatar.vue";
+import { formatDate } from "../formatDate";
+import { loadFamilyKeys } from "../familyKeys";
+
   export default {
+    components: { PageBand, PersonAvatar },
       computed: {
     currentUser() {
       return this.$store.state.auth.user;
@@ -201,6 +134,7 @@ import PersonDataService from "../services/PersonDataService";
         return { 
          persons: [],
          searchMembers: [],
+         familyKeys: {},
          search: ""
 
          
@@ -208,6 +142,7 @@ import PersonDataService from "../services/PersonDataService";
         };
   },
     created() {
+        loadFamilyKeys().then(keys => { this.familyKeys = keys; });
         PersonDataService.getAll()
             .then(response => {
                 this.persons = response.data;
@@ -221,13 +156,14 @@ import PersonDataService from "../services/PersonDataService";
       
     
     methods: {
+          formatDate,
           editPerson(person) {
             this.$router.push({ name: 'person-edit', params: { id: person.per_ID } });
     
         },
     
       filterMembers() {
-			const search = (this.search || "").toLowerCase();
+			const search = (this.search || "").trim().toLowerCase();
 			this.searchMembers = this.persons.filter((person) => {
 				const name = `${person.frst_name || ""} ${person.last_name || ""}`;
 				return name.toLowerCase().includes(search);
@@ -286,199 +222,76 @@ import PersonDataService from "../services/PersonDataService";
 </script>
 
 
-<style>
-
-.v-card--reveal {
-  align-items: center;
-  bottom: 0;
-  justify-content: center;
-  opacity: .5;
-  position: absolute;
+<style scoped>
+.member-search {
+  max-width: 520px;
+}
+.member-empty {
+  color: var(--ink-muted);
+}
+.member-grid {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+.member {
   width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  text-align: left;
+  color: var(--ink);
+  transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+.member:hover {
+  border-color: rgba(var(--v-theme-primary), 0.5);
+  box-shadow: var(--shadow-card);
+}
+.member-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.member-name {
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+.member-role {
+  color: var(--ink-muted);
+  font-size: 0.9375rem;
+}
+.member-card-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 20px 8px;
+}
+.member-card-head h2 {
+  margin: 0 0 6px;
+}
+.member-facts {
+  margin: 0;
+  padding: 8px 20px 12px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 16px;
+}
+.member-facts dt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.member-facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
 }
 </style>
-
-    <!--
-    
-       
- 
-    <v-card
-      class="mx-auto"
-      color="grey lighten-4"
-      max-width="700px"
-
-   >
-   
-            
-        </v-card-title>
-          </v-card>
-  
-      <v-card-text
-        class="pt-6"
-        style="position: relative;"
-      >
-       <v-card-text>
-  
-           <v-row>
-             <v-col
-             cols="12"
-                sm="6"
-                md="4"
-             >
-             <v-text-field>
-             label="{{person.pub_permission}}{{person.baptised}} {{person.bapt_date}}"
-              </v-text-field>
-   
-                  <v-col>
-                      </v-row> 
-                              </v-card-text>  
- 
-
-
-<<template> 
-<v-main>
-<v-container
-fluid
->
-      <v-spacer>  </v-spacer> 
-  <v-card
-    class="mx-auto"
-    max-width="1000"
-    elevation="3"
-    height="1000"
-    outlined
-    >
-    <v-card-title>
-      <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="Search"
-        single-line
-        hide-details
-      ></v-text-field>
-    </v-card-title>
-  
-  <v-data-table
-      :headers="headers"
-      :items="person"
-      :single-expand="singleExpand"
-      :expanded.sync="expanded"
-      item-key="per_ID"
-      show-expand
-      class="elevation-1"
-      :search="search"
-    
-    >
-<template v-slot:expanded-item="{ item }">
-      <td :colspan="headers.length">
-        <v-card-actions>
-				<v-btn
-				@click="editPerson(item)"
-				class="ma"
-				outlined
-        top
-				small
-				fab
-				color="blue darken"
-				>
-				<v-icon>mdi-pencil</v-icon>
-				</v-btn>
-       </v-card-actions>
-      </td>
-    </template>
-    </v-data-table>
-    </v-card> 
-    </v-container>
-</v-main>
-</template>
-
-<script>
-import PersonDataService from "../services/PersonDataService";
-  export default {
-
-  data() {
-        return { 
-        search: '',
-         person: [],
-         singleExpand: false,
-         expanded: [],
-            headers: [
-              {
-                    text: 'ID',
-                    value: 'per_ID',
-                    align: 'start',
-                    width: "2%"
-              },
-                {
-                    text: 'Member',
-                    value: 'frst_name',
-                    align: 'left',
-                    sortable: true,
-                    width: "3%"
-                },
-                  {
-                    value: 'last_name',
-                    align: 'left',
-                    sortable: true,
-                    width: "3%"
-                },
-                  {
-                    text: 'Birthday',
-                    value: 'bday',
-                    align: 'left',
-                    sortable: true,
-                    width: "7%"
-                },
-                  {
-                    text: 'Baptism ',
-                    value: 'baptised',
-                    align: 'left',
-                    sortable: true,
-                    width: "1%"
-                },
-                  {
-                    
-                    value: 'bapt_date',
-                    align: 'left',
-                    sortable: true,
-                    width: "7%"
-                },
-                {
-                    text: 'Employer',
-                    value: 'employer',
-                    align: 'left',
-                    sortable: true,
-                    width: "4%"
-                },
-                 {
-                    text: 'Publish Permission',
-                    value: 'pub_permission',
-                    align: 'left',
-                    sortable: true,
-                    width: "1%"
-                },
-               
-                 {
-                    text: 'Edit',
-                    value: 'data-table-expand',
-                    align: 'right',
-                    width: "1%"
-                },
-              
-            ],
-            message: 'Enter click on Member to edit'
-           
-        };
-    },
-    created() {
-        PersonDataService.getAll()
-            .then(response => {
-                this.person = response.data;
-                console.log(this.person);
-            })
-            .catch(error => {
-                this.message = (error.response && error.response.data.message) || error.message;
-            });
-    },
-
--->

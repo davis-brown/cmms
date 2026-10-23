@@ -1,83 +1,51 @@
 <template>
-  
-<v-main>
- <v-carousel cycle hide-delimiter-background height="500px">
-      <v-carousel-item
-        v-for="(item,i) in items"
-        :key="i"
-        :src="item.src"
-        cover
-        reverse-transition="fade"
-        transition="fade"
-      ></v-carousel-item>
-  </v-carousel>
-  
-<v-container>
-    <h1> Congregation Information</h1>
-     <v-btn
-			to="/congregationadd"
-			v-if="isModeratorOrAdmin"
-			class="mr-4"
-			color="primary"
-		>
-    Add Congregation
-		</v-btn>
-        <v-divider> </v-divider>
-        <v-row
-        align="center">
-		<v-col
-            v-for="congregation in congregations"
-            :key="congregation.con_ID"
-            cols="12"
-            align="center"
-          >
-
-  <v-card
-  class="mx-auto"
-  max-width="544"
-    
-  >
-  <v-spacer></v-spacer>
-  <v-card-title class="text-center">
-
-    <h2>{{congregation.con_name}}</h2>
-    </v-card-title>
-<v-spacer></v-spacer>
-  <v-card-subtitle>
-    <h3>
-    Congregation Address
-       <v-divider></v-divider>
-   {{congregation.con_addrs}} 
-   </h3>
-</v-card-subtitle>
-    
-      <v-card-actions>
+  <div>
+    <PageBand title="Congregation Information">
       <v-btn
-				@click="editCongregation(congregation)"
-				v-if="isModeratorOrAdmin"
-				class="ma-2"
-				variant="outlined"
-				size="large"
-				icon
-				color="blue-darken-4"
-				>
-				<v-icon>mdi-pencil</v-icon>
-				</v-btn>
-        <v-spacer></v-spacer>
-        </v-card-actions>
-   
-      </v-card>
-
-       </v-col>
-       </v-row>
- </v-container>
-</v-main>
+        to="/congregationadd"
+        v-if="isModeratorOrAdmin"
+        color="primary"
+        prepend-icon="mdi-plus"
+      >
+        Add Congregation
+      </v-btn>
+    </PageBand>
+    <div class="page-body">
+      <v-row>
+        <v-col
+          v-for="congregation in congregations"
+          :key="congregation.con_ID"
+          cols="12"
+          md="6"
+        >
+          <v-card>
+            <v-card-title class="pt-5 px-5"><h2>{{ congregation.con_name }}</h2></v-card-title>
+            <v-card-text class="px-5 text-body-1">
+              <v-icon icon="mdi-map-marker" color="primary" class="mr-1" />{{ congregation.con_addrs }}
+            </v-card-text>
+            <v-card-actions v-if="isModeratorOrAdmin" class="px-4 pb-4">
+              <v-btn
+                @click="editCongregation(congregation)"
+                variant="tonal"
+                color="primary"
+                prepend-icon="mdi-pencil"
+              >
+                Edit
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+    </div>
+  </div>
 </template>
 
 <script>
+import PageBand from "../components/PageBand.vue";
 import CongregationServices from "../services/CongregationServices";
 
 export default {
+  components: { PageBand },
   name: 'Home',
   computed: {
     isModeratorOrAdmin() {
@@ -88,22 +56,7 @@ export default {
   },
   data() {
     return {
-      congregations: {},
-      items: [
-        {
-          src: require("../assets/riversidewindow.jpg")
-        },
-        // Placeholders until the church adds its own photos
-        {
-          src: require("../assets/carousel/placeholder-1.svg")
-        },
-        {
-          src: require("../assets/carousel/placeholder-2.svg")
-        },
-        {
-          src: require("../assets/carousel/placeholder-3.svg")
-        }
-      ]
+      congregations: [],
     };
   },
   created() {

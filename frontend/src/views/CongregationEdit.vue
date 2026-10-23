@@ -1,5 +1,8 @@
 <template>
-      <div v-if="currentCongregation" class="edit-form py-3">
+  <div>
+  <PageBand title="Edit congregation" />
+  <div class="page-body page-body--narrow">
+      <div v-if="currentCongregation" class="form-page">
       <v-form ref="form">
      
         <v-text-field
@@ -17,22 +20,26 @@
         ></v-text-field>
 
 
-    <v-btn size="small" @click="updateCongregation">
+    <v-btn @click="updateCongregation" color="primary" variant="flat">
         Submit
       </v-btn>
 
-    <v-btn size="small" @click="deleteCongregation">
+    <v-btn @click="deleteCongregation" color="error" variant="outlined">
         Delete
       </v-btn>
     
   </v-form>
   </div>
+  </div>
+  </div>
 </template>
 
 <script>
+import PageBand from "../components/PageBand.vue";
 import CongregationServices from "../services/CongregationServices";
 
 export default {
+  components: { PageBand },
     data(){
         return {
             currentCongregation: null,
@@ -82,13 +89,3 @@ export default {
     
 };
 </script>
-<style>
-h4 {
-  font-size: 25px;
-  text-align: center;
-}
-.edit-form {
-  max-width: 400px;
-  margin: auto;
-}
-</style>

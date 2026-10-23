@@ -8,6 +8,7 @@
                 :headers="emailheaders"
                 :items="emails"
                 hide-default-footer
+                no-data-text="None added yet"
                 >
                 <template v-slot:[`item.primary`]="{ item }">
                         <v-radio-group
@@ -23,19 +24,19 @@
                     </v-icon>
                 </template>
                 <template v-slot:[`body.append`]>
-                    <tr>
-                        <td>
+                    <tr class="add-row">
+                        <td colspan="3">
+                            <div class="add-line">
                             <v-text-field
                             v-model="currentEmail.address"
                             :rules="emailRules"
                             label="Email Address"
                             required
                             ></v-text-field>
-                        </td>
-                        <td center>
-                            <v-btn :disabled="!validEmail" size="small" @click="addEmail()" >
+                            <v-btn :disabled="!validEmail" @click="addEmail()"  color="primary" variant="flat">
                             Add
                             </v-btn>
+                            </div>
                         </td>
                     </tr>
                 </template>
@@ -49,6 +50,7 @@
                 :headers="phoneheaders"
                 :items="phones"
                 hide-default-footer
+                no-data-text="None added yet"
                 >
                     <template v-slot:[`item.primary`]="{ item }">
                         <v-radio-group
@@ -64,21 +66,21 @@
                         </v-icon>
                     </template>
                     <template v-slot:[`body.append`]>
-                        <tr>
-                            <td>
+                        <tr class="add-row">
+                        <td colspan="3">
+                            <div class="add-line">
                                 <v-text-field
                                 v-model="currentPhone.number"
                                 :rules="phoneRules"
                                 label="Phone Number"
                                 required
                                 ></v-text-field>
-                            </td>
-                            <td center>
-                                <v-btn :disabled="!validPhone" size="small" @click="addPhone()" >
+                            <v-btn :disabled="!validPhone" @click="addPhone()"  color="primary" variant="flat">
                                 Add
                                 </v-btn>
-                            </td>
-                        </tr>
+                            </div>
+                        </td>
+                    </tr>
                     </template>
                 </v-data-table>
             </v-form>
@@ -90,6 +92,7 @@
                 :headers="addressheaders"
                 :items="addresses"
                 hide-default-footer
+                no-data-text="None added yet"
                 >
                     <template v-slot:[`item.primary`]="{ item }">
                         <v-radio-group
@@ -105,21 +108,21 @@
                         </v-icon>
                     </template>
                     <template v-slot:[`body.append`]>
-                        <tr>
-                            <td>
+                        <tr class="add-row">
+                        <td colspan="3">
+                            <div class="add-line">
                                 <v-text-field
                                 v-model="currentAddress.address"
                                 :rules="addressRules"
                                 label="Street Address"
                                 required
                                 ></v-text-field>
-                            </td>
-                            <td center>
-                                <v-btn :disabled="!validAddress" size="small" @click="addAddress()" >
+                            <v-btn :disabled="!validAddress" @click="addAddress()"  color="primary" variant="flat">
                                 Add
                                 </v-btn>
-                            </td>
-                        </tr>
+                            </div>
+                        </td>
+                    </tr>
                     </template>
                 </v-data-table>
             </v-form>
