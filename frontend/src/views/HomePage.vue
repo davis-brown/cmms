@@ -2,6 +2,7 @@
   <div class="home">
     <section class="home-welcome">
       <div class="home-inner">
+        <p class="home-place">Riverside Community Church</p>
         <h1 v-if="currentUser">{{ greeting }}, {{ currentUser.username }}</h1>
         <h1 v-else>Welcome to Riverside</h1>
         <p class="home-lede">
@@ -9,22 +10,11 @@
           <template v-else>The members' directory and calendar for Riverside Community Church. Log in to find people, families, groups and events.</template>
         </p>
         <div v-if="!currentUser" class="home-auth">
-          <v-btn color="primary" size="large" to="/login">Log in</v-btn>
-          <v-btn variant="outlined" color="primary" size="large" to="/register">Sign up</v-btn>
+          <v-btn color="white" variant="flat" size="large" class="text-primary" to="/login">Log in</v-btn>
+          <v-btn variant="outlined" color="white" size="large" to="/register">Sign up</v-btn>
         </div>
+        <p class="home-address">100 Main St, Springfield</p>
       </div>
-    </section>
-
-    <section class="home-inner" aria-label="Areas">
-      <ul class="area-grid">
-        <li v-for="area in areas" :key="area.to">
-          <router-link :to="area.to" class="area-tile">
-            <v-icon :icon="area.icon" size="28" color="primary" class="area-tile-icon" />
-            <span class="area-tile-name">{{ area.label }}</span>
-            <span v-if="area.count !== null" class="area-tile-count">{{ area.count }} {{ area.noun }}</span>
-          </router-link>
-        </li>
-      </ul>
     </section>
 
     <section v-if="currentUser" class="home-inner home-coming">
@@ -52,6 +42,24 @@
       </ol>
     </section>
 
+    <section aria-label="Areas" class="areas">
+      <article v-for="area in areas" :key="area.to" class="area">
+        <div class="home-inner area-inner">
+          <div class="area-art">
+            <img :src="area.art" alt="" loading="lazy">
+          </div>
+          <div class="area-text">
+            <h2 class="area-name">{{ area.label }}</h2>
+            <p class="area-blurb">{{ area.blurb }}</p>
+            <p v-if="area.count !== null" class="area-count">{{ area.count }} {{ area.noun }}</p>
+            <v-btn :to="area.to" class="area-link" color="primary" variant="outlined" size="large" append-icon="mdi-arrow-right">
+              Open {{ area.label }}
+            </v-btn>
+          </div>
+        </div>
+      </article>
+    </section>
+
     <footer class="home-footer">
       <div class="home-inner">
         <strong>Riverside Community Church</strong>
@@ -69,6 +77,10 @@ import FamilyService from '../services/FamilyService';
 import GroupDataService from '../services/GroupDataService';
 import EventService from '../services/EventService';
 import { eventColor } from '../eventColors';
+import membersArt from '../assets/members.jpg';
+import familiesArt from '../assets/big-family.jpg';
+import groupsArt from '../assets/group.jpg';
+import eventsArt from '../assets/calendarpicture.jpg';
 
 export default {
   name: 'HomePage',
@@ -90,10 +102,14 @@ export default {
     areas() {
       const c = this.counts;
       return [
-        { to: '/person', label: 'Members', icon: 'mdi-account-multiple', noun: 'people', count: c.members },
-        { to: '/families', label: 'Families', icon: 'mdi-home-account', noun: 'families', count: c.families },
-        { to: '/group', label: 'Groups', icon: 'mdi-account-group', noun: 'groups', count: c.groups },
-        { to: '/calendar', label: 'Events', icon: 'mdi-calendar', noun: 'coming up', count: c.events }
+        { to: '/person', label: 'Members', art: membersArt, noun: 'people', count: c.members,
+          blurb: 'Find out more about the members of Riverside church: who they are and how to reach them.' },
+        { to: '/families', label: 'Families', art: familiesArt, noun: 'families', count: c.families,
+          blurb: 'Keep your own family\'s details up to date and see the other families in the congregation.' },
+        { to: '/group', label: 'Groups', art: groupsArt, noun: 'groups', count: c.groups,
+          blurb: 'Discover the groups at Riverside and who belongs to each one.' },
+        { to: '/calendar', label: 'Events', art: eventsArt, noun: 'coming up', count: c.events,
+          blurb: 'Keep up with what\'s happening at Riverside, RSVP, and say what you\'re bringing.' }
       ];
     }
   },
@@ -140,13 +156,31 @@ export default {
   margin: 0 auto;
   padding: 0 24px;
 }
+/* The stained-glass window under a cobalt wash, closed by the gold band rule */
 .home-welcome {
-  padding: 48px 0 8px;
+  padding: 72px 0 40px;
+  color: #fff;
+  background:
+    linear-gradient(90deg, rgba(18, 33, 78, 0.92) 0%, rgba(18, 33, 78, 0.78) 50%, rgba(18, 33, 78, 0.45) 100%),
+    url('../assets/riversidewindow.jpg') center 40% / cover no-repeat #12214e;
+  border-bottom: 3px solid rgb(var(--v-theme-gold));
+}
+.home-welcome h1 {
+  color: #fff;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+}
+.home-place {
+  margin: 0 0 8px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.9375rem;
+  color: rgb(var(--v-theme-gold));
 }
 .home-lede {
   margin: 12px 0 0;
   font-size: 1.25rem;
-  color: var(--ink-muted);
+  color: rgba(255, 255, 255, 0.9);
   max-width: 52ch;
 }
 .home-auth {
@@ -155,46 +189,69 @@ export default {
   margin-top: 24px;
   flex-wrap: wrap;
 }
-
-/* The four areas as quiet link tiles */
-.area-grid {
-  list-style: none;
-  margin: 0;
-  padding: 32px 0 40px;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
+.home-address {
+  margin: 40px 0 0;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.75);
 }
-.area-tile {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 20px;
+
+/* The four areas: illustration and text, alternating sides on alternating bands */
+.area:nth-child(even) {
+  background: #f1f4f9;
+}
+.area-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  align-items: center;
+  gap: 56px;
+  padding-top: 56px;
+  padding-bottom: 56px;
+}
+.area:nth-child(even) .area-art {
+  order: 2;
+}
+.area-art {
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 12px;
   background: #fff;
-  color: var(--ink);
-  text-decoration: none;
-  transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out;
 }
-.area-tile:hover {
-  color: var(--ink);
-  border-color: rgba(var(--v-theme-primary), 0.5);
-  box-shadow: var(--shadow-card);
+.area-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
-.area-tile-icon {
-  margin-bottom: 8px;
+.area-name {
+  font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+  margin: 0;
 }
-.area-tile-name {
-  font-size: 1.25rem;
+.area-name::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 3px;
+  border-radius: 2px;
+  margin-bottom: 16px;
+  background: rgb(var(--v-theme-gold));
+}
+.area-blurb {
+  margin: 12px 0 0;
+  font-size: 1.1875rem;
+  max-width: 44ch;
+}
+.area-count {
+  margin: 8px 0 0;
+  color: var(--ink-muted);
   font-weight: 700;
 }
-.area-tile-count {
-  color: var(--ink-muted);
+.area-link {
+  margin-top: 24px;
 }
 
 .home-coming {
+  padding-top: 40px;
   padding-bottom: 56px;
 }
 .home-coming-head {
@@ -275,8 +332,8 @@ export default {
 }
 
 @media (max-width: 899px) {
-  .area-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .area-inner {
+    gap: 32px;
   }
 }
 @media (max-width: 599px) {
@@ -284,11 +341,22 @@ export default {
     padding: 0 16px;
   }
   .home-welcome {
-    padding-top: 28px;
+    padding: 40px 0 28px;
   }
-  .area-grid {
-    padding: 24px 0 32px;
-    gap: 12px;
+  .home-address {
+    margin-top: 28px;
+  }
+  .area-inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    padding-top: 32px;
+    padding-bottom: 36px;
+  }
+  .area:nth-child(even) .area-art {
+    order: 0;
+  }
+  .area-art {
+    aspect-ratio: 16 / 10;
   }
   .board-row {
     grid-template-columns: 56px minmax(0, 1fr);

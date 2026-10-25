@@ -99,11 +99,9 @@ components:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
     rounded: "{rounded.control}"
-  area-tile:
+  area-art:
     backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
     rounded: "{rounded.tile}"
-    padding: "20px"
   member-tile:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
@@ -131,7 +129,7 @@ components:
 
 **Creative North Star: "The Well-Kept Register"**
 
-The app reads like a church office's register that someone keeps carefully: white pages, one steady ink-blue, every entry in the same plain, legible hand. A cobalt bar runs across the top and carries the actions; below it is white paper, neutral cards with hairline borders, and ink text. Inner pages open with a pale cobalt-tinted header band that holds the title and the page's actions, so every page starts the same way. Gold is the one accent: it underlines the current page in the bar, rules the bottom of every page band and tints text selection. Where you are is told by the page title and that gold underline, never by a change of colour.
+The app reads like a church office's register that someone keeps carefully: white pages, one steady ink-blue, every entry in the same plain, legible hand. A cobalt bar runs across the top and carries the actions; below it is white paper, neutral cards with hairline borders, and ink text. Inner pages open with a pale cobalt-tinted header band that holds the title and the page's actions, so every page starts the same way. Gold is the one accent: it underlines the current page in the bar, rules the bottom of every page band and of the Home hero, tops each Home area heading with a short bar, and tints text selection. Home is the one page with pictures: the church's stained-glass window under a cobalt wash, and a friendly flat illustration beside each area. Where you are is told by the page title and that gold underline, never by a change of colour.
 
 There is one typeface, Atkinson Hyperlegible, in regular and bold, for everything from the wordmark to the hints under a field. Hierarchy comes from size and weight alone. People appear as quiet tinted initials avatars whose tone comes from their family, so a household reads as a set without anything shouting. Colour beyond cobalt is rationed: slate and amber exist only to tell events apart, and green, red and yellow only to report state.
 
@@ -150,7 +148,7 @@ Density is comfortable rather than compact: 44px targets, a 17px body, nothing u
 One working blue on white paper with warm-grey hairlines and near-black ink; two muted event colours and the status colours stand apart from it.
 
 ### Primary
-- **Register Cobalt** (cobalt): The shell bar and every action: filled and outlined buttons, tonal Edit buttons, text buttons, links, input focus, checkboxes and radios, the caret, the 3px focus ring, the Home tile icons and the icons in member detail lists. It is also the default event colour.
+- **Register Cobalt** (cobalt): The shell bar and every action: filled and outlined buttons, tonal Edit buttons, text buttons, links, input focus, checkboxes and radios, the caret, the 3px focus ring and the icons in member detail lists. It is also the default event colour.
 
 ### Secondary
 - **Slate** (slate): An event colour only. Calendar events, the date discs on the "Coming up" board and the strip atop event details.
@@ -163,13 +161,13 @@ One working blue on white paper with warm-grey hairlines and near-black ink; two
 - **Muted Ink** (ink-muted): Ledes, subtitles, counts, secondary facts, family card icons, empty states, out-of-month calendar days.
 - **Paper** (paper): The ground of every page and the fill of cards, tiles, inputs and the footer. The ground is never tinted.
 - **Band Tint** (band-tint): The pale cobalt-tinted fill of the page band, and only that.
-- **Register Gold** (gold): The one accent. The 4px underline on the active nav link, the 3px rule along the bottom of every page band, and the 35% text-selection wash. Never a fill, button or text colour.
+- **Register Gold** (gold): The one accent. The 4px underline on the active nav link, the 3px rule along the bottom of every page band and the Home hero, the 40px bar above each Home area heading, the small uppercase place name on the dark Home hero, and the 35% text-selection wash. Never a fill or button colour, and never text on a light ground.
 - **Hairline** (line): Card and tile borders, group card title dividers, board and phone-list row rules, calendar grid lines and the footer rule.
 - **Avatar tones** (avatar-blue with cobalt initials, avatar-grey with #3A4150 initials, avatar-sand with #6B4700 initials): The three quiet person-avatar tints.
 - **Status** (success, error, warning): State only. Active and inactive chips, alerts, and the outlined Delete and Remove buttons.
 
 ### Named Rules
-**The One Blue Rule.** Cobalt is the only colour that acts. The shell, buttons, links and focus are cobalt; gold only marks (the nav underline, the band rule, selection); nothing else on a page is coloured unless it is an event or a state.
+**The One Blue Rule.** Cobalt is the only colour that acts. The shell, buttons, links and focus are cobalt; gold only marks (the nav underline, the band and hero rules, the area bars, selection); nothing else on a page is coloured unless it is an event or a state.
 
 **The Events Only Rule.** Slate and amber appear on events and nowhere else. Every stored event colour, old or new, is mapped onto cobalt, slate or amber when shown, and an unknown colour shows as cobalt.
 
@@ -184,7 +182,7 @@ One working blue on white paper with warm-grey hairlines and near-black ink; two
 ### Hierarchy
 - **Headline** (700, clamp(1.75rem, 3.5vw, 2.25rem), 1.15, -0.01em): Page titles (h1) in the band and the greeting on Home, with balanced wrapping. The "Riverside" wordmark is 1.5rem bold in the same face.
 - **Section** (700, clamp(1.375rem, 2.5vw, 1.625rem), 1.15, -0.01em): h2 such as "Coming up" and the name in a member's detail card.
-- **Title** (700, 1.375rem): h3, family and group card titles. Generic card titles are 1.25rem bold, table toolbar titles 1.125rem bold, Home tile names 1.25rem bold.
+- **Title** (700, 1.375rem): h3, family and group card titles. Generic card titles are 1.25rem bold, table toolbar titles 1.125rem bold. On Home, the greeting is clamp(2rem, 4.5vw, 3rem) and area names use the Headline size.
 - **Body** (400, 1.0625rem, 1.55): All running text. Ledes run 1.125 to 1.25rem in muted ink, capped at 52 to 60ch. Tables use 1rem with tabular numerals.
 - **Button** (700, 1rem, no tracking): Every button, in sentence case.
 - **Label** (400, 0.875rem, 1.35): Floating labels, hints, messages and chips. This is the floor; the only smaller text is the 13px bold month abbreviation inside a date disc.
@@ -198,16 +196,16 @@ One working blue on white paper with warm-grey hairlines and near-black ink; two
 
 Content sits in a centred column with a 1200px maximum; forms and detail pages narrow to 760px. Gutters are 24px, dropping to 16px under 600px. Each inner page is two parts: a full-width page band (32px top, 28px bottom padding) with the h1 and optional lede at the left and the actions at the right, bottom-aligned and wrapping; then the page body (28px top, 64px bottom padding).
 
-Home has no band. It shows a greeting h1 and lede, then the four area tiles in a four-column grid with 16px gaps, two by two under 900px (12px gaps under 600px), then the "Coming up" board: ruled rows on a fixed grid (date disc, name, when, where) that collapse to a disc plus a stacked text column on phones. A white footer with a hairline top rule closes the page.
+Home has no band. It opens with a hero: the stained-glass window photo under a left-to-right cobalt wash (92% to 45%), a small uppercase gold place name, a white greeting h1 and lede (Log in and Sign up buttons when logged out), the church address, and a 3px gold bottom rule. Logged-in members then see the "Coming up" board: ruled rows on a fixed grid (date disc, name, when, where) that collapse to a disc plus a stacked text column on phones. Then each of the four areas gets its own full-width band, alternating white and the pale band tint: an illustration in a 5:4 hairline frame (12px corners) beside a gold bar, the area name, a one-line description, a muted bold count and an outlined "Open …" button. The picture swaps sides on each band (5fr to 6fr columns, 56px gap); under 600px the picture sits above the text at 16:10. A white footer with a hairline top rule closes the page.
 
 Member lists are auto-filling tile grids (minimum 260px, 12px gap). Family and group cards sit in a responsive card grid. The shell wraps under 1024px, giving the nav its own full-width row under the brand; under 480px the "Community Church" subline is hidden. Spacing steps in use are 4, 8, 12, 16, 20, 24, 28 and 48px.
 
 ## Elevation & Depth
 
-Depth is soft, low and tinted with ink rather than black. Cards sit on paper with a hairline border and a gentle two-layer shadow; menus and dialogs lift further. Home tiles and member tiles are flat at rest and take the card shadow plus a half-strength cobalt border on hover. Motion is limited to 150ms ease-out hover feedback, and reduced-motion preferences collapse it.
+Depth is soft, low and tinted with ink rather than black. Cards sit on paper with a hairline border and a gentle two-layer shadow; menus and dialogs lift further. Member tiles are flat at rest and take the card shadow plus a half-strength cobalt border on hover. Motion is limited to 150ms ease-out hover feedback, and reduced-motion preferences collapse it.
 
 ### Shadow Vocabulary
-- **Card** (`box-shadow: 0 1px 2px rgba(35, 37, 45, 0.08), 0 4px 14px rgba(35, 37, 45, 0.08)`): Cards at rest; Home and member tiles on hover.
+- **Card** (`box-shadow: 0 1px 2px rgba(35, 37, 45, 0.08), 0 4px 14px rgba(35, 37, 45, 0.08)`): Cards at rest; member tiles on hover.
 - **Lift** (`box-shadow: 0 2px 4px rgba(35, 37, 45, 0.1), 0 10px 24px rgba(35, 37, 45, 0.12)`): Menus and dialogs.
 
 ### Named Rules
@@ -215,7 +213,7 @@ Depth is soft, low and tinted with ink rather than black. Cards sit on paper wit
 
 ## Shapes
 
-Gently rounded and plain. Buttons, cards and fields use 8px corners; shell links 10px; Home tiles 12px; member tiles 14px. Chips are full pills. Person avatars, the date discs on the "Coming up" board and the calendar's phone-list dots are circles. Every border is a single 1px hairline; the heavier lines are the 4px rounded gold underline on the active nav link, the 3px gold rule under the page band, and the 10px event-colour strip that tops an event's detail card.
+Gently rounded and plain. Buttons, cards and fields use 8px corners; shell links 10px; Home illustration frames 12px; member tiles 14px. Chips are full pills. Person avatars, the date discs on the "Coming up" board and the calendar's phone-list dots are circles. Every border is a single 1px hairline; the heavier lines are the 4px rounded gold underline on the active nav link, the 3px gold rule under the page band, and the 10px event-colour strip that tops an event's detail card.
 
 ## Components
 
@@ -254,8 +252,8 @@ Opens every inner page. Band-tint fill, a hairline bottom rule, the h1 in ink, a
 ### Person Avatar
 A circular initials avatar (40px in cards, 48px in member tiles, 64px in detail cards) with bold initials at 38% of its size and no ring or shadow. Its tone (blue, grey or sand) is hashed from the person's family key, falling back to their surname, so a household shares a tone on every page.
 
-### Area Tiles and Coming Up Board
-On Home, each area is a bordered white link tile: a 28px cobalt mdi icon, the name in 1.25rem bold, and a muted count. "Coming up" is a ruled board; each row starts with a 56px date disc in the event's colour (bold day, 13px uppercase month) followed by the bold name, then when and where in muted ink.
+### Home Hero, Area Bands and Coming Up Board
+The Home hero is the only photo in the app, and the area illustrations are the only drawings; both stay on Home. Each area band pairs one illustration with its text and an outlined cobalt button, and the bands alternate sides like the original page did, in the quiet palette instead of bright fills. "Coming up" is a ruled board; each row starts with a 56px date disc in the event's colour (bold day, 13px uppercase month) followed by the bold name, then when and where in muted ink.
 
 ## Do's and Don'ts
 

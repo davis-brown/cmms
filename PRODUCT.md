@@ -39,7 +39,7 @@ A portfolio and demo project. It was built for one real congregation (Riverside 
 
 ## Evidence on Hand
 
-- Photos in `frontend/src/assets/` (church, window, members, families, group and calendar images), plus `logoriverside.png` and `logo.svg`. The carousel slides in `frontend/src/assets/carousel/` are placeholders.
+- The stained-glass window photo and the members, families, group and calendar illustrations in `frontend/src/assets/`, used on the Home page.
 - No testimonials, usage numbers, member counts or endorsements from the church. Do not make any up.
 
 ## Product Principles
