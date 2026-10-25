@@ -20,10 +20,6 @@ class FamilyPersonService {
   delete(id) {
     return http.delete(`familyperson/${id}`);
   }
-
-  deleteAll(id) {
-    return http.delete(`/familyperson?family=` + id);
-  }
 }
 
 export default new FamilyPersonService();

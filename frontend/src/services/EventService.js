@@ -20,10 +20,6 @@ class EventService {
   delete(id) {
     return http.delete(`events/${id}`);
   }
-
-  //deleteAll() {
-  //  return http.delete(`courses`);
-  //}
 }
 
 export default new EventService();

@@ -70,7 +70,6 @@ const requireRole = (roleNames, message) => (req, res, next) => {
 };
 
 const isAdmin = requireRole(["admin"], "Require Admin Role!");
-const isModerator = requireRole(["moderator"], "Require Moderator Role!");
 const isModeratorOrAdmin = requireRole(["moderator", "admin"], "Require Moderator or Admin Role!");
 
 // Returns middleware that lets moderators and admins through, plus users whose
@@ -118,7 +117,6 @@ const isFamilyMemberOrModerator = getFamId => (req, res, next) => {
 const authJwt = {
   verifyToken: verifyToken,
   isAdmin: isAdmin,
-  isModerator: isModerator,
   isModeratorOrAdmin: isModeratorOrAdmin,
   isFamilyMemberOrModerator: isFamilyMemberOrModerator
 };

@@ -68,6 +68,29 @@ const fs = require('fs');
     }
   });
 
+  await check('A member with only a first name gets one initial', async () => {
+    const solo = await api('POST', '/person', { frst_name: 'Solo' }, admin.accessToken);
+    try {
+      await page.goto(APP + '/person');
+      const initials = (await page.locator('button.member', { hasText: 'Solo' }).locator('.avatar-initials').innerText()).trim();
+      expect(initials === 'S', `shows "${initials}"`);
+      return initials;
+    } finally {
+      await api('DELETE', '/person/' + solo.per_ID, null, admin.accessToken);
+    }
+  });
+
+  await check('Birthdays show the stored day west of UTC', async () => {
+    // The API sends dates as UTC midnight; read naively they land on the day before west of UTC
+    const west = await loggedInPage(browser, 'demo', 'demo1234', null, { timezoneId: 'America/Chicago', locale: 'en-US' });
+    await west.goto(APP + '/person');
+    await west.locator('button:has-text("James Carter")').click();
+    const facts = await west.locator('.v-menu.v-overlay--active .member-facts').innerText();
+    expect(facts.includes('April 12, 1975'), `card shows ${JSON.stringify(facts)}`);
+    await west.close();
+    return 'April 12, 1975';
+  });
+
   await check('CSV download is real CSV without notes', async () => {
     await page.goto(APP + '/person');
     await page.locator('button:has-text("James Carter")').waitFor();

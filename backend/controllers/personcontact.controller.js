@@ -116,26 +116,3 @@ exports.delete = (req, res) => {
         });
     });
 };
-
-// Delete all Personcontacts from the database.
-exports.deleteAll = (req, res) => {
-    const id = req.query.person;
-    if (!id) {
-        return res.status(400).send({ message: "The person query parameter is required." });
-    }
-
-    Personcontact.destroy({
-        where: {per_ID: String(id)},
-        truncate: false
-    })
-    .then(nums => {
-        res.send({
-            message: `${nums} Personcontacts were deleted successfully!`
-        });
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: err.message || "Some error occurred while removing all Personcontacts."
-        });
-    });
-};

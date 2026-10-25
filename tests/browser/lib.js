@@ -34,9 +34,9 @@ async function signin(username, password) {
   return api('POST', '/auth/signin', { username, password });
 }
 
-// A browser page logged in as the given user
-async function loggedInPage(browser, username, password, viewport) {
-  const page = await browser.newPage(viewport ? { viewport } : {});
+// A browser page logged in as the given user; options go to browser.newPage
+async function loggedInPage(browser, username, password, viewport, options = {}) {
+  const page = await browser.newPage({ ...(viewport ? { viewport } : {}), ...options });
   page.errors = [];
   page.on('pageerror', e => page.errors.push(e.message));
   await page.goto(APP + '/login');

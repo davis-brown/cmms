@@ -119,25 +119,3 @@ exports.delete = (req, res) => {
         });
     });
 };
-
-// Delete all Group member from the database.
-exports.deleteAll = (req, res) => {
-    const id = req.query.group;
-    if (!id) {
-        return res.status(400).send({ message: "The group query parameter is required." });
-    }
-    Groupmember.destroy({
-        where: {grp_ID: String(id)},
-        truncate: false
-    })
-    .then(nums => {
-        res.send({
-            message: `${nums} Group member were deleted successfully!`
-        });
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: err.message || "Some error occurred while removing all Group member."
-        });
-    });
-};

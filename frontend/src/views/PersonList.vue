@@ -29,7 +29,8 @@
         @update:model-value="filterMembers"
       ></v-text-field>
 
-      <p v-if="searchMembers.length === 0" class="member-empty">
+      <p v-if="message" class="member-empty" role="alert">{{ message }}</p>
+      <p v-else-if="loaded && searchMembers.length === 0" class="member-empty">
         {{ persons.length === 0 ? 'No members yet.' : `No one matches “${search}”.` }}
       </p>
 
@@ -38,7 +39,7 @@
           <v-menu :close-on-content-click="false" location="bottom start">
             <template v-slot:activator="{ props }">
               <button type="button" class="member" v-bind="props">
-                <PersonAvatar :name="`${person.frst_name} ${person.last_name}`" :color-key="familyKeys[person.per_ID] || person.last_name" />
+                <PersonAvatar :name="[person.frst_name, person.last_name].filter(Boolean).join(' ')" :color-key="familyKeys[person.per_ID] || person.last_name" />
                 <span class="member-text">
                   <span class="member-name">{{ person.frst_name }} {{ person.last_name }}</span>
                   <span v-if="person.church_pos" class="member-role">{{ person.church_pos }}</span>
@@ -48,7 +49,7 @@
 
             <v-card class="member-card" max-height="70vh" width="420">
               <div class="member-card-head">
-                <PersonAvatar :name="`${person.frst_name} ${person.last_name}`" :color-key="familyKeys[person.per_ID] || person.last_name" :size="64" />
+                <PersonAvatar :name="[person.frst_name, person.last_name].filter(Boolean).join(' ')" :color-key="familyKeys[person.per_ID] || person.last_name" :size="64" />
                 <div>
                   <h2>{{ person.frst_name }} {{ person.last_name }}</h2>
                   <v-chip
@@ -135,6 +136,8 @@ import { loadFamilyKeys } from "../familyKeys";
          persons: [],
          searchMembers: [],
          familyKeys: {},
+         loaded: false,
+         message: "",
          search: ""
 
          
@@ -147,7 +150,7 @@ import { loadFamilyKeys } from "../familyKeys";
             .then(response => {
                 this.persons = response.data;
                 this.searchMembers = response.data;
-                console.log(this.persons);
+                this.loaded = true;
             })
             .catch(error => {
                 this.message = (error.response && error.response.data.message) || error.message;

@@ -23,8 +23,5 @@ module.exports = app => {
     // Delete a Course with id
     router.delete("/:id", authJwt.isModeratorOrAdmin, Personcontact.delete);
   
-    // Delete all Majors
-    router.delete("/", authJwt.isModeratorOrAdmin, Personcontact.deleteAll);
-  
     app.use('/api/personcontact', router);
 };

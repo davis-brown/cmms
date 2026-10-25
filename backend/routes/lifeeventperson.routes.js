@@ -22,7 +22,5 @@ module.exports = app => {
     
     router.delete("/:id", authJwt.isModeratorOrAdmin, lifeeventperson.delete);
     
-    router.delete("/", authJwt.isModeratorOrAdmin, lifeeventperson.deleteAll);
-  
     app.use('/api/lifeventperson', router);
 };

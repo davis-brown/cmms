@@ -45,7 +45,6 @@ export default {
         EventService.get(evt_ID)
             .then(response => {
             this.currentEvent = response.data;
-            console.log(response.data);
             })
             .catch(e => {
             console.log(e);
@@ -68,7 +67,6 @@ export default {
                     attendeeNames.push(event.username);
                     }
                     this.attendees = attendance;
-                    console.log(attendance);
                     this.getNumberofAttendees(attendeeNames);
                 })
                 .catch(error => {
@@ -85,7 +83,6 @@ export default {
             }
         }
         this.uniqueAttendees = unique;
-        console.log (this.uniqueAttendees);
         },
 
         cancel() {

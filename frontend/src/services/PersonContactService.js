@@ -20,10 +20,6 @@ class PersonContactService {
   delete(id) {
     return http.delete(`personcontact/${id}`);
   }
-
-  deleteAll(id) {
-    return http.delete(`/personcontact?person=` + id);
-  }
 }
 
 export default new PersonContactService();

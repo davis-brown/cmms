@@ -14,7 +14,7 @@
 
         <ul v-if="people.length" class="family-people">
             <li v-for="person in people" :key="person.per_ID">
-                <PersonAvatar :name="`${person.frst_name} ${person.last_name || ''}`" :color-key="familyKey(family.fam_ID)" :size="40" />
+                <PersonAvatar :name="[person.frst_name, person.last_name].filter(Boolean).join(' ')" :color-key="familyKey(family.fam_ID)" :size="40" />
                 {{ person.frst_name }}
             </li>
         </ul>
