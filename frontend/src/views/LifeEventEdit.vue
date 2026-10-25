@@ -1,5 +1,8 @@
 <template>
-      <div v-if="currentLifeEvent" class="edit-form py-3">
+  <div>
+  <PageBand title="Edit life event" />
+  <div class="page-body page-body--narrow">
+      <div v-if="currentLifeEvent" class="form-page">
       <v-form ref="form">
      
         <v-text-field
@@ -19,26 +22,30 @@
         ></v-text-field>
 
 
-    <v-btn color="success" size="small" @click="updateLifeEvent">
+    <v-btn @click="updateLifeEvent" color="primary" variant="flat">
         Submit
       </v-btn>
 
-    <v-btn color="primary" size="small" @click="cancel">
+    <v-btn @click="cancel" variant="text">
         Cancel
       </v-btn>
 
-    <v-btn color="red" size="small" @click="deleteLifeEvent">
+    <v-btn @click="deleteLifeEvent" color="error" variant="outlined">
         Delete Event
     </v-btn>
     
   </v-form>
   </div>
+  </div>
+  </div>
 </template>
 
 <script>
+import PageBand from "../components/PageBand.vue";
 import LifeEventService from "../services/LifeEventService.js";
 
 export default {
+  components: { PageBand },
     data(){
         return {
             currentLifeEvent: null,
@@ -92,13 +99,3 @@ export default {
 };
 
 </script>
-<style>
-h4 {
-  font-size: 25px;
-  text-align: center;
-}
-.edit-form {
-  max-width: 400px;
-  margin: auto;
-}
-</style>

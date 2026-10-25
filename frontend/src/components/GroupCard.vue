@@ -1,59 +1,41 @@
 <template>
-<v-hover>
-    <template 
-    v-slot:default="{ isHovering, props }"
-    >
-      <v-card
-        v-bind="props"
-        class="mx-auto"
-        max-width="544"
-      >
-         <v-card-title class="text-center">
-          <h2>
-       {{group.grp_name }}
-   
-        </h2>
-        </v-card-title>
-				<v-card-subtitle>
-				Members of the group: 
-        <v-divider> </v-divider>
-         {{ groupNames }} 
-				</v-card-subtitle>
-          <v-overlay
-            v-if="showAdminBoard || showModeratorBoard"
-            :model-value="isHovering"
-            class="d-flex transition-fast-in-fast-out bg-grey-darken-1 v-card--reveal text-h2 text-white"
-            contained
-            style="height: 65%;"
-        
-          >
-          <v-card-actions>
-            <div v-if="showAdminBoard || showModeratorBoard">
+  <v-card class="group">
+    <div class="group-head">
+      <v-card-title class="group-title">{{ group.grp_name }}</v-card-title>
       <v-btn
-    
-				@click="editGroup(group)"
-				class="ma-2"
-				variant="outlined"
-				size="large"
-				icon
-				color="white"
-				>
+        v-if="showAdminBoard || showModeratorBoard"
+        @click="editGroup(group)"
+        variant="tonal"
+        color="primary"
+        prepend-icon="mdi-pencil"
+      >
         Edit
-				</v-btn>
-        </div>
-          <v-spacer></v-spacer>
-          </v-card-actions>
-          </v-overlay>
-    </v-card>
-     </template>
-       </v-hover>
+      </v-btn>
+    </div>
+    <p v-if="people.length === 0" class="group-empty">No members yet.</p>
+    <ul v-else class="group-people">
+      <li v-for="person in people" :key="person.per_ID">
+        <PersonAvatar :name="`${person.frst_name} ${person.last_name || ''}`" :color-key="familyKeys[person.per_ID] || person.last_name" :size="40" />
+        <span class="group-name">{{ [person.frst_name, person.last_name].filter(Boolean).join(' ') }}</span>
+        <a v-if="person.phone" :href="`tel:${person.phone}`" class="group-phone">{{ person.phone }}</a>
+      </li>
+    </ul>
+  </v-card>
 </template>
 
 <script>
 import GroupMemberService from "../services/GroupMemberService";
+import PersonAvatar from "./PersonAvatar.vue";
+import { loadFamilyKeys } from "../familyKeys";
 
 export default {
+    components: { PersonAvatar },
     computed: {
+    people() {
+      return this.groupMembers
+        .filter(groupMember => groupMember.person)
+        .map(groupMember => groupMember.person);
+    },
     currentUser() {
       return this.$store.state.auth.user;
     },
@@ -75,7 +57,7 @@ export default {
     data() {
         return {
             groupMembers: [],
-            groupNames: "",
+            familyKeys: {},
             path: ""
             
         };
@@ -90,19 +72,6 @@ export default {
       GroupMemberService.getGroupMembers(grp_ID)
         .then(response => {
             this.groupMembers = response.data;
-  
-                  
-          // "First Last (phone)", leaving out whatever a member doesn't have
-          this.groupNames = this.groupMembers
-            .filter(groupMember => groupMember.person)
-            .map(groupMember => {
-              const person = groupMember.person;
-              const name = [person.frst_name, person.last_name].filter(Boolean).join(" ");
-              return person.phone ? `${name} (${person.phone})` : name;
-            })
-            .join(", ");
-          
-             console.log(this.groupNames);
         })
         .catch(error => {
             this.message = (error.response && error.response.data.message) || error.message;
@@ -112,10 +81,46 @@ export default {
     },
     mounted() {
         this.getPeopleForGroup(this.group.grp_ID)
+        loadFamilyKeys().then(keys => { this.familyKeys = keys; })
     }
 };
 </script>
 
-<style>
-
+<style scoped>
+.group {
+  height: 100%;
+}
+.group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 16px 4px 0;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 4px;
+}
+.group-title {
+  font-weight: 700;
+  font-size: 1.375rem;
+  padding: 0 0 0 20px;
+}
+.group-empty {
+  padding: 12px 20px 20px;
+  color: var(--ink-muted);
+}
+.group-people {
+  list-style: none;
+  margin: 0;
+  padding: 8px 20px 16px;
+}
+.group-people li {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+}
+.group-name {
+  font-weight: 700;
+}
 </style>

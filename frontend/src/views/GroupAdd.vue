@@ -1,7 +1,9 @@
 <template>
-  <div class="submit-form mt-3 mx-auto">
-    <h1>Add a Group</h1>
-
+  <div>
+  <PageBand title="Add a group" />
+  <div class="page-body page-body--narrow">
+  <div class="form-page">
+    
     <v-form ref="form" @submit.prevent="saveGroup">
 
       <v-text-field
@@ -12,7 +14,7 @@
       ></v-text-field>
 
       <v-card>
-        <v-data-table
+        <v-data-table no-data-text="No members yet"
           :headers="headers"
           :items="groupMembers"
           hide-default-footer
@@ -35,11 +37,11 @@
               >
                 <template v-slot:activator="{ props }">
                   <v-btn
-                    color="primary"
-                    variant="elevated"
+                   
+                   
                     class="mb-2"
                     v-bind="props"
-                  >
+                   color="primary" variant="flat">
                     Add Group Member
                   </v-btn>
                 </template>
@@ -67,17 +69,17 @@
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
-                      color="blue-darken-1"
-                      variant="text"
+                     
+                     
                       @click="close"
-                    >
+                     variant="text">
                       Cancel
                     </v-btn>
                     <v-btn
-                      color="blue-darken-1"
-                      variant="text"
+                     
+                     
                       @click="addMemberForTable()"
-                    >
+                     color="primary" variant="flat">
                       Save
                     </v-btn>
                   </v-card-actions>
@@ -110,25 +112,29 @@
   <v-divider class="my-5"></v-divider>
     <v-row justify="center">
       <v-col justify="left" col="1"> 
-        <v-btn @click="cancel">
+        <v-btn @click="cancel" variant="text">
           Cancel
         </v-btn>
       </v-col>
       <v-col justify="right" col="2"> 
-        <v-btn class= "float-right" @click="saveGroup">
+        <v-btn class= "float-right" @click="saveGroup" color="primary" variant="flat">
           Save
         </v-btn>
       </v-col>
     </v-row>
   </div>
+  </div>
+  </div>
 </template>
 
 <script>
+import PageBand from "../components/PageBand.vue";
 import GroupDataServices from "../services/GroupDataService";
 import PersonDataService from "../services/PersonDataService";
 import GroupMemberService from "../services/GroupMemberService";
 
 export default {
+  components: { PageBand },
   data() {
     return {
   
@@ -256,17 +262,3 @@ export default {
 };
 </script>
 
-<style>
-.submit-form {
-  max-width: 600px;
-  margin: auto;
-  font-size: 20px;
-}
-
-
-h1 {
-  text-align: center;
-}
-
-
-</style>

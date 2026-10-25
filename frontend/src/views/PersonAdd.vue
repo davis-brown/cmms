@@ -1,7 +1,9 @@
 <template>
-  <div class="submit-form mx-5 mx-auto">
-    <h1>Add a member</h1>
-    <v-form ref="form" @submit.prevent="savePerson">
+  <div>
+  <PageBand title="Add a member" />
+  <div class="page-body page-body--narrow">
+  <div class="form-page">
+        <v-form ref="form" @submit.prevent="savePerson">
       
 
       <v-text-field
@@ -45,7 +47,6 @@
         required></v-text-field>
        <v-textarea
           v-model="person.notes"
-          variant="solo"
           label="Notes"
         ></v-textarea>
         <v-select
@@ -69,27 +70,30 @@
       <v-divider class="my-5"></v-divider>
     <v-row justify="center">
       <v-col justify="left" col="1"> 
-        <v-btn @click="cancel">
+        <v-btn @click="cancel" variant="text">
           Cancel
         </v-btn>
       </v-col>
       <v-col justify="right" col="2"> 
-        <v-btn class= "float-right" @click="savePerson">
+        <v-btn class= "float-right" @click="savePerson" color="primary" variant="flat">
           Submit
         </v-btn>
       </v-col>
     </v-row>
      </div>
   
+  </div>
+  </div>
 </template>
 
 <script>
+import PageBand from "../components/PageBand.vue";
 import PersonDataService from "../services/PersonDataService";
 import CommunicationService from "../services/CommunicationService";
 import PersonContactService from "../services/PersonContactService";
 import PersonContact from "../components/AddContactInfo";
 export default {
-  components: {
+  components: { PageBand, 
 		PersonContact
 	},
   data() {
@@ -158,13 +162,3 @@ export default {
 };
 </script>
 
-<style>
-.submit-form {
-  max-width: 600px;
-  margin: auto;
-  font-size: 20px;
-}
-h1 {
-  text-align: center;
-}
-</style>

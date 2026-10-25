@@ -42,7 +42,7 @@ async function loggedInPage(browser, username, password, viewport) {
   await page.goto(APP + '/login');
   await page.fill('input[name=username]', username);
   await page.fill('input[name=password]', password);
-  await page.click('button:has-text("Login")');
+  await page.click('button:has-text("Log in")');
   await page.waitForURL('**/profile');
   return page;
 }

@@ -1,7 +1,9 @@
 <template>
-  <div class="submit-form mt-3 mx-auto">
-    <h1>Add a family</h1>
-
+  <div>
+  <PageBand title="Add a family" />
+  <div class="page-body page-body--narrow">
+  <div class="form-page">
+    
     <v-form ref="form" @submit.prevent="saveFamily">
       
       <v-file-input
@@ -40,7 +42,7 @@
       ></v-text-field>
 
       <v-card>
-        <v-data-table
+        <v-data-table no-data-text="No members yet"
           :headers="headers"
           :items="familyPersons"
           hide-default-footer
@@ -72,11 +74,11 @@
               >
                 <template v-slot:activator="{ props }">
                   <v-btn
-                    color="primary"
-                    variant="elevated"
+                   
+                   
                     class="mb-2"
                     v-bind="props"
-                  >
+                   color="primary" variant="flat">
                     Add Member
                   </v-btn>
                 </template>
@@ -112,17 +114,17 @@
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
-                      color="blue-darken-1"
-                      variant="text"
+                     
+                     
                       @click="close"
-                    >
+                     variant="text">
                       Cancel
                     </v-btn>
                     <v-btn
-                      color="blue-darken-1"
-                      variant="text"
+                     
+                     
                       @click="addPersonForTable()"
-                    >
+                     color="primary" variant="flat">
                       Save
                     </v-btn>
                   </v-card-actions>
@@ -152,20 +154,23 @@
   <v-divider class="my-5"></v-divider>
     <v-row justify="center">
       <v-col justify="left" col="1"> 
-        <v-btn @click="cancel">
+        <v-btn @click="cancel" variant="text">
           Cancel
         </v-btn>
       </v-col>
       <v-col justify="right" col="2"> 
-        <v-btn class= "float-right" @click="saveFamily">
+        <v-btn class= "float-right" @click="saveFamily" color="primary" variant="flat">
           Save
         </v-btn>
       </v-col>
     </v-row>
   </div>
+  </div>
+  </div>
 </template>
 
 <script>
+import PageBand from "../components/PageBand.vue";
 import FamilyService from "../services/FamilyService";
 import PersonDataService from "../services/PersonDataService";
 import FamilyPersonService from "../services/FamilyPersonService";
@@ -175,6 +180,7 @@ import FamilyPersonService from "../services/FamilyPersonService";
 let draft = null;
 
 export default {
+  components: { PageBand },
   data() {
     return {
       selectedFile: null,
@@ -352,15 +358,3 @@ export default {
 };
 </script>
 
-<style>
-.submit-form {
-  max-width: 500px;
-  margin: auto;
-  font-size: 20px;
-}
-
-
-h1 {
-  text-align: center;
-}
-</style>

@@ -1,11 +1,10 @@
 <template>
-  <v-main>
-    <v-container fluid>
-      <h1>Users</h1>
-      <p class="text-center">
-        New sign-ups can't log in until they're approved. Link an account to a
-        member with the Login username field on that member's edit page.
-      </p>
+  <div>
+    <PageBand
+      title="Users"
+      lede="New sign-ups can't log in until they're approved. Link an account to a member with the Login username field on that member's edit page."
+    />
+    <div class="page-body">
 
       <v-alert v-if="message" :type="messageType" closable @click:close="message = ''">
         {{ message }}
@@ -17,14 +16,15 @@
         :loading="loading"
         item-value="id"
         :sort-by="[{ key: 'approved', order: 'asc' }]"
-        class="elevation-1"
+        class="admin-table"
+        mobile-breakpoint="sm"
       >
         <template v-slot:[`item.member`]="{ item }">
           {{ item.member ? item.member.name : "Not linked" }}
         </template>
 
         <template v-slot:[`item.approved`]="{ item }">
-          <v-chip size="small" :color="item.approved ? 'green' : 'orange'">
+          <v-chip size="small" :color="item.approved ? 'success' : 'warning'" variant="flat">
             {{ item.approved ? "Approved" : "Waiting" }}
           </v-chip>
         </template>
@@ -46,36 +46,36 @@
           <div class="d-flex justify-end">
             <v-btn
               v-if="!item.approved"
-              size="small"
               color="primary"
               class="mr-2"
               @click="setApproved(item, true)"
             >Approve</v-btn>
             <v-btn
               v-else-if="!isSelf(item)"
-              size="small"
               variant="outlined"
               class="mr-2"
               @click="setApproved(item, false)"
             >Revoke</v-btn>
             <v-btn
               v-if="!isSelf(item)"
-              size="small"
-              variant="outlined"
-              color="red"
+             
+             
+             
               @click="deleteUser(item)"
-            >Delete</v-btn>
+             color="error" variant="outlined">Delete</v-btn>
           </div>
         </template>
       </v-data-table>
-    </v-container>
-  </v-main>
+    </div>
+  </div>
 </template>
 
 <script>
+import PageBand from "../components/PageBand.vue";
 import UserService from "../services/user.service";
 
 export default {
+  components: { PageBand },
   name: "Admin",
   data() {
     return {
@@ -152,3 +152,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.admin-table {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+</style>

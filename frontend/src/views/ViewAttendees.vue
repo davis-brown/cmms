@@ -1,40 +1,28 @@
 <template>
-<div v-if="currentEvent">
-
-    
-    <v-card style="margin-top:3rem; margin-bottom:2rem;" max-width="700px" class="mx-auto">
-        <v-toolbar :color = "currentEvent.color">
-                <v-card-title style="color: white; font-size:x-large"> 
-                    <v-btn icon @click="cancel()" class="mr-auto">
-                        <v-icon>mdi-chevron-left</v-icon>
-                    </v-btn>
-                    <v-spacer></v-spacer>
-                    Attendees for {{currentEvent.event_name}}
-                </v-card-title>
-            </v-toolbar>
-            <div class="listitems" style="padding-left: 20px">  
-            <v-list v-if="attendees">
-                <v-card-text v-if="uniqueAttendees.length == 0">
-                    There is no one RSVP'd for this event
-                </v-card-text>
-                <v-list-item v-for="(attendee,index) in uniqueAttendees" :key="index">
-                    {{attendee}}
-                </v-list-item>
-            </v-list>
-            </div>
-            
-    </v-card>
-
-    
-</div>
-  
-
+  <div v-if="currentEvent">
+    <PageBand :title="`Attendees for ${currentEvent.event_name}`">
+      <v-btn variant="outlined" color="primary" prepend-icon="mdi-arrow-left" @click="cancel()">Back</v-btn>
+    </PageBand>
+    <div class="page-body page-body--narrow">
+      <p v-if="uniqueAttendees.length == 0" class="text-medium-emphasis">No one has RSVP'd for this event yet.</p>
+      <v-list v-else lines="one">
+        <v-list-item v-for="(attendee, index) in uniqueAttendees" :key="index" :title="attendee">
+          <template v-slot:prepend>
+            <PersonAvatar :name="attendee || ''" :size="40" class="mr-3" />
+          </template>
+        </v-list-item>
+      </v-list>
+    </div>
+  </div>
 </template>
 
 <script>
+import PageBand from "../components/PageBand.vue";
+import PersonAvatar from "../components/PersonAvatar.vue";
 import EventService from "../services/EventService";
 import AttendeeService from "../services/AttendeeService";
 export default {
+  components: { PageBand, PersonAvatar },
     data: () => ({
     currentEvent: null,
     attendees: [],
@@ -109,6 +97,3 @@ export default {
 }
 </script>
 
-<style>
-
-</style>

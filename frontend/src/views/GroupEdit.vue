@@ -1,5 +1,8 @@
 <template>
-  <div v-if="currentGroup" class="submit-form">
+  <div>
+  <PageBand title="Edit group" />
+  <div class="page-body page-body--narrow">
+  <div v-if="currentGroup" class="form-page">
       <v-form ref="form">
         
       <v-text-field
@@ -10,7 +13,7 @@
       ></v-text-field>
       
       <v-card>
-        <v-data-table
+        <v-data-table no-data-text="No members yet"
           :headers="headers"
           :items="groupMembers"
           hide-default-footer
@@ -66,17 +69,17 @@
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
-                      color="blue-darken-1"
-                      variant="text"
+                     
+                     
                       @click="close"
-                    >
+                     variant="text">
                       Cancel
                     </v-btn>
                     <v-btn
-                      color="blue-darken-1"
-                      variant="text"
+                     
+                     
                       @click="addMemberForGroup()"
-                    >
+                     color="primary" variant="flat">
                       Save
                     </v-btn>
                   </v-card-actions>
@@ -103,12 +106,12 @@
 
       <v-row justify="center">
         <v-col justify="left" col="1"> 
-          <v-btn @click="deleteGroup">
+          <v-btn @click="deleteGroup" color="error" variant="outlined">
             Delete
           </v-btn>
         </v-col>
         <v-col justify="right" col="2"> 
-          <v-btn class= "float-right" @click="updateGroup">
+          <v-btn class= "float-right" @click="updateGroup" color="primary" variant="flat">
             Update
           </v-btn>
         </v-col>
@@ -121,14 +124,18 @@
     <p>Please click on a Group...</p>
     
   </div>
+  </div>
+  </div>
 </template>
 
 <script>
+import PageBand from "../components/PageBand.vue";
 import GroupDataServices from "../services/GroupDataService";
 import PersonDataService from "../services/PersonDataService";
 import GroupMemberService from "../services/GroupMemberService";
 
 export default {
+  components: { PageBand },
   data() {
     return {
       dialog: false,
@@ -281,14 +288,3 @@ export default {
 };
 </script>
 
-<style>
-h4 {
-  font-size: 25px;
-  text-align: center;
-}
-.submit-form {
-  max-width: 600px;
-  max-height: 700px;
-  margin: auto;
-}
-</style>

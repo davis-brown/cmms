@@ -1,70 +1,40 @@
 <template>
-<v-main>
-<v-container>
-<h1>List of Life Events </h1>
-	<v-btn
-			to="/lifeeventadd"
-			class="mr-4"
-			color="primary"
-		>
-    Add Life Event
-		</v-btn>
-      <v-spacer></v-spacer> 
-      <v-col
-        v-for="lifeevent in lifeevents"
-        :key="lifeevent.event_ID"
-        >
-
- 
-    <v-timeline>
-
-    <template v-slot:activator="{ props }">
-        <v-btn
-         
-          v-bind="props"
-        >
-          {{lifeevent.event_date}}
-        </v-btn>
-        </template>
-        <v-timeline-item>
-        <v-card >
-          <v-list>
-          <v-list-item>
-                
-              <v-list-item-title><h2>{{lifeevent.event_note}}</h2></v-list-item-title>
-              <v-list-item-subtitle>{{lifeevent.event_date}}
-              </v-list-item-subtitle>
-
-            <v-list-item-action>
-          <v-btn
-          @click="editLifeEvent(lifeevent)"
+  <div>
+    <PageBand title="Life Events">
+      <v-btn to="/lifeeventadd" color="primary" prepend-icon="mdi-plus">
+        Add Life Event
+      </v-btn>
+    </PageBand>
+    <div class="page-body page-body--narrow">
+      <p v-if="lifeevents.length === 0" class="text-medium-emphasis">No life events yet.</p>
+      <v-timeline v-else density="compact" side="end" line-color="primary">
+        <v-timeline-item
+          v-for="lifeevent in lifeevents"
+          :key="lifeevent.event_ID"
+          dot-color="primary"
           size="small"
-          right
         >
-        Edit
-   
-        </v-btn>
-              </v-list-item-action>
-
-          </v-list-item>
-              </v-list>
-    
-
+          <v-card>
+            <v-card-title class="pt-4 px-5"><h2>{{ lifeevent.event_note }}</h2></v-card-title>
+            <v-card-subtitle class="px-5">{{ formatDate(lifeevent.event_date) }}</v-card-subtitle>
+            <v-card-actions class="px-4 pb-4">
+              <v-btn variant="tonal" color="primary" prepend-icon="mdi-pencil" @click="editLifeEvent(lifeevent)">Edit</v-btn>
+              
+            </v-card-actions>
           </v-card>
-  
         </v-timeline-item>
-
-          </v-timeline>
-
- </v-col>
-</v-container>
-</v-main>
+      </v-timeline>
+    </div>
+  </div>
 </template>
 
 <script>
+import PageBand from "../components/PageBand.vue";
+import { formatDate } from "../formatDate";
 import LifeEventService from "../services/LifeEventService";
 
 export default {
+  components: { PageBand },
   data() {
     return {
       lifeevents: [],
@@ -82,6 +52,7 @@ export default {
       });
   },
   methods: {
+    formatDate,
     editLifeEvent(lifeevent) {
       this.$router.push({
         name: "lifeeventedit",
@@ -93,15 +64,3 @@ export default {
 </script>
 
 
-<style>
-
-.v-card--reveal {
-  align-items: center;
-  bottom: 0;
-  justify-content: center;
-  opacity: 0.5;
-  position: absolute;
-  width: 100%;
-  
-}
-</style>

@@ -1,5 +1,8 @@
 <template>
-  <div v-if="currentPerson" class="edit-form py-3">
+  <div>
+  <PageBand title="Edit member" />
+  <div class="page-body page-body--narrow">
+  <div v-if="currentPerson" class="form-page">
       <v-form ref="form">
 
       <v-text-field
@@ -53,7 +56,6 @@
 
           <v-textarea
           v-model="currentPerson.notes"
-          variant="solo"
           label="Notes"
         ></v-textarea>
      <v-select
@@ -78,12 +80,12 @@
 
 <v-row justify="center">
       <v-col justify="left" col="1"> 
-        <v-btn @click="deletePerson">
+        <v-btn @click="deletePerson" color="error" variant="outlined">
           Delete
         </v-btn>
       </v-col>
       <v-col justify="right" col="2"> 
-        <v-btn class= "float-right" @click="updatePerson">
+        <v-btn class= "float-right" @click="updatePerson" color="primary" variant="flat">
           Update
         </v-btn>
       </v-col>
@@ -99,14 +101,17 @@
     
   </div>
 
+  </div>
+  </div>
 </template>
 
 <script>
+import PageBand from "../components/PageBand.vue";
 import PersonDataService from "../services/PersonDataService";
 import PersonContact from "../components/ContactInfo";
 
 export default {
-  components: {
+  components: { PageBand, 
 		PersonContact
 	},
   data() {
@@ -126,8 +131,12 @@ export default {
     getPerson(per_ID) {
       PersonDataService.get(per_ID)
         .then(response => {
-          this.currentPerson = response.data;
-          console.log(response.data);
+          const person = response.data;
+          // The fields take YYYY-MM-DD; the API sends full timestamps
+          for (const field of ['bday', 'bapt_date']) {
+            if (typeof person[field] === 'string') person[field] = person[field].substr(0, 10);
+          }
+          this.currentPerson = person;
         })
         .catch(e => {
           console.log(e);
@@ -172,13 +181,3 @@ export default {
 };
 </script>
 
-<style>
-h4 {
-  font-size: 25px;
-  text-align: center;
-}
-.edit-form {
-  max-width: 600px;
-  margin: auto;
-}
-</style>

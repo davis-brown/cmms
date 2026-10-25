@@ -1,61 +1,57 @@
 <template>
-	<v-main>
-      <v-container fluid>
-		<h1>Families of the Congregation </h1>
-		<v-row align="end">
-			<v-col lg="2" align="center">
-				<v-btn
-					class="mr-4"
-					color="primary"
-					to="/familyadd"
-					v-if="showModeratorBoard || showAdminBoard"
-				>
-					New Family
-				</v-btn>
-			</v-col>
-			<v-col>
-				<v-text-field
-					v-model="search"
-					label="Search Families"
-					@update:model-value="filterFamilies"
-				></v-text-field>
-			</v-col>
-			<v-col lg="2" align="center">
-				<GenerateDirectory
-					v-if="families.length != 0"
-					v-bind:families="families"
-				></GenerateDirectory>
-			</v-col>
-		</v-row>
-		<v-divider> </v-divider>
-        <v-row>
-			<v-col
-				v-for="family in searchFamilies"
-				:key="family.fam_ID"
-				cols="12"
-				sm="6"
-				lg="4"
+	<div>
+		<PageBand title="Families of the Congregation">
+			<v-btn
+				color="primary"
+				to="/familyadd"
+				prepend-icon="mdi-plus"
+				v-if="showModeratorBoard || showAdminBoard"
 			>
-				<FamilyCard 
-					v-bind:key="family.fam_ID"
-					v-bind:family="family"
-				></FamilyCard>
-			</v-col>
-        </v-row>
-      </v-container>
-    </v-main>
+				New Family
+			</v-btn>
+			<GenerateDirectory
+				v-if="families.length != 0"
+				v-bind:families="families"
+			></GenerateDirectory>
+		</PageBand>
+		<div class="page-body">
+			<v-text-field
+				v-model="search"
+				label="Search Families"
+				prepend-inner-icon="mdi-magnify"
+				style="max-width: 520px"
+				@update:model-value="filterFamilies"
+			></v-text-field>
+			<p v-if="searchFamilies.length === 0" class="text-medium-emphasis">
+				{{ families.length === 0 ? 'No families yet.' : `No family matches “${search}”.` }}
+			</p>
+			<v-row>
+				<v-col
+					v-for="family in searchFamilies"
+					:key="family.fam_ID"
+					cols="12"
+					sm="6"
+					lg="4"
+				>
+					<FamilyCard v-bind:family="family"></FamilyCard>
+				</v-col>
+			</v-row>
+		</div>
+	</div>
 </template>
 
 <script>
 import FamilyService from "../services/FamilyService";
 import FamilyCard from "../components/FamilyCard";
 import GenerateDirectory from "../components/GenerateDirectory";
+import PageBand from "../components/PageBand.vue";
 
 export default {
 	name: 'Families-List',
 	components: {
 		FamilyCard,
-		GenerateDirectory
+		GenerateDirectory,
+		PageBand
 	},
     data() {
         return {
@@ -94,7 +90,7 @@ export default {
 		},
 		filterFamilies() {
 			this.searchFamilies = this.families.filter((family) => {
-				return (family.fam_name || '').toLowerCase().includes(this.search.toLowerCase());
+				return (family.fam_name || '').toLowerCase().includes((this.search || '').trim().toLowerCase());
 			});
 		}
     },
