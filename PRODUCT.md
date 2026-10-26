@@ -35,11 +35,11 @@ A portfolio and demo project. It was built for one real congregation (Riverside 
 
 ## Brand Commitments
 
-- The Riverside Community Church name, address (100 Main St, Springfield), phone number and photos appear in the app as content from the original congregation. Because this is a portfolio piece, they are flavour, not binding brand commitments.
+- The Riverside Community Church name, address (100 Main St, Springfield), and phone number appear in the app as content from the original congregation. Because this is a portfolio piece, they are flavour, not binding brand commitments.
 
 ## Evidence on Hand
 
-- The stained-glass window photo and the members, families, group and calendar illustrations in `frontend/src/assets/`, used on the Home page.
+- The members, families, group and calendar illustrations in `frontend/src/assets/`, used on the Home page.
 - No testimonials, usage numbers, member counts or endorsements from the church. Do not make any up.
 
 ## Product Principles

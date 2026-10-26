@@ -28,3 +28,7 @@ To stop, press `Ctrl+C`. To wipe the database and uploaded photos and start fres
 The containers run built copies of the code, so after editing, run `docker compose up --build` again. For hot reload, run the backend and frontend directly instead; see their READMEs.
 
 To check the app in a headless browser, run `tests/browser/run.sh` while the stack is up; see [`tests/browser/`](tests/browser/).
+
+## License
+
+[MIT](LICENSE)

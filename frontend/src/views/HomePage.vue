@@ -156,13 +156,11 @@ export default {
   margin: 0 auto;
   padding: 0 24px;
 }
-/* The stained-glass window under a cobalt wash, closed by the gold band rule */
+/* Deep cobalt, closed by the gold band rule */
 .home-welcome {
   padding: 72px 0 40px;
   color: #fff;
-  background:
-    linear-gradient(90deg, rgba(18, 33, 78, 0.92) 0%, rgba(18, 33, 78, 0.78) 50%, rgba(18, 33, 78, 0.45) 100%),
-    url('../assets/riversidewindow.jpg') center 40% / cover no-repeat #12214e;
+  background: #12214e;
   border-bottom: 3px solid rgb(var(--v-theme-gold));
 }
 .home-welcome h1 {
