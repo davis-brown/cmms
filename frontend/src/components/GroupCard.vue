@@ -12,10 +12,11 @@
         Edit
       </v-btn>
     </div>
-    <p v-if="people.length === 0" class="group-empty">No members yet.</p>
+    <p v-if="message" class="group-empty" role="alert">{{ message }}</p>
+    <p v-else-if="loaded && people.length === 0" class="group-empty">No members yet.</p>
     <ul v-else class="group-people">
       <li v-for="person in people" :key="person.per_ID">
-        <PersonAvatar :name="`${person.frst_name} ${person.last_name || ''}`" :color-key="familyKeys[person.per_ID] || person.last_name" :size="40" />
+        <PersonAvatar :name="[person.frst_name, person.last_name].filter(Boolean).join(' ')" :color-key="familyKeys[person.per_ID] || person.last_name" :size="40" />
         <span class="group-name">{{ [person.frst_name, person.last_name].filter(Boolean).join(' ') }}</span>
         <a v-if="person.phone" :href="`tel:${person.phone}`" class="group-phone">{{ person.phone }}</a>
       </li>
@@ -57,6 +58,8 @@ export default {
     data() {
         return {
             groupMembers: [],
+            loaded: false,
+            message: "",
             familyKeys: {},
             path: ""
             
@@ -72,6 +75,7 @@ export default {
       GroupMemberService.getGroupMembers(grp_ID)
         .then(response => {
             this.groupMembers = response.data;
+            this.loaded = true;
         })
         .catch(error => {
             this.message = (error.response && error.response.data.message) || error.message;

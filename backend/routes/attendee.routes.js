@@ -17,12 +17,5 @@ module.exports = app => {
     // Retrieve a single Attendee with id
     router.get("/:id", Attendee.findOne);
   
-    // Update a Attendee with id
-    router.put("/:id", authJwt.isModeratorOrAdmin, Attendee.update);
-  
-    // Delete a Attendee with id
-    router.delete("/:id", authJwt.isModeratorOrAdmin, Attendee.delete);
-  
-  
     app.use('/api/attendee', router);
 };

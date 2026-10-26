@@ -12,18 +12,6 @@ class AttendeeService {
   create(data) {
     return http.post("attendee/", data);
   }
-
-  update(id, data) {
-    return http.put(`attendee/${id}`, data);
-  }
-
-  delete(id) {
-    return http.delete(`attendee/${id}`);
-  }
-
-  deleteAll(id) {
-    return http.delete(`/attendee?event=` + id);
-  }
 }
 
 export default new AttendeeService();

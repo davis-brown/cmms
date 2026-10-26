@@ -27,8 +27,5 @@ module.exports = app => {
     // Delete a Course with id
     router.delete("/:id", authJwt.isModeratorOrAdmin, Family.delete);
   
-    // Delete all Majors
-    router.delete("/", authJwt.isAdmin, Family.deleteAll);
-  
     app.use('/api/families', router);
 };

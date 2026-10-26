@@ -47,7 +47,9 @@ nginx.conf        Serves the production build and proxies /api to the backend
 
 ## Home page photos
 
-The home page slideshow starts with the church window photo, then three plain
-placeholders in `src/assets/carousel/`. To use real photos, add them to that folder
-(landscape, at least 1600×900) and point the `items` list in `src/views/HomePage.vue`
-and `src/views/Home.vue` at them. Only use photos the church has the rights to.
+The home page header shows the church window photo (`src/assets/riversidewindow.jpg`)
+under a blue wash, and each of the four areas below it has its own picture
+(`members.jpg`, `big-family.jpg`, `group.jpg`, `calendarpicture.jpg` in `src/assets/`).
+To change one, replace the file and keep its name, or point `src/views/HomePage.vue` at
+a new file: the area pictures are `import`s at the top of the script, and the window
+is the `url(...)` in `.home-welcome`'s style. Only use photos the church has the rights to.

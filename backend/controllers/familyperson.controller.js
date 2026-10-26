@@ -117,26 +117,3 @@ exports.delete = (req, res) => {
         });
     });
 };
-
-// Delete all Familypersons from the database.
-exports.deleteAll = (req, res) => {
-    const id = req.query.family;
-    if (!id) {
-        return res.status(400).send({ message: "The family query parameter is required." });
-    }
-
-    Familyperson.destroy({
-        where: {fam_ID: String(id)},
-        truncate: false
-    })
-    .then(nums => {
-        res.send({
-            message: `${nums} Familypersons were deleted successfully!`
-        });
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: err.message || "Some error occurred while removing all Familypersons."
-        });
-    });
-};

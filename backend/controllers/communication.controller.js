@@ -116,23 +116,3 @@ exports.delete = (req, res) => {
         });
     });
 };
-
-// Delete all Communications from the database.
-exports.deleteAll = (req, res) => {
-    const id = req.query.id;
-
-    Communication.destroy({
-        where: {com_ID: id},
-        truncate: false
-    })
-    .then(nums => {
-        res.send({
-            message: `${nums} Communications were deleted successfully!`
-        });
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: err.message || "Some error occurred while removing all Communications."
-        });
-    });
-};

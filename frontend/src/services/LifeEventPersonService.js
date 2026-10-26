@@ -20,10 +20,6 @@ class LifeEventPersonService {
   delete(id) {
     return http.delete(`lifeventperson/${id}`);
   }
-
-  deleteAll(id) {
-    return http.delete("/lifeventperson?person=" + id);
-  }
 }
 
 export default new LifeEventPersonService();

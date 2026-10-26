@@ -59,7 +59,6 @@ export default {
     num: 0,
     openText: false,
     attendees: [],
-    uniqueAttendees: [],
     attendee: {
       atd_ID: null,
       evt_ID: null,
@@ -91,7 +90,6 @@ export default {
       EventService.get(evt_ID)
         .then(response => {
           this.currentEvent = response.data;
-          console.log(response.data);
         })
         .catch(e => {
           console.log(e);
@@ -103,7 +101,6 @@ export default {
       AttendeeService.getAttendee(evt_ID)
       .then(response => {
         var attendance = new Array();
-        var attendeeNames = new Array();
                 for ( var i=0; i< response.data.length; i++) {
                   var event ={};
                    event.atd_ID = response.data[i].atd_ID;
@@ -112,13 +109,8 @@ export default {
                    event.username = response.data[i].username;
                    event.contribution = response.data[i].contribution;
                    attendance.push(event);  
-                   attendeeNames.push(event.username);
                 }
                 this.attendees = attendance;
-                console.log('Testing');
-                console.log(this.attendees);
-                console.log('Done');
-                this.getNumberofAttendees(attendeeNames);
             })
             .catch(error => {
               console.log(error);
@@ -136,18 +128,6 @@ export default {
           .catch((e) => {
             console.log(e);
           });
-    },
-
-    getNumberofAttendees(attendees) {
-      var unique = []
-      for(var i = 0; i < attendees.length; i++) {
-        var value = attendees[i]
-        if (unique.indexOf(value) == -1) {
-          unique.push(value)
-        }
-      }
-      this.uniqueAttendees = unique;
-      console.log (this.uniqueAttendees);
     },
 
     cancel() {

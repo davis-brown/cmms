@@ -117,8 +117,6 @@ export default {
   gap: 12px;
   text-decoration: none;
   color: #fff;
-}
-.shell-brand {
   min-height: 52px;
 }
 .shell-name {
