@@ -20,7 +20,7 @@ A Church Membership Management System: one place where a congregation keeps its 
 
 ## Positioning
 
-A portfolio and demo project. It was built for one real congregation (Riverside Community Church), and it now mainly shows the work. It is not an active product for that church or for others. It is a members-first directory and calendar, not a back-office database or a donations or giving tool.
+A portfolio and demo project. It was built for one real congregation, and it now mainly shows the work. It is not an active product for that church or for others. It is a members-first directory and calendar, not a back-office database or a donations or giving tool.
 
 ## Operating Context
 
@@ -35,7 +35,7 @@ A portfolio and demo project. It was built for one real congregation (Riverside 
 
 ## Brand Commitments
 
-- The Riverside Community Church name, address (100 Main St, Springfield), and phone number appear in the app as content from the original congregation. Because this is a portfolio piece, they are flavour, not binding brand commitments.
+- The Riverside Community Church name, address (100 Main St, Springfield) and phone number in the app are fictional placeholders, not a real church.
 
 ## Evidence on Hand
 
