@@ -29,7 +29,11 @@ exports.create = (req, res) => {
             contribution: req.body.contribution
         };
 
-        return Attendee.create(attendee)
+        // One RSVP per user per event: a second RSVP updates the latest one
+        return Attendee.findOne({ where: { evt_ID: attendee.evt_ID, username: user.username }, order: [["atd_ID", "DESC"]] })
+        .then(existing => existing
+            ? existing.update({ contribution: attendee.contribution })
+            : Attendee.create(attendee))
         .then(data => refreshAttendance(data.evt_ID).then(() => data));
     })
     .then(data => {
@@ -38,6 +42,24 @@ exports.create = (req, res) => {
     .catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while creating the Attendee."
+        });
+    });
+};
+
+// Cancel the logged-in user's RSVP to an event (all their rows, so old duplicates go too)
+exports.deleteMine = (req, res) => {
+    const evt_ID = req.query.events;
+    if (!evt_ID) {
+        res.status(400).send({ message: "Which event? events is required." });
+        return;
+    }
+
+    User.findByPk(req.userId)
+    .then(user => Attendee.destroy({ where: { evt_ID: String(evt_ID), username: user.username } }))
+    .then(count => refreshAttendance(evt_ID).then(() => res.send({ message: count + " RSVP(s) removed." })))
+    .catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while cancelling the RSVP."
         });
     });
 };

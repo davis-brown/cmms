@@ -78,6 +78,54 @@ const { chromium, APP, check, expect, report, api, signin, loggedInPage } = requ
     return `attendance ${e.attendance}, by ${attendees[0].username}`;
   });
 
+  await check('A second RSVP updates the first instead of adding another', async () => {
+    const e = await findEvent();
+    await page.goto(APP + '/eventdetails/' + e.evt_ID);
+    await page.locator("text=You're going.").waitFor();
+    const prefilled = await page.getByLabel('Add your contribution').inputValue();
+    expect(prefilled === 'Cookies', `contribution field shows "${prefilled}"`);
+    await page.getByLabel('Add your contribution').fill('Lemonade');
+    await page.locator('button:has-text("Update RSVP")').click();
+    await page.waitForURL('**/calendar');
+    const attendees = await api('GET', '/attendee?events=' + e.evt_ID, null, admin.accessToken);
+    expect(attendees.length === 1, `${attendees.length} RSVP rows`);
+    expect(attendees[0].contribution === 'Lemonade', `contribution is "${attendees[0].contribution}"`);
+    expect((await findEvent()).attendance === 1, 'attendance changed');
+    return `1 row, bringing ${attendees[0].contribution}`;
+  });
+
+  await check("Another user can't cancel someone else's RSVP", async () => {
+    const e = await findEvent();
+    const U = 'rsvpcheck' + Date.now() % 100000;
+    await api('POST', '/auth/signup', { username: U, email: U + '@example.com', password: 'secret123' });
+    const users = await api('GET', '/users', null, admin.accessToken);
+    const created = Array.isArray(users) ? users.find(u => u.username === U) : null;
+    if (created) await api('PUT', '/users/' + created.id, { approved: true }, admin.accessToken);
+    try {
+      const other = await signin(U, 'secret123');
+      expect(other.accessToken, 'could not sign in as the second user');
+      await api('DELETE', '/attendee?events=' + e.evt_ID, null, other.accessToken);
+      const attendees = await api('GET', '/attendee?events=' + e.evt_ID, null, admin.accessToken);
+      expect(attendees.length === 1 && attendees[0].username === 'demo', `${attendees.length} RSVP rows left`);
+      expect((await findEvent()).attendance === 1, 'attendance changed');
+      return `${U}'s cancel left demo's RSVP`;
+    } finally {
+      if (created) await api('DELETE', '/users/' + created.id, null, admin.accessToken);
+    }
+  });
+
+  await check('Cancelling an RSVP removes it and lowers attendance', async () => {
+    const e = await findEvent();
+    await page.goto(APP + '/eventdetails/' + e.evt_ID);
+    await page.locator('button:has-text("Cancel RSVP")').click();
+    await page.waitForURL('**/calendar');
+    const attendees = await api('GET', '/attendee?events=' + e.evt_ID, null, admin.accessToken);
+    const after = await findEvent();
+    expect(attendees.length === 0, `${attendees.length} RSVP rows left`);
+    expect(after.attendance === 0, `attendance is ${after.attendance}`);
+    return `0 rows, attendance ${e.attendance} → ${after.attendance}`;
+  });
+
   await check('Deleting an event asks first, then removes it', async () => {
     await page.goto(APP + '/calendar');
     await page.locator('.v-event', { hasText: name }).first().click();
