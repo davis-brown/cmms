@@ -14,6 +14,9 @@ module.exports = app => {
     // Retrieve all Attendees
     router.get("/", Attendee.findAttendeeForEvent);
   
+    // Cancel the logged-in user's own RSVP: DELETE /api/attendee?events=<evt_ID>
+    router.delete("/", Attendee.deleteMine);
+  
     // Retrieve a single Attendee with id
     router.get("/:id", Attendee.findOne);
   

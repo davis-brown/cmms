@@ -24,10 +24,10 @@
         </v-card-text>
       </v-card>
 
-      <section v-if="attendees.some(a => a.contribution)" class="event-section">
+      <section v-if="latestRsvps.some(a => a.contribution)" class="event-section">
         <h2>Contributions</h2>
         <ul class="event-contributions">
-          <template v-for="attendee in attendees" :key="attendee.atd_ID">
+          <template v-for="attendee in latestRsvps" :key="attendee.atd_ID">
             <li v-if="attendee.contribution">
               <PersonAvatar :name="attendee.username || ''" :size="36" />
               <span><strong>{{ attendee.username }}</strong> is bringing {{ attendee.contribution }}</span>
@@ -38,8 +38,14 @@
 
       <section class="event-section">
         <h2>Bringing something?</h2>
+        <p v-if="myRsvp" class="event-rsvp-status mt-2">
+          <v-icon icon="mdi-check-circle" color="success" />You're going.
+        </p>
         <v-text-field label="Add your contribution" v-model="attendee.contribution" class="mt-3"></v-text-field>
-        <v-btn @click="addAttendance()" color="primary" variant="flat" size="large">RSVP for Event</v-btn>
+        <div class="d-flex flex-wrap ga-3">
+          <v-btn @click="addAttendance()" color="primary" variant="flat" size="large">{{ myRsvp ? 'Update RSVP' : 'RSVP for Event' }}</v-btn>
+          <v-btn v-if="myRsvp" @click="cancelAttendance()" color="error" variant="outlined" size="large">Cancel RSVP</v-btn>
+        </div>
       </section>
     </div>
   </div>
@@ -72,6 +78,15 @@ export default {
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
+    },
+    // One entry per username, holding their latest RSVP, so old duplicate rows don't show
+    latestRsvps() {
+      const byUser = new Map();
+      [...this.attendees].sort((a, b) => a.atd_ID - b.atd_ID).forEach(a => byUser.set(a.username, a));
+      return [...byUser.values()];
+    },
+    myRsvp() {
+      return this.latestRsvps.find(a => a.username === this.currentUser.username);
     }
   },
 
@@ -111,6 +126,7 @@ export default {
                    attendance.push(event);  
                 }
                 this.attendees = attendance;
+                if (this.myRsvp) this.attendee.contribution = this.myRsvp.contribution;
             })
             .catch(error => {
               console.log(error);
@@ -122,6 +138,16 @@ export default {
       this.attendee.evt_ID = this.currentEvent.evt_ID;
       // The server records the RSVP under the logged-in user and updates the event's attendance
       AttendeeService.create(this.attendee)
+          .then(() => {
+            this.$router.push({name: 'calendar'});
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+    },
+
+    cancelAttendance() {
+      AttendeeService.delete(this.currentEvent.evt_ID)
           .then(() => {
             this.$router.push({name: 'calendar'});
           })
@@ -168,6 +194,13 @@ export default {
 }
 .event-section {
   margin-top: 40px;
+}
+.event-rsvp-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.125rem;
+  font-weight: 700;
 }
 .event-contributions {
   list-style: none;
