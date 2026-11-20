@@ -1,0 +1,64 @@
+name: CI
+
+on:
+    pull_request:
+    push:
+        branches: [main]
+
+permissions:
+    contents: read
+
+# A new commit on the same branch cancels the run for the older one
+concurrency:
+    group: ci-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    backend:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: backend
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: npm
+                  cache-dependency-path: backend/package-lock.json
+            - run: npm ci
+            - run: npm test
+
+    frontend:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: frontend
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+                  cache-dependency-path: frontend/package-lock.json
+            - run: npm ci
+            # Without --no-fix the lint script rewrites files and passes
+            - run: npm run lint -- --no-fix
+            - run: npm run build
+
+    browser:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - run: docker compose up --build -d
+            - name: Wait for the API
+              run: |
+                  for i in $(seq 1 60); do
+                      curl -s -o /dev/null http://localhost:8080/api/events && exit 0
+                      sleep 5
+                  done
+                  echo "API did not answer within 5 minutes"
+                  exit 1
+            - run: tests/browser/run.sh
+            - if: failure()
+              run: docker compose logs

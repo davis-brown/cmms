@@ -29,6 +29,8 @@ The containers run built copies of the code, so after editing, run `docker compo
 
 To check the app in a headless browser, run `tests/browser/run.sh` while the stack is up; see [`tests/browser/`](tests/browser/).
 
+Every pull request runs the backend tests, the frontend lint and build, and these browser checks (see [`.github/workflows/ci.yml`](.github/workflows/ci.yml)).
+
 ## License
 
 [MIT](LICENSE)
