@@ -5,6 +5,7 @@ const db = require("./models");
 // adds the index to databases that already existed.
 const UNIQUE_COLUMNS = [
   { table: "users", column: "username" },
+  { table: "users", column: "email" },
   { table: "person", column: "user_name" },
 ];
 
