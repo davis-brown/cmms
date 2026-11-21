@@ -6,7 +6,7 @@
     "start": "node server.js",
     "test": "node --test",
     "dev": "node --watch --env-file=.env server.js",
-    "bundle": "mkdir deploy && cp -r config controllers middleware models routes server.js seed.js unique-indexes.js approved-column.js package.json package-lock.json congregation-backend.service deploy"
+    "bundle": "mkdir deploy && cp -r config controllers middleware models routes server.js seed.js unique-indexes.js approved-column.js attendee-per-id.js package.json package-lock.json congregation-backend.service deploy"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

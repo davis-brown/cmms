@@ -38,6 +38,7 @@ const db = require("./models");
 const seed = require("./seed");
 const ensureUniqueIndexes = require("./unique-indexes");
 const ensureApprovedColumn = require("./approved-column");
+const repairAttendeePerIds = require("./attendee-per-id");
 const contactPrivacy = require("./middleware/contactPrivacy");
 
 // parse requests of content-type - application/json
@@ -74,6 +75,7 @@ db.sequelize
   .sync()
   .then(ensureUniqueIndexes)
   .then(ensureApprovedColumn)
+  .then(repairAttendeePerIds)
   .then(seed)
   .then(() => {
     app.listen(PORT, () => {

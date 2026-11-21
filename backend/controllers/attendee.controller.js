@@ -12,15 +12,16 @@ exports.refreshAttendance = refreshAttendance;
 
 // Create and Save a new Attendee
 exports.create = (req, res) => {
-    if (!req.body || !req.body.evt_ID) {
+    const evt_ID = Number(req.body && req.body.evt_ID);
+    if (!Number.isInteger(evt_ID) || evt_ID < 1) {
         res.status(400).send({
-            message: "Content can NOT be empty!"
+            message: "evt_ID must be a positive integer."
         });
         return;
     }
 
     // The RSVP is always made as the logged-in user
-    Promise.all([User.findByPk(req.userId), Event.findByPk(req.body.evt_ID)])
+    Promise.all([User.findByPk(req.userId), Event.findByPk(evt_ID)])
     .then(([user, event]) => {
         if (!event) {
             res.status(404).send({ message: "Event not found." });
@@ -34,7 +35,7 @@ exports.create = (req, res) => {
         if (!found) return null;
         const { user, person } = found;
         const attendee = {
-            evt_ID: req.body.evt_ID,
+            evt_ID: evt_ID,
             per_ID: person ? person.per_ID : null,
             username: user.username,
             contribution: req.body.contribution
@@ -43,7 +44,7 @@ exports.create = (req, res) => {
         // One RSVP per user per event: a second RSVP updates the latest one
         return Attendee.findOne({ where: { evt_ID: attendee.evt_ID, username: user.username }, order: [["atd_ID", "DESC"]] })
         .then(existing => existing
-            ? existing.update({ contribution: attendee.contribution })
+            ? existing.update({ per_ID: attendee.per_ID, contribution: attendee.contribution })
             : Attendee.create(attendee))
         .then(data => refreshAttendance(data.evt_ID).then(() => data));
     })
