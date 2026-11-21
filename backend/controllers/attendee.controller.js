@@ -20,11 +20,22 @@ exports.create = (req, res) => {
     }
 
     // The RSVP is always made as the logged-in user
-    User.findByPk(req.userId)
-    .then(user => {
+    Promise.all([User.findByPk(req.userId), Event.findByPk(req.body.evt_ID)])
+    .then(([user, event]) => {
+        if (!event) {
+            res.status(404).send({ message: "Event not found." });
+            return null;
+        }
+        // per_ID is the caller's own member record, never what the client sends
+        return db.person.findOne({ where: { user_name: user.username } })
+        .then(person => ({ user, person }));
+    })
+    .then(found => {
+        if (!found) return null;
+        const { user, person } = found;
         const attendee = {
             evt_ID: req.body.evt_ID,
-            per_ID: req.body.per_ID,
+            per_ID: person ? person.per_ID : null,
             username: user.username,
             contribution: req.body.contribution
         };
@@ -37,7 +48,7 @@ exports.create = (req, res) => {
         .then(data => refreshAttendance(data.evt_ID).then(() => data));
     })
     .then(data => {
-        res.send(data);
+        if (data) res.send(data);
     })
     .catch(err => {
         res.status(500).send({
