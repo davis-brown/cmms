@@ -94,10 +94,12 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    Communication.destroy({
-        where: {
-            com_ID: id
-        }
+    // Remove the links that point at this communication, then the communication
+    db.sequelize.transaction(transaction => {
+        const byID = { where: { com_ID: id }, transaction };
+
+        return db.personcontact.destroy(byID)
+        .then(() => Communication.destroy(byID));
     })
     .then(num => {
         if (num == 1) {
