@@ -246,7 +246,6 @@ export default {
             PersonContactService.delete(personcontact.cpc_ID)
             .then(() => {
                 this[list] = this[list].filter(contact => contact.cpc_ID != personcontact.cpc_ID);
-                return CommunicationService.delete(personcontact.com_ID);
             })
             .catch(error => {
                 this.message = (error.response && error.response.data.message) || error.message;

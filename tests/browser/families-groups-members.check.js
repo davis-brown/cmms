@@ -139,6 +139,40 @@ const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR
     const coms = (await api('GET', '/communications', null, T)).filter(c => ['555-000-1111', '9 Delete St'].includes(c.number) || c.address === '9 Delete St');
     expect(left.length === 0, `${left.length} contacts left`);
     expect(coms.length === 0, `${coms.length} communications left`);
+    await page.reload({ waitUntil: 'networkidle' });
+    expect(await page.locator('tr', { hasText: '555-000-1111' }).count() === 0, 'phone back after reload');
+    expect(await page.locator('tr', { hasText: '9 Delete St' }).count() === 0, 'address back after reload');
+  });
+
+  await check('Deleting a communication directly removes its contact link too', async () => {
+    const p = await api('POST', '/person', { frst_name: 'Dangling', last_name: 'Check' }, T);
+    cleanup.push(() => api('DELETE', '/person/' + p.per_ID, null, T));
+    const gone = await api('POST', '/communications', { vvg_ID: 1, vve_ID: 2, number: '555-000-2222', address: '' }, T);
+    await api('POST', '/personcontact', { com_ID: gone.com_ID, per_ID: p.per_ID }, T);
+    const kept = await api('POST', '/communications', { vvg_ID: 1, vve_ID: 2, number: '555-000-3333', address: '' }, T);
+    await api('POST', '/personcontact', { com_ID: kept.com_ID, per_ID: p.per_ID }, T);
+    await api('DELETE', '/communications/' + gone.com_ID, null, T);
+    const left = await api('GET', '/personcontact?person=' + p.per_ID, null, T);
+    expect(left.length === 1 && left[0].com_ID === kept.com_ID, `left: ${JSON.stringify(left.map(c => c.com_ID))}`);
+    const coms = await api('GET', '/communications', null, T);
+    expect(!coms.some(c => c.com_ID === gone.com_ID), 'communication still there');
+    await page.goto(APP + '/personedit/' + p.per_ID);
+    await page.locator('tr', { hasText: '555-000-3333' }).waitFor({ timeout: 5000 });
+  });
+
+  await check('Deleting one of two links to a shared communication keeps it for the other', async () => {
+    const [a, b] = [await api('POST', '/person', { frst_name: 'ShareA', last_name: 'Check' }, T), await api('POST', '/person', { frst_name: 'ShareB', last_name: 'Check' }, T)];
+    cleanup.push(() => api('DELETE', '/person/' + a.per_ID, null, T), () => api('DELETE', '/person/' + b.per_ID, null, T));
+    const shared = await api('POST', '/communications', { vvg_ID: 1, vve_ID: 2, number: '555-000-4444', address: '' }, T);
+    cleanup.push(() => api('DELETE', '/communications/' + shared.com_ID, null, T));
+    const link = await api('POST', '/personcontact', { com_ID: shared.com_ID, per_ID: a.per_ID }, T);
+    await api('POST', '/personcontact', { com_ID: shared.com_ID, per_ID: b.per_ID }, T);
+    await api('DELETE', '/personcontact/' + link.cpc_ID, null, T);
+    const left = await api('GET', '/personcontact?person=' + b.per_ID, null, T);
+    expect(left.length === 1 && left[0].communication && left[0].communication.com_ID === shared.com_ID, `left: ${JSON.stringify(left)}`);
+    await api('DELETE', '/personcontact/' + left[0].cpc_ID, null, T);
+    const coms = await api('GET', '/communications', null, T);
+    expect(!coms.some(c => c.com_ID === shared.com_ID), 'communication kept after its last link was deleted');
   });
 
   await check('Life events: add one for a person and see it listed', async () => {
