@@ -23,10 +23,12 @@ exports.signup = (req, res) => {
       res.send({ message: "Registered! An admin needs to approve your account before you can log in." });
     })
     .catch(err => {
-      // Two sign-ups racing for the same name get past the duplicate check;
-      // the unique index stops the second one
+      // Two sign-ups racing for the same name or email get past the duplicate
+      // check; the unique index stops the second one
       if (err instanceof db.Sequelize.UniqueConstraintError) {
-        return res.status(400).send({ message: "Failed! Username is already in use!" });
+        // MySQL may report the column ("email") or the index name ("users_email_unique")
+        const field = Object.keys(err.fields || {}).some(key => key.includes("email")) ? "Email" : "Username";
+        return res.status(400).send({ message: `Failed! ${field} is already in use!` });
       }
       res.status(500).send({ message: err.message });
     });

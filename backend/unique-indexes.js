@@ -5,6 +5,7 @@ const db = require("./models");
 // adds the index to databases that already existed.
 const UNIQUE_COLUMNS = [
   { table: "users", column: "username" },
+  { table: "users", column: "email" },
   { table: "person", column: "user_name" },
 ];
 
@@ -17,15 +18,15 @@ async function ensureUniqueIndex({ table, column }) {
   );
   if (hasIndex) return;
 
-  // The index can't be created while duplicates exist; say which ones so they can be fixed
-  const [duplicates] = await db.sequelize.query(
-    `SELECT \`${column}\` AS value, COUNT(*) AS count FROM \`${table}\`
-     WHERE \`${column}\` IS NOT NULL GROUP BY \`${column}\` HAVING COUNT(*) > 1`
-  );
+  // The index can't be created while duplicates exist. Log only how many, not
+  // the values (emails are personal data); the query lists them for an operator.
+  const duplicatesQuery = `SELECT \`${column}\`, COUNT(*) FROM \`${table}\`
+     WHERE \`${column}\` IS NOT NULL GROUP BY \`${column}\` HAVING COUNT(*) > 1`;
+  const [duplicates] = await db.sequelize.query(duplicatesQuery);
   if (duplicates.length > 0) {
-    const list = duplicates.map((d) => `"${d.value}" (${d.count}x)`).join(", ");
     console.warn(
-      `Cannot make ${table}.${column} unique until these duplicates are fixed: ${list}`
+      `Cannot make ${table}.${column} unique until ${duplicates.length} duplicated value(s) are fixed. ` +
+        `List them with: ${duplicatesQuery.replace(/\s+/g, " ")}`
     );
     return;
   }
